@@ -6,8 +6,14 @@ namespace Yiisoft\Hydrator;
 
 use function is_string;
 
+/**
+ * @psalm-import-type MapType from HydratorInterface
+ */
 final class Context
 {
+    /**
+     * @psalm-param MapType $map
+     */
     public function __construct(
         private string $parameterName,
         private bool $resolved,
@@ -32,6 +38,7 @@ final class Context
     }
 
     /**
+     * @param string[]|string|null $key
      * @throws NotResolvedException
      */
     public function getData(array|string|null $key): mixed

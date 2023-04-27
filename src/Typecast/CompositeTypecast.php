@@ -11,11 +11,15 @@ use Yiisoft\Hydrator\TypecastInterface;
 
 final class CompositeTypecast implements TypecastInterface
 {
+    /**
+     * @var TypecastInterface[]
+     */
     private array $typecasts;
 
     public function __construct(
         TypecastInterface ...$typecasts
-    ) {
+    )
+    {
         $this->typecasts = $typecasts;
     }
 

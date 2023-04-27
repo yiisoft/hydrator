@@ -16,7 +16,7 @@ use function strlen;
 final class DataHelper
 {
     /**
-     * @psalm-param string|list<string> $path
+     * @param string|string[] $path
      *
      * @throws NotResolvedException
      */
@@ -36,6 +36,8 @@ final class DataHelper
 
     /**
      * @throws NotResolvedException
+     *
+     * @psalm-param array<string,mixed> $data
      */
     private static function getValueByKey(array $data, string $pathKey): mixed
     {

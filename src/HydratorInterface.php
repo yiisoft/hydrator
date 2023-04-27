@@ -8,6 +8,9 @@ namespace Yiisoft\Hydrator;
  */
 interface HydratorInterface
 {
+    /**
+     * @psalm-param MapType $map
+     */
     public function populate(object $model, array $data = [], array $map = [], bool $strict = false): void;
 
     /**

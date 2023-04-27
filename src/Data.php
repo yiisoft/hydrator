@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+/**
+ * @psalm-import-type MapType from HydratorInterface
+ */
 final class Data
 {
+    /**
+     * @psalm-param MapType $map
+     */
     public function __construct(
         private array $data,
         private array $map,
@@ -17,6 +23,9 @@ final class Data
         return $this->data;
     }
 
+    /**
+     * @psalm-return MapType
+     */
     public function getMap(): array
     {
         return $this->map;
@@ -32,6 +41,9 @@ final class Data
         $this->data = $data;
     }
 
+    /**
+     * @psalm-param MapType $map
+     */
     public function setMap(array $map): void
     {
         $this->map = $map;

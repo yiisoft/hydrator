@@ -40,7 +40,6 @@ final class SimpleTypecast implements TypecastInterface
         }
 
         foreach ($types as $t) {
-            /** @psalm-trace $t */
             if ($t->isBuiltin()) {
                 if ($t->allowsNull() && is_null($value)) {
                     return null;

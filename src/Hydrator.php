@@ -61,6 +61,7 @@ final class Hydrator implements HydratorInterface
     /**
      * @psalm-param class-string $class
      * @psalm-param MapType $map
+     * @psalm-return array{0:list<string>,1:array<string,mixed>}
      */
     private function getConstructorArguments(string $class, array $sourceData, array $map, bool $strict): array
     {
@@ -173,8 +174,6 @@ final class Hydrator implements HydratorInterface
     }
 
     /**
-     * @psalm-param MapType $map
-     *
      * @throws NotResolvedException
      */
     private function resolve(string $name, Data $data): mixed
@@ -229,6 +228,7 @@ final class Hydrator implements HydratorInterface
 
     /**
      * @psalm-param object|class-string $object
+     * @psalm-param MapType $map
      */
     private function createData(object|string $object, array $sourceData, array $map, bool $strict): Data
     {

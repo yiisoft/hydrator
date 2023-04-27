@@ -12,6 +12,9 @@ use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 final class Data implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
+    /**
+     * @param string[]|string|null $key
+     */
     public function __construct(
         private array|string|null $key = null,
     ) {}
