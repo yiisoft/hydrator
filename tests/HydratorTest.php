@@ -510,4 +510,16 @@ final class HydratorTest extends TestCase
 
         $this->assertSame('red', $model->car->getColor());
     }
+
+    public function testNonExistPath(): void
+    {
+        $hydrator = new Hydrator(new SimpleContainer());
+
+        $object = new class() {
+            public ?int $value = null;
+        };
+        $hydrator->populate($object, ['a' => ['b' => 23]], ['value' => 'a.b.c']);
+
+        $this->assertNull($object->value);
+    }
 }

@@ -28,6 +28,9 @@ final class DataHelper
 
         $value = $data;
         foreach ($path as $pathKey) {
+            if (!is_array($value)) {
+                throw new NotResolvedException();
+            }
             $value = self::getValueByKey($value, $pathKey);
         }
 
