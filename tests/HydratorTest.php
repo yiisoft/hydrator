@@ -202,7 +202,7 @@ final class HydratorTest extends TestCase
                 ['int' => new StringableObject('99')],
             ],
             'string-with-separators-to-int' => [
-                ['int' => 1000242],
+                ['int' => 1_000_242],
                 ['int' => '1 000 242'],
             ],
             'array-to-int' => [
@@ -313,7 +313,7 @@ final class HydratorTest extends TestCase
                 ['float' => new StringableObject('99.36')],
             ],
             'string-with-separators-to-float' => [
-                ['float' => 1000242.25],
+                ['float' => 1_000_242.25],
                 ['float' => '1 000 242,25'],
             ],
 
