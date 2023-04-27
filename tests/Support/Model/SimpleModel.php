@@ -6,8 +6,15 @@ namespace Yiisoft\Hydrator\Tests\Support\Model;
 
 final class SimpleModel
 {
-    public function __construct(private string $a = '.', private string $b = '.', private string $c = '.')
+    private string $c;
+
+    public function __construct(
+        private string $a = '.',
+        private string $b = '.',
+        string $c = '.',
+    )
     {
+        $this->c = $c;
     }
 
     public function getA(): string
