@@ -1,0 +1,52 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Yiisoft\Hydrator;
+
+use function is_string;
+
+final class Context
+{
+    public function __construct(
+        private string $parameterName,
+        private bool $resolved,
+        private mixed $resolvedValue,
+        private array $data,
+        private array $map,
+    ) {}
+
+    public function getParameterName(): string
+    {
+        return $this->parameterName;
+    }
+
+    public function isResolved(): bool
+    {
+        return $this->resolved;
+    }
+
+    public function getResolvedValue(): mixed
+    {
+        return $this->resolvedValue;
+    }
+
+    /**
+     * @throws NotResolvedException
+     */
+    public function getData(array|string|null $key): mixed
+    {
+        if ($key === null) {
+            return $this->data;
+        }
+
+        if (is_string($key)) {
+            $path = $this->map[$key] ?? $key;
+        } else {
+            $path = implode('.', $key);
+            $path = $this->map[$path] ?? $key;
+        }
+
+        return DataHelper::getValueByPath($this->data, $path);
+    }
+}
