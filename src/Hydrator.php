@@ -216,6 +216,7 @@ final class Hydrator implements HydratorInterface
                 continue;
             }
 
+            /** @psalm-suppress UndefinedMethod Need for PHP 8.0 only */
             if (PHP_VERSION_ID >= 80100 && $property->isReadOnly()) {
                 continue;
             }
