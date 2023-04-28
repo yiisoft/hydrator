@@ -39,14 +39,14 @@ final class DataHelper
 
     /**
      * @throws NotResolvedException
-     *
-     * @psalm-param array<string,mixed> $data
      */
     private static function getValueByKey(array $data, string $pathKey): mixed
     {
         $found = false;
         $result = null;
         foreach ($data as $dataKey => $dataValue) {
+            $dataKey = (string) $dataKey;
+
             if ($dataKey === $pathKey) {
                 $found = true;
                 $result = (is_array($dataValue) && is_array($result))
