@@ -19,10 +19,6 @@ final class ParameterAttributesHandler
     ) {}
 
     /**
-     * @param ReflectionAttribute[] $reflectionAttributes
-     *
-     * @psalm-param ReflectionAttribute<ParameterAttributeInterface>[] $reflectionAttributes
-     *
      * @throws NotResolvedException
      */
     public function handle(
@@ -32,7 +28,6 @@ final class ParameterAttributesHandler
         ?Data $data = null
     ): mixed
     {
-        $parameterName = $parameter->getName();
         $reflectionAttributes = $parameter
             ->getAttributes(ParameterAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
 
@@ -42,7 +37,7 @@ final class ParameterAttributesHandler
             $resolver = $this->getParameterResolver($attribute);
 
             $context = new Context(
-                $parameterName,
+                $parameter,
                 $resolved || $hereResolved,
                 $resolvedValue,
                 $data?->getData() ?? [],

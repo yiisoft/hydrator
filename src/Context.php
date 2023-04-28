@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use ReflectionParameter;
+use ReflectionProperty;
+
 use function is_string;
 
 /**
@@ -15,16 +18,16 @@ final class Context
      * @psalm-param MapType $map
      */
     public function __construct(
-        private string $parameterName,
+        private ReflectionParameter|ReflectionProperty $parameter,
         private bool $resolved,
         private mixed $resolvedValue,
         private array $data,
         private array $map,
     ) {}
 
-    public function getParameterName(): string
+    public function getParameter(): ReflectionParameter|ReflectionProperty
     {
-        return $this->parameterName;
+        return $this->parameter;
     }
 
     public function isResolved(): bool
