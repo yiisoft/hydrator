@@ -12,7 +12,6 @@ use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Attribute\Parameter\CastToString;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\NotResolvedException;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
@@ -20,11 +19,13 @@ use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\InvalidParameterResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\NotResolver;
 use Yiisoft\Hydrator\Tests\Support\Model\ConstructorParameterAttributesModel;
+use Yiisoft\Hydrator\Tests\Support\Model\ConstructorTypeModel;
 use Yiisoft\Hydrator\Tests\Support\Model\CounterModel;
 use Yiisoft\Hydrator\Tests\Support\Model\FromPredefinedArrayModel;
 use Yiisoft\Hydrator\Tests\Support\Model\InvalidDataResolverModel;
 use Yiisoft\Hydrator\Tests\Support\Model\ObjectPropertyModel\ObjectPropertyModel;
 use Yiisoft\Hydrator\Tests\Support\Model\ObjectPropertyModel\RedCar;
+use Yiisoft\Hydrator\Tests\Support\Model\StaticModel;
 use Yiisoft\Hydrator\Tests\Support\Model\TypeModel;
 use Yiisoft\Hydrator\Tests\Support\Model\NestedModel\UserModel;
 use Yiisoft\Hydrator\Tests\Support\Model\PreparePropertyModel;
@@ -413,6 +414,39 @@ final class HydratorTest extends TestCase
         );
     }
 
+    public function dataConstructorTypecast(): array
+    {
+        return [
+            'array-to-int' => [
+                [],
+                ['int' => [42]],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataConstructorTypecast
+     */
+    public function testConstructorTypecast(array $expectedValues, array $data): void
+    {
+        $hydrator = new Hydrator(new SimpleContainer());
+        $model = $hydrator->create(ConstructorTypeModel::class, $data);
+
+        $expectedValues = array_merge(
+            [
+                'int' => -1,
+            ],
+            $expectedValues
+        );
+
+        $this->assertSame(
+            $expectedValues,
+            [
+                'int' => $model->int,
+            ]
+        );
+    }
+
     public function testCustomTypecast(): void
     {
         $service = new Hydrator(
@@ -590,5 +624,15 @@ final class HydratorTest extends TestCase
             DataAttributeResolverInterface::class . '".'
         );
         $hydrator->create(InvalidDataResolverModel::class);
+    }
+
+    public function testStaticProperty(): void
+    {
+        $hydrator = new Hydrator(new SimpleContainer());
+
+        $model = $hydrator->create(StaticModel::class, ['a' => 7, 'b' => 42]);
+
+        $this->assertSame(7, $model->a);
+        $this->assertSame(0, $model::$b);
     }
 }
