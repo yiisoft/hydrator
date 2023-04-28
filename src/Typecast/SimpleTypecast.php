@@ -47,10 +47,7 @@ final class SimpleTypecast implements TypecastInterface
                 switch ($t->getName()) {
                     case 'string':
                         if (
-                            is_int($value)
-                            || is_bool($value)
-                            || is_float($value)
-                            || is_string($value)
+                            is_scalar($value)
                             || is_null($value)
                             || $value instanceof Stringable
                         ) {
@@ -88,10 +85,7 @@ final class SimpleTypecast implements TypecastInterface
 
                     case 'bool':
                         if (
-                            is_int($value)
-                            || is_bool($value)
-                            || is_float($value)
-                            || is_string($value)
+                            is_scalar($value)
                             || is_null($value)
                             || is_array($value)
                             || is_object($value)
