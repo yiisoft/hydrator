@@ -162,15 +162,36 @@ final class HydratorTest extends TestCase
         $this->assertSame('Mike Li', $model->getName());
     }
 
-    public function testCreateNestedModelWithMap(): void
+    public function dataCreateNestedModelWithMap(): array
+    {
+        return [
+            [
+                [
+                    'fio.first' => 'Mike',
+                    'fio' => ['last' => 'Li'],
+                ],
+                ['name' => 'fio'],
+            ],
+            [
+                [
+                    'person.fio' => [
+                        'first' => 'Mike',
+                    ],
+                    'person.fio.last' => 'Li',
+                ],
+                ['name' => 'person.fio'],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataCreateNestedModelWithMap
+     */
+    public function testCreateNestedModelWithMap(array $data, array $map): void
     {
         $service = new Hydrator(new SimpleContainer());
 
-        $model = $service->create(
-            UserModel::class,
-            ['fio.first' => 'Mike', 'fio' => ['last' => 'Li']],
-            ['name' => 'fio'],
-        );
+        $model = $service->create(UserModel::class, $data, $map);
 
         $this->assertSame('Mike Li', $model->getName());
     }
