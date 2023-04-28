@@ -5,17 +5,24 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use stdClass;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Attribute\Parameter\CastToString;
+use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\NotResolvedException;
+use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
+use Yiisoft\Hydrator\Tests\Support\Attribute\InvalidParameterResolver;
+use Yiisoft\Hydrator\Tests\Support\Attribute\NotResolver;
 use Yiisoft\Hydrator\Tests\Support\Model\ConstructorParameterAttributesModel;
 use Yiisoft\Hydrator\Tests\Support\Model\CounterModel;
 use Yiisoft\Hydrator\Tests\Support\Model\FromPredefinedArrayModel;
+use Yiisoft\Hydrator\Tests\Support\Model\InvalidDataResolverModel;
 use Yiisoft\Hydrator\Tests\Support\Model\ObjectPropertyModel\ObjectPropertyModel;
 use Yiisoft\Hydrator\Tests\Support\Model\ObjectPropertyModel\RedCar;
 use Yiisoft\Hydrator\Tests\Support\Model\TypeModel;
@@ -521,5 +528,46 @@ final class HydratorTest extends TestCase
         $hydrator->populate($object, ['a' => ['b' => 23]], ['value' => 'a.b.c']);
 
         $this->assertNull($object->value);
+    }
+
+    public function testInvalidParameterAttributeResolver(): void
+    {
+        $hydrator = new Hydrator(
+            new SimpleContainer([
+                NotResolver::class => new NotResolver(),
+            ])
+        );
+
+        $object = new class() {
+            #[InvalidParameterResolver]
+            public int $value;
+        };
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Parameter attribute resolver "' .
+            NotResolver::class .
+            '" must implement "' .
+            ParameterAttributeResolverInterface::class . '".'
+        );
+        $hydrator->populate($object);
+    }
+
+    public function testInvalidDataAttributeResolver(): void
+    {
+        $hydrator = new Hydrator(
+            new SimpleContainer([
+                NotResolver::class => new NotResolver(),
+            ])
+        );
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Data attribute resolver "' .
+            NotResolver::class .
+            '" must implement "' .
+            DataAttributeResolverInterface::class . '".'
+        );
+        $hydrator->create(InvalidDataResolverModel::class);
     }
 }
