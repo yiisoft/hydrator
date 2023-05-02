@@ -6,16 +6,16 @@ namespace Yiisoft\Hydrator\Tests\Attribute;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\Tests\Support\Model\NoPopulateModel;
+use Yiisoft\Hydrator\Tests\Support\Model\SkipHydrateModel;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
-final class NoPopulateTest extends TestCase
+final class SkipHydrateTest extends TestCase
 {
     public function testBase(): void
     {
         $service = new Hydrator(new SimpleContainer());
 
-        $model = $service->create(NoPopulateModel::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
+        $model = $service->create(SkipHydrateModel::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
 
         $this->assertNull($model->a);
         $this->assertSame(2, $model->b);

@@ -21,7 +21,7 @@ final class CastToStringTest extends TestCase
             public string $a = '';
         };
 
-        $service->populate($model, ['a' => 99]);
+        $service->hydrate($model, ['a' => 99]);
 
         $this->assertSame('99', $model->a);
     }

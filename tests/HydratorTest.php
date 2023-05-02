@@ -53,12 +53,12 @@ final class HydratorTest extends TestCase
         $this->assertSame('3', $model->getC());
     }
 
-    public function testSimplePopulate(): void
+    public function testSimpleHydrate(): void
     {
         $service = new Hydrator(new SimpleContainer());
 
         $model = new SimpleModel();
-        $service->populate(
+        $service->hydrate(
             $model,
             ['a' => '1', 'b' => '2', 'c' => '3'],
         );
@@ -84,12 +84,12 @@ final class HydratorTest extends TestCase
         $this->assertSame('.', $model->getC());
     }
 
-    public function testSimplePopulateStrict(): void
+    public function testSimpleHydrateStrict(): void
     {
         $service = new Hydrator(new SimpleContainer());
 
         $model = new SimpleModel();
-        $service->populate(
+        $service->hydrate(
             $model,
             ['a' => '1', 'b' => '2', 'c' => '3'],
             ['b' => 'b'],
@@ -101,7 +101,7 @@ final class HydratorTest extends TestCase
         $this->assertSame('.', $model->getC());
     }
 
-    public function dataSimplePopulateWithMap(): array
+    public function dataSimpleHydrateWithMap(): array
     {
         return [
             'simple' => [
@@ -128,14 +128,14 @@ final class HydratorTest extends TestCase
     }
 
     /**
-     * @dataProvider dataSimplePopulateWithMap
+     * @dataProvider dataSimpleHydrateWithMap
      */
-    public function testSimplePopulateWithMap(array $data, array $map): void
+    public function testSimpleHydrateWithMap(array $data, array $map): void
     {
         $service = new Hydrator(new SimpleContainer());
 
         $model = new SimpleModel();
-        $service->populate($model, $data, $map);
+        $service->hydrate($model, $data, $map);
 
         $this->assertSame('1', $model->getA());
         $this->assertSame('2', $model->getB());
@@ -383,7 +383,7 @@ final class HydratorTest extends TestCase
         }
 
         $service = new Hydrator(new SimpleContainer());
-        $service->populate($model, $data);
+        $service->hydrate($model, $data);
 
         $expectedValues = array_merge(
             [
@@ -458,7 +458,7 @@ final class HydratorTest extends TestCase
         );
 
         $model = new TypeModel();
-        $service->populate($model, ['string' => 'test', 'int' => 7]);
+        $service->hydrate($model, ['string' => 'test', 'int' => 7]);
 
         $this->assertSame('42', $model->string);
         $this->assertSame(7, $model->int);
@@ -483,7 +483,7 @@ final class HydratorTest extends TestCase
 
         $resolver->setArray(['number' => 42]);
 
-        $service->populate($model);
+        $service->hydrate($model);
 
         $this->assertSame('42', $model->a);
     }
@@ -502,7 +502,7 @@ final class HydratorTest extends TestCase
 
         $resolver->setArray(['a' => 42]);
 
-        $service->populate($model);
+        $service->hydrate($model);
 
         $this->assertSame('42', $model->a);
     }
@@ -538,7 +538,7 @@ final class HydratorTest extends TestCase
             ) {}
         };
 
-        $service->populate(
+        $service->hydrate(
             $model,
             data: [
                 'a' => 1,
@@ -580,7 +580,7 @@ final class HydratorTest extends TestCase
         $object = new class() {
             public ?int $value = null;
         };
-        $hydrator->populate($object, ['a' => ['b' => 23]], ['value' => 'a.b.c']);
+        $hydrator->hydrate($object, ['a' => ['b' => 23]], ['value' => 'a.b.c']);
 
         $this->assertNull($object->value);
     }
@@ -605,7 +605,7 @@ final class HydratorTest extends TestCase
             '" must implement "' .
             ParameterAttributeResolverInterface::class . '".'
         );
-        $hydrator->populate($object);
+        $hydrator->hydrate($object);
     }
 
     public function testInvalidDataAttributeResolver(): void

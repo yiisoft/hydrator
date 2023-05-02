@@ -23,7 +23,7 @@ final class DataTest extends TestCase
             public ?int $y = null;
         };
 
-        $service->populate(
+        $service->hydrate(
             $model,
             data: [
                 'a' => 99,
@@ -46,7 +46,7 @@ final class DataTest extends TestCase
             public array $data = [];
         };
 
-        $service->populate(
+        $service->hydrate(
             $model,
             data: ['a' => 1, 'b' => 2],
         );
@@ -66,7 +66,7 @@ final class DataTest extends TestCase
             public ?int $z = null;
         };
 
-        $service->populate(
+        $service->hydrate(
             $model,
             data: [
                 'nested' => [
@@ -97,7 +97,7 @@ final class DataTest extends TestCase
             public ?int $z = null;
         };
 
-        $service->populate(
+        $service->hydrate(
             $model,
             data: [
                 'value' => 1,

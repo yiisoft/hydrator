@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Support\Model;
 
-use Yiisoft\Hydrator\Attribute\NoPopulate;
+use Yiisoft\Hydrator\Attribute\SkipHydrate;
 
-final class NoPopulateModel
+final class SkipHydrateModel
 {
-    #[NoPopulate]
+    #[SkipHydrate]
     public ?int $a = null;
     public ?int $b = null;
 
     public function __construct(
-        #[NoPopulate]
+        #[SkipHydrate]
         public ?int $c = null,
         public ?int $d = null,
     ) {}

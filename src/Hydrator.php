@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
-use Yiisoft\Hydrator\Attribute\NoPopulate;
+use Yiisoft\Hydrator\Attribute\SkipHydrate;
 use Yiisoft\Hydrator\Typecast\SimpleTypecast;
 use Yiisoft\Injector\Injector;
 
@@ -36,9 +36,9 @@ final class Hydrator implements HydratorInterface
         $this->parameterAttributesHandler = new ParameterAttributesHandler($container);
     }
 
-    public function populate(object $model, array $data = [], array $map = [], bool $strict = false): void
+    public function hydrate(object $model, array $data = [], array $map = [], bool $strict = false): void
     {
-        $this->hydrate(
+        $this->populate(
             $model,
             $this->getHydrateData($model, $data, $map, $strict),
         );
@@ -50,7 +50,7 @@ final class Hydrator implements HydratorInterface
 
         $model = $this->injector->make($class, $constructorArguments);
 
-        $this->hydrate(
+        $this->populate(
             $model,
             $this->getHydrateData($model, $data, $map, $strict, $excludeProperties),
         );
@@ -76,7 +76,7 @@ final class Hydrator implements HydratorInterface
         $data = $this->createData($class, $sourceData, $map, $strict);
 
         foreach ($constructor->getParameters() as $parameter) {
-            if ($parameter->getAttributes(NoPopulate::class)) {
+            if ($parameter->getAttributes(SkipHydrate::class)) {
                 continue;
             }
 
@@ -134,7 +134,7 @@ final class Hydrator implements HydratorInterface
         $data = $this->createData($object, $sourceData, $map, $strict);
 
         foreach ($this->getObjectProperties($object) as $property) {
-            if ($property->getAttributes(NoPopulate::class)) {
+            if ($property->getAttributes(SkipHydrate::class)) {
                 continue;
             }
 
@@ -187,7 +187,7 @@ final class Hydrator implements HydratorInterface
         return DataHelper::getValueByPath($data->getData(), $map[$name] ?? $name);
     }
 
-    private function hydrate(object $object, array $values): void
+    private function populate(object $object, array $values): void
     {
         /** @var Closure $setter */
         $setter = Closure::bind(
