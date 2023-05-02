@@ -9,6 +9,7 @@ use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\HydratorInterface;
+
 use function dirname;
 
 final class ConfigTest extends TestCase
