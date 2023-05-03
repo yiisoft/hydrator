@@ -39,47 +39,38 @@ final class SimpleTypecast implements TypecastInterface
             throw new SkipTypecastException();
         }
 
-        $isNull = is_null($value);
-        $isInt = is_int($value);
-        $isFloat = is_float($value);
-        $isString = is_string($value);
-        $isBool = is_bool($value);
-        $isArray = is_array($value);
-        $isObject = is_object($value);
-        $isStringable = $value instanceof Stringable;
-
         foreach ($types as $t) {
-            if ($isNull && $t->allowsNull()) {
+            if (is_null($value) && $t->allowsNull()) {
                 return null;
             }
             if ($t->isBuiltin()) {
                 switch ($t->getName()) {
                     case 'string':
-                        if ($isString) {
-                            return (string) $value;
+                        if (is_string($value)) {
+                            return $value;
                         }
                         break;
 
                     case 'int':
-                        if ($isInt) {
+                        if (is_int($value)) {
                             return $value;
                         }
                         break;
 
                     case 'float':
-                        if ($isFloat) {
+                        if (is_float($value)) {
                             return $value;
                         }
                         break;
 
                     case 'bool':
-                        if ($isBool) {
-                            return (bool) $value;
+                        if (is_bool($value)) {
+                            return $value;
                         }
                         break;
 
                     case 'array':
-                        if ($isArray) {
+                        if (is_array($value)) {
                             return $value;
                         }
                         break;
@@ -91,31 +82,42 @@ final class SimpleTypecast implements TypecastInterface
             if ($t->isBuiltin()) {
                 switch ($t->getName()) {
                     case 'string':
-                        if ($isInt || $isFloat || $isBool || $isNull || $isStringable) {
+                        if (is_int($value)
+                            || is_float($value)
+                            || is_bool($value)
+                            || is_null($value)
+                            || $value instanceof Stringable
+                        ) {
                             return (string) $value;
                         }
                         break;
 
                     case 'int':
-                        if ($isBool || $isFloat || $isNull) {
+                        if (is_bool($value) || is_float($value) || is_null($value)) {
                             return (int) $value;
                         }
-                        if ($isStringable || $isString) {
+                        if ($value instanceof Stringable || is_string($value)) {
                             return (int) NumericHelper::normalize((string) $value);
                         }
                         break;
 
                     case 'float':
-                        if ($isInt || $isBool || $isNull) {
+                        if (is_int($value) || is_bool($value) || is_null($value)) {
                             return (float) $value;
                         }
-                        if ($isStringable || $isString) {
+                        if ($value instanceof Stringable || is_string($value)) {
                             return (float) NumericHelper::normalize((string) $value);
                         }
                         break;
 
                     case 'bool':
-                        if ($isInt || $isFloat || $isString || $isNull || $isArray || $isObject) {
+                        if (is_int($value)
+                            || is_float($value)
+                            || is_string($value)
+                            || is_null($value)
+                            || is_array($value)
+                            || is_object($value)
+                        ) {
                             return (bool) $value;
                         }
                         break;
@@ -124,11 +126,11 @@ final class SimpleTypecast implements TypecastInterface
             }
 
             $class = $t->getName();
-            if ($isObject) {
+            if (is_object($value)) {
                 if (is_a($value, $class)) {
                     return $value;
                 }
-            } elseif ($isArray) {
+            } elseif (is_array($value)) {
                 $reflection = new ReflectionClass($class);
                 if ($reflection->isInstantiable()) {
                     return $hydrator->create($class, $value);
