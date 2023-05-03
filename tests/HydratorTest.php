@@ -311,6 +311,11 @@ final class HydratorTest extends TestCase
                 ['bool' => true],
                 ['bool' => new stdClass()],
             ],
+            'resource-to-bool' => [
+                ['bool' => true],
+                ['bool' => tmpfile()],
+                fn(TypeModel $model) => $model->bool = true,
+            ],
 
             // Float
             'int-to-float' => [
