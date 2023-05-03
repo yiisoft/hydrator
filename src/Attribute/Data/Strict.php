@@ -8,6 +8,7 @@ use Attribute;
 use Yiisoft\Hydrator\Data;
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
+use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Strict implements DataAttributeInterface, DataAttributeResolverInterface
@@ -23,6 +24,10 @@ final class Strict implements DataAttributeInterface, DataAttributeResolverInter
 
     public function prepareData(DataAttributeInterface $attribute, Data $data): void
     {
+        if (!$attribute instanceof self) {
+            throw new UnexpectedAttributeException(self::class, $attribute);
+        }
+
         $data->setStrict($this->strict);
     }
 }

@@ -7,22 +7,70 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\CastToString;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
+use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
+use Yiisoft\Hydrator\Tests\Support\Model\CounterModel;
+use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\Typecast\NoTypecast;
+use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class CastToStringTest extends TestCase
 {
-    public function testBase(): void
+    public function dataBase(): array
     {
-        $service = new Hydrator(new SimpleContainer(), new NoTypecast());
+        return [
+            ['99', 99],
+            ['1', true],
+            ['1.1', 1.1],
+            ['red', 'red'],
+            ['', null],
+            ['test', new StringableObject('test')],
+            ['', tmpfile()],
+        ];
+    }
+
+    /**
+     * @dataProvider dataBase
+     */
+    public function testBase(string $expected, mixed $value): void
+    {
+        $hydrator = new Hydrator(new SimpleContainer(), new NoTypecast());
 
         $model = new class() {
             #[CastToString]
-            public string $a = '';
+            public string $a = '...';
         };
 
-        $service->hydrate($model, ['a' => 99]);
+        $hydrator->hydrate($model, ['a' => $value]);
 
-        $this->assertSame('99', $model->a);
+        $this->assertSame($expected, $model->a);
+    }
+
+    public function testNotResolved(): void
+    {
+        $hydrator = new Hydrator(new SimpleContainer());
+
+        $model = new class() {
+            #[CastToString]
+            public string $a = '...';
+        };
+
+        $hydrator->hydrate($model);
+
+        $this->assertSame('...', $model->a);
+    }
+
+    public function testUnexpectedAttributeException(): void
+    {
+        $hydrator = new Hydrator(
+            new SimpleContainer([CounterResolver::class => new CastToString()])
+        );
+
+        $model = new CounterModel();
+
+        $this->expectException(UnexpectedAttributeException::class);
+        $this->expectExceptionMessage('Expected "' . CastToString::class . '", but "' . Counter::class . '" given.');
+        $hydrator->hydrate($model);
     }
 }

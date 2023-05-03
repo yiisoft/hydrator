@@ -7,6 +7,10 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
+use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
+use Yiisoft\Hydrator\Tests\Support\Model\CounterModel;
+use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class DataTest extends TestCase
@@ -118,5 +122,18 @@ final class DataTest extends TestCase
         $this->assertSame(1, $model->x);
         $this->assertSame(2, $model->y);
         $this->assertSame(3, $model->z);
+    }
+
+    public function testUnexpectedAttributeException(): void
+    {
+        $hydrator = new Hydrator(
+            new SimpleContainer([CounterResolver::class => new Data()])
+        );
+
+        $model = new CounterModel();
+
+        $this->expectException(UnexpectedAttributeException::class);
+        $this->expectExceptionMessage('Expected "' . Data::class . '", but "' . Counter::class . '" given.');
+        $hydrator->hydrate($model);
     }
 }

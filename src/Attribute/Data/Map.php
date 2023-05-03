@@ -9,6 +9,7 @@ use Yiisoft\Hydrator\Data;
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\HydratorInterface;
+use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 /**
  * @psalm-import-type MapType from HydratorInterface
@@ -30,6 +31,10 @@ final class Map implements DataAttributeInterface, DataAttributeResolverInterfac
 
     public function prepareData(DataAttributeInterface $attribute, Data $data): void
     {
+        if (!$attribute instanceof self) {
+            throw new UnexpectedAttributeException(self::class, $attribute);
+        }
+
         $data->setMap($this->map);
     }
 }
