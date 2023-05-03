@@ -469,6 +469,22 @@ final class HydratorTest extends TestCase
         $this->assertSame(7, $model->int);
     }
 
+    public function testCompositeTypecastWithoutCast(): void
+    {
+        $service = new Hydrator(
+            new SimpleContainer(),
+            new CompositeTypecast(
+                new String42Typecast(),
+                new SimpleTypecast(),
+            ),
+        );
+
+        $model = new TypeModel();
+        $service->hydrate($model, ['int' => new stdClass()]);
+
+        $this->assertSame(-1, $model->int);
+    }
+
     public function testWithPropertyAttributeResolver(): void
     {
         $resolver = new FromPredefinedArrayResolver();
