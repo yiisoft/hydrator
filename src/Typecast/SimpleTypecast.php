@@ -82,12 +82,7 @@ final class SimpleTypecast implements TypecastInterface
             if ($t->isBuiltin()) {
                 switch ($t->getName()) {
                     case 'string':
-                        if (is_int($value)
-                            || is_float($value)
-                            || is_bool($value)
-                            || is_null($value)
-                            || $value instanceof Stringable
-                        ) {
+                        if (is_scalar($value) || is_null($value) || $value instanceof Stringable) {
                             return (string) $value;
                         }
                         break;
@@ -111,13 +106,7 @@ final class SimpleTypecast implements TypecastInterface
                         break;
 
                     case 'bool':
-                        if (is_int($value)
-                            || is_float($value)
-                            || is_string($value)
-                            || is_null($value)
-                            || is_array($value)
-                            || is_object($value)
-                        ) {
+                        if (is_scalar($value) || is_null($value) || is_array($value) || is_object($value)) {
                             return (bool) $value;
                         }
                         break;
