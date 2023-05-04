@@ -76,7 +76,7 @@ final class Hydrator implements HydratorInterface
         $data = $this->createData($class, $sourceData, $map, $strict);
 
         foreach ($constructor->getParameters() as $parameter) {
-            if ($parameter->getAttributes(SkipHydrate::class)) {
+            if (!empty($parameter->getAttributes(SkipHydrate::class))) {
                 continue;
             }
 
