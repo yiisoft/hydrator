@@ -1,7 +1,7 @@
 {
     "name": "yiisoft/hydrator",
     "type": "library",
-    "description": "_____",
+    "description": "Create and populate objects with typecasting, mapping and dependencies resolving support.",
     "keywords": [
         "hydrator"
     ],
