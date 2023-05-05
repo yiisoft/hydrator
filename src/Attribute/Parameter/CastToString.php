@@ -34,14 +34,7 @@ final class CastToString implements ParameterAttributeInterface, ParameterAttrib
 
         if ($context->isResolved()) {
             $resolvedValue = $context->getResolvedValue();
-            if (
-                is_int($resolvedValue)
-                || is_bool($resolvedValue)
-                || is_float($resolvedValue)
-                || is_string($resolvedValue)
-                || is_null($resolvedValue)
-                || $resolvedValue instanceof Stringable
-            ) {
+            if (is_scalar($resolvedValue) || is_null($resolvedValue) || $resolvedValue instanceof Stringable) {
                 return (string) $resolvedValue;
             }
             return '';
