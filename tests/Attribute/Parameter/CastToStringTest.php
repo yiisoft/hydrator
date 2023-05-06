@@ -37,7 +37,7 @@ final class CastToStringTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer(), new NoTypeCaster());
 
-        $model = new class() {
+        $model = new class () {
             #[CastToString]
             public string $a = '...';
         };
@@ -51,7 +51,7 @@ final class CastToStringTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = new class() {
+        $model = new class () {
             #[CastToString]
             public string $a = '...';
         };

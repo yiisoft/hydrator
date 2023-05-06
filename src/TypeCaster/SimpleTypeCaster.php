@@ -18,7 +18,6 @@ use function is_array;
 use function is_bool;
 use function is_float;
 use function is_int;
-use function is_null;
 use function is_object;
 use function is_string;
 
@@ -40,7 +39,7 @@ final class SimpleTypeCaster implements TypeCasterInterface
         }
 
         foreach ($types as $t) {
-            if (is_null($value) && $t->allowsNull()) {
+            if (null === $value && $t->allowsNull()) {
                 return null;
             }
             if ($t->isBuiltin()) {
@@ -82,13 +81,13 @@ final class SimpleTypeCaster implements TypeCasterInterface
             if ($t->isBuiltin()) {
                 switch ($t->getName()) {
                     case 'string':
-                        if (is_scalar($value) || is_null($value) || $value instanceof Stringable) {
+                        if (is_scalar($value) || null === $value || $value instanceof Stringable) {
                             return (string) $value;
                         }
                         break;
 
                     case 'int':
-                        if (is_bool($value) || is_float($value) || is_null($value)) {
+                        if (is_bool($value) || is_float($value) || null === $value) {
                             return (int) $value;
                         }
                         if ($value instanceof Stringable || is_string($value)) {
@@ -97,7 +96,7 @@ final class SimpleTypeCaster implements TypeCasterInterface
                         break;
 
                     case 'float':
-                        if (is_int($value) || is_bool($value) || is_null($value)) {
+                        if (is_int($value) || is_bool($value) || null === $value) {
                             return (float) $value;
                         }
                         if ($value instanceof Stringable || is_string($value)) {
@@ -106,7 +105,7 @@ final class SimpleTypeCaster implements TypeCasterInterface
                         break;
 
                     case 'bool':
-                        if (is_scalar($value) || is_null($value) || is_array($value) || is_object($value)) {
+                        if (is_scalar($value) || null === $value || is_array($value) || is_object($value)) {
                             return (bool) $value;
                         }
                         break;

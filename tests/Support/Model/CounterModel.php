@@ -17,5 +17,6 @@ final class CounterModel
         private string $b = '.',
         #[Counter('c')]
         string $c = '.',
-    ) {}
+    ) {
+    }
 }

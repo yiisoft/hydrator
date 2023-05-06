@@ -18,8 +18,7 @@ final class CompositeTypeCaster implements TypeCasterInterface
 
     public function __construct(
         TypeCasterInterface ...$typeCasters
-    )
-    {
+    ) {
         $this->typeCasters = $typeCasters;
     }
 

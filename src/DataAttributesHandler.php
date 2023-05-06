@@ -17,7 +17,8 @@ final class DataAttributesHandler
 {
     public function __construct(
         private ContainerInterface $container,
-    ) {}
+    ) {
+    }
 
     /**
      * @param ReflectionAttribute[] $reflectionAttributes

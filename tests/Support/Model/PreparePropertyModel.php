@@ -8,8 +8,7 @@ final class PreparePropertyModel
 {
     public function __construct(
         private string $a,
-    )
-    {
+    ) {
         $this->a .= '!';
     }
 

@@ -16,7 +16,8 @@ final class ParameterAttributesHandler
 {
     public function __construct(
         private ContainerInterface $container,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws NotResolvedException
@@ -26,8 +27,7 @@ final class ParameterAttributesHandler
         bool $resolved = false,
         mixed $resolvedValue = null,
         ?Data $data = null
-    ): mixed
-    {
+    ): mixed {
         $reflectionAttributes = $parameter
             ->getAttributes(ParameterAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
 

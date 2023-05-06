@@ -14,11 +14,12 @@ use Yiisoft\Hydrator\UnexpectedAttributeException;
 final class Data implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
     /**
-     * @param string[]|string|null $key
+     * @param string|string[]|null $key
      */
     public function __construct(
         private array|string|null $key = null,
-    ) {}
+    ) {
+    }
 
     public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): mixed
     {

@@ -13,7 +13,7 @@ final class ContextTest extends TestCase
     public function testBase(): void
     {
         $parameter = (new ReflectionClass(
-            new class() {
+            new class () {
                 private int $age = 42;
             }
         ))->getProperties()[0];

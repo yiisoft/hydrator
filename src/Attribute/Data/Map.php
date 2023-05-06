@@ -22,7 +22,8 @@ final class Map implements DataAttributeInterface, DataAttributeResolverInterfac
      */
     public function __construct(
         private array $map
-    ) {}
+    ) {
+    }
 
     public function getResolver(): self
     {

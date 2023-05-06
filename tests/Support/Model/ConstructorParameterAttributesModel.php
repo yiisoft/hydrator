@@ -15,7 +15,8 @@ final class ConstructorParameterAttributesModel
         private string $a,
         #[Di('stringable42')]
         private Stringable $stringable,
-    ) {}
+    ) {
+    }
 
     public function getA(): string
     {

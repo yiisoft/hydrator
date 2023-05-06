@@ -16,7 +16,8 @@ final class Data
         private array $data,
         private array $map,
         private bool $strict,
-    ) {}
+    ) {
+    }
 
     public function getData(): array
     {

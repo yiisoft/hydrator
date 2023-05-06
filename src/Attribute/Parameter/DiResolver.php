@@ -14,7 +14,8 @@ final class DiResolver implements ParameterAttributeResolverInterface
 {
     public function __construct(
         private ContainerInterface $container,
-    ) {}
+    ) {
+    }
 
     public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): mixed
     {

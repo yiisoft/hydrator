@@ -14,7 +14,8 @@ final class CustomData implements DataAttributeInterface, DataAttributeResolverI
 {
     public function __construct(
         private array $data
-    ) {}
+    ) {
+    }
 
     public function getResolver(): self
     {
