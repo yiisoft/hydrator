@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Support\Model;
 
-use Yiisoft\Hydrator\Attribute\SkipHydrate;
+use Yiisoft\Hydrator\Attribute\SkipHydration;
 
-final class SkipHydrateModel
+final class SkipHydrationModel
 {
-    #[SkipHydrate]
+    #[SkipHydration]
     public ?int $a = null;
     public ?int $b = null;
 
     public function __construct(
-        #[SkipHydrate]
+        #[SkipHydration]
         public ?int $c = null,
         public ?int $d = null,
     ) {}

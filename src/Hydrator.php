@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
-use Yiisoft\Hydrator\Attribute\SkipHydrate;
+use Yiisoft\Hydrator\Attribute\SkipHydration;
 use Yiisoft\Hydrator\Typecast\SimpleTypecast;
 use Yiisoft\Injector\Injector;
 
@@ -76,7 +76,7 @@ final class Hydrator implements HydratorInterface
         $data = $this->createData($class, $sourceData, $map, $strict);
 
         foreach ($constructor->getParameters() as $parameter) {
-            if (!empty($parameter->getAttributes(SkipHydrate::class))) {
+            if (!empty($parameter->getAttributes(SkipHydration::class))) {
                 continue;
             }
 
@@ -134,7 +134,7 @@ final class Hydrator implements HydratorInterface
         $data = $this->createData($object, $sourceData, $map, $strict);
 
         foreach ($this->getObjectProperties($object) as $property) {
-            if (!empty($property->getAttributes(SkipHydrate::class))) {
+            if (!empty($property->getAttributes(SkipHydration::class))) {
                 continue;
             }
 

@@ -7,6 +7,6 @@ namespace Yiisoft\Hydrator\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PARAMETER | Attribute::TARGET_PROPERTY)]
-final class SkipHydrate
+final class SkipHydration
 {
 }
