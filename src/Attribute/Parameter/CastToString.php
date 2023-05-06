@@ -12,11 +12,7 @@ use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
-use function is_bool;
-use function is_float;
-use function is_int;
 use function is_null;
-use function is_string;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
 final class CastToString implements ParameterAttributeInterface, ParameterAttributeResolverInterface
