@@ -40,7 +40,7 @@ final class DataAttributesHandler
             if (!$resolver instanceof DataAttributeResolverInterface) {
                 throw new RuntimeException(
                     sprintf(
-                        'Data attribute resolver "%1$s" must implement "%2$s".',
+                        'Data attribute resolver "%s" must implement "%s".',
                         $resolver::class,
                         DataAttributeResolverInterface::class,
                     )
