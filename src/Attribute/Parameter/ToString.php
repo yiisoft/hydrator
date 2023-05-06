@@ -15,7 +15,7 @@ use Yiisoft\Hydrator\UnexpectedAttributeException;
 use function is_null;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
-final class CastToString implements ParameterAttributeInterface, ParameterAttributeResolverInterface
+final class ToString implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
     public function getResolver(): self
     {

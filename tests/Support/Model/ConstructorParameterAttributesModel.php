@@ -6,12 +6,12 @@ namespace Yiisoft\Hydrator\Tests\Support\Model;
 
 use Stringable;
 use Yiisoft\Hydrator\Attribute\Parameter\Di;
-use Yiisoft\Hydrator\Attribute\Parameter\CastToString;
+use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 
 final class ConstructorParameterAttributesModel
 {
     public function __construct(
-        #[CastToString]
+        #[ToString]
         private string $a,
         #[Di('stringable42')]
         private Stringable $stringable,

@@ -9,7 +9,7 @@ use RuntimeException;
 use stdClass;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
-use Yiisoft\Hydrator\Attribute\Parameter\CastToString;
+use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
@@ -498,7 +498,7 @@ final class HydratorTest extends TestCase
 
         $model = new class() {
             #[FromPredefinedArray('number')]
-            #[CastToString]
+            #[ToString]
             public string $a;
         };
 

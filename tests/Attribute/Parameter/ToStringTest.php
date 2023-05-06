@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Hydrator\Attribute\Parameter\CastToString;
+use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
@@ -15,7 +15,7 @@ use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
-final class CastToStringTest extends TestCase
+final class ToStringTest extends TestCase
 {
     public function dataBase(): array
     {
@@ -38,7 +38,7 @@ final class CastToStringTest extends TestCase
         $hydrator = new Hydrator(new SimpleContainer(), new NoTypeCaster());
 
         $model = new class() {
-            #[CastToString]
+            #[ToString]
             public string $a = '...';
         };
 
@@ -52,7 +52,7 @@ final class CastToStringTest extends TestCase
         $hydrator = new Hydrator(new SimpleContainer());
 
         $model = new class() {
-            #[CastToString]
+            #[ToString]
             public string $a = '...';
         };
 
@@ -64,13 +64,13 @@ final class CastToStringTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new CastToString()])
+            new SimpleContainer([CounterResolver::class => new ToString()])
         );
 
         $model = new CounterModel();
 
         $this->expectException(UnexpectedAttributeException::class);
-        $this->expectExceptionMessage('Expected "' . CastToString::class . '", but "' . Counter::class . '" given.');
+        $this->expectExceptionMessage('Expected "' . ToString::class . '", but "' . Counter::class . '" given.');
         $hydrator->hydrate($model);
     }
 }
