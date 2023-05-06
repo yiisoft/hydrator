@@ -11,7 +11,7 @@ use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Model\CounterModel;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
-use Yiisoft\Hydrator\Typecaster\NoTypecaster;
+use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -35,7 +35,7 @@ final class CastToStringTest extends TestCase
      */
     public function testBase(string $expected, mixed $value): void
     {
-        $hydrator = new Hydrator(new SimpleContainer(), new NoTypecaster());
+        $hydrator = new Hydrator(new SimpleContainer(), new NoTypeCaster());
 
         $model = new class() {
             #[CastToString]

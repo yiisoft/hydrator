@@ -5,10 +5,10 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionType;
 
-interface TypecasterInterface
+interface TypeCasterInterface
 {
     /**
-     * @throws SkipTypecastException
+     * @throws SkipTypeCastException
      */
     public function cast(mixed $value, ?ReflectionType $type, Hydrator $hydrator): mixed;
 }

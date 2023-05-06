@@ -24,7 +24,7 @@ final class HydratorTest extends TestCase
         $this->assertSame(3, $model->c);
     }
 
-    public function dataTypecast(): array
+    public function dataTypeCast(): array
     {
         return [
             // int|string
@@ -37,7 +37,7 @@ final class HydratorTest extends TestCase
                 ['intString' => '42'],
             ],
 
-            // intersection typecast is not supported
+            // intersection type casting is not supported
             'intersection' => [
                 ['intersection' => 'red car'],
                 ['intersection' => new StringableCar('yellow')],
@@ -46,9 +46,9 @@ final class HydratorTest extends TestCase
     }
 
     /**
-     * @dataProvider dataTypecast
+     * @dataProvider dataTypeCast
      */
-    public function testTypecast(array $expectedValues, array $data): void
+    public function testTypeCast(array $expectedValues, array $data): void
     {
         $model = new TypeModel();
 

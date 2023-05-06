@@ -30,11 +30,11 @@ use Yiisoft\Hydrator\Tests\Support\Model\TypeModel;
 use Yiisoft\Hydrator\Tests\Support\Model\NestedModel\UserModel;
 use Yiisoft\Hydrator\Tests\Support\Model\PreparePropertyModel;
 use Yiisoft\Hydrator\Tests\Support\Model\SimpleModel;
-use Yiisoft\Hydrator\Tests\Support\String42Typecaster;
+use Yiisoft\Hydrator\Tests\Support\String42TypeCaster;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
-use Yiisoft\Hydrator\Typecaster\CompositeTypecaster;
-use Yiisoft\Hydrator\Typecaster\NoTypecaster;
-use Yiisoft\Hydrator\Typecaster\SimpleTypecaster;
+use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class HydratorTest extends TestCase
@@ -197,7 +197,7 @@ final class HydratorTest extends TestCase
         $this->assertSame('Mike Li', $model->getName());
     }
 
-    public function dataTypecast(): array
+    public function dataTypeCast(): array
     {
         return [
 
@@ -378,9 +378,9 @@ final class HydratorTest extends TestCase
     }
 
     /**
-     * @dataProvider dataTypecast
+     * @dataProvider dataTypeCast
      */
-    public function testTypecast(array $expectedValues, array $data, ?callable $prepareCallable = null): void
+    public function testTypeCast(array $expectedValues, array $data, ?callable $prepareCallable = null): void
     {
         $model = new TypeModel();
         if ($prepareCallable !== null) {
@@ -419,7 +419,7 @@ final class HydratorTest extends TestCase
         );
     }
 
-    public function dataConstructorTypecast(): array
+    public function dataConstructorTypeCast(): array
     {
         return [
             'array-to-int' => [
@@ -430,9 +430,9 @@ final class HydratorTest extends TestCase
     }
 
     /**
-     * @dataProvider dataConstructorTypecast
+     * @dataProvider dataConstructorTypeCast
      */
-    public function testConstructorTypecast(array $expectedValues, array $data): void
+    public function testConstructorTypeCast(array $expectedValues, array $data): void
     {
         $hydrator = new Hydrator(new SimpleContainer());
         $model = $hydrator->create(ConstructorTypeModel::class, $data);
@@ -452,13 +452,13 @@ final class HydratorTest extends TestCase
         );
     }
 
-    public function testCustomTypecast(): void
+    public function testCustomTypeCast(): void
     {
         $service = new Hydrator(
             new SimpleContainer(),
-            new CompositeTypecaster(
-                new String42Typecaster(),
-                new SimpleTypecaster(),
+            new CompositeTypeCaster(
+                new String42TypeCaster(),
+                new SimpleTypeCaster(),
             ),
         );
 
@@ -469,13 +469,13 @@ final class HydratorTest extends TestCase
         $this->assertSame(7, $model->int);
     }
 
-    public function testCompositeTypecastWithoutCast(): void
+    public function testCompositeTypeCastWithoutCast(): void
     {
         $service = new Hydrator(
             new SimpleContainer(),
-            new CompositeTypecaster(
-                new String42Typecaster(),
-                new SimpleTypecaster(),
+            new CompositeTypeCaster(
+                new String42TypeCaster(),
+                new SimpleTypeCaster(),
             ),
         );
 
@@ -493,7 +493,7 @@ final class HydratorTest extends TestCase
             new SimpleContainer([
                 FromPredefinedArrayResolver::class => $resolver
             ]),
-            new NoTypecaster()
+            new NoTypeCaster()
         );
 
         $model = new class() {
@@ -536,7 +536,7 @@ final class HydratorTest extends TestCase
                     new SimpleContainer(['stringable42' => new StringableObject('42')])
                 )
             ]),
-            typecaster: new NoTypecaster(),
+            typeCaster: new NoTypeCaster(),
         );
 
         $model = $service->create(ConstructorParameterAttributesModel::class, ['a' => 7]);
@@ -545,7 +545,7 @@ final class HydratorTest extends TestCase
         $this->assertSame('42', $model->getString());
     }
 
-    public function testTypecastAfterAttribute(): void
+    public function testTypeCastAfterAttribute(): void
     {
         $service = new Hydrator(new SimpleContainer());
 

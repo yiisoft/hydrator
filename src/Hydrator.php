@@ -10,7 +10,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
 use Yiisoft\Hydrator\Attribute\SkipHydration;
-use Yiisoft\Hydrator\Typecaster\SimpleTypecaster;
+use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 use Yiisoft\Injector\Injector;
 
 use function array_key_exists;
@@ -22,16 +22,16 @@ use function in_array;
 final class Hydrator implements HydratorInterface
 {
     private Injector $injector;
-    private TypecasterInterface $typecaster;
+    private TypeCasterInterface $typeCaster;
     private DataAttributesHandler $dataAttributesHandler;
     private ParameterAttributesHandler $parameterAttributesHandler;
 
     public function __construct(
         ContainerInterface   $container,
-        ?TypecasterInterface $typecaster = null,
+        ?TypeCasterInterface $typeCaster = null,
     ) {
         $this->injector = new Injector($container);
-        $this->typecaster = $typecaster ?? new SimpleTypecaster();
+        $this->typeCaster = $typeCaster ?? new SimpleTypeCaster();
         $this->dataAttributesHandler = new DataAttributesHandler($container);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($container);
     }
@@ -106,12 +106,12 @@ final class Hydrator implements HydratorInterface
 
             if ($resolved) {
                 try {
-                    $constructorArguments[$parameterName] = $this->typecaster->cast(
+                    $constructorArguments[$parameterName] = $this->typeCaster->cast(
                         $resolvedValue,
                         $parameter->getType(),
                         $this
                     );
-                } catch (SkipTypecastException) {
+                } catch (SkipTypeCastException) {
                 }
             }
         }
@@ -164,8 +164,8 @@ final class Hydrator implements HydratorInterface
 
             if ($resolved) {
                 try {
-                    $hydrateData[$propertyName] = $this->typecaster->cast($resolvedValue, $property->getType(), $this);
-                } catch (SkipTypecastException) {
+                    $hydrateData[$propertyName] = $this->typeCaster->cast($resolvedValue, $property->getType(), $this);
+                } catch (SkipTypeCastException) {
                 }
             }
         }

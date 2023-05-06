@@ -7,10 +7,10 @@ namespace Yiisoft\Hydrator\Tests\Support;
 use ReflectionNamedType;
 use ReflectionType;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\SkipTypecastException;
-use Yiisoft\Hydrator\TypecasterInterface;
+use Yiisoft\Hydrator\SkipTypeCastException;
+use Yiisoft\Hydrator\TypeCasterInterface;
 
-final class String42Typecaster implements TypecasterInterface
+final class String42TypeCaster implements TypeCasterInterface
 {
     public function cast(mixed $value, ?ReflectionType $type, Hydrator $hydrator): mixed
     {
@@ -21,6 +21,6 @@ final class String42Typecaster implements TypecasterInterface
             return '42';
         }
 
-        throw new SkipTypecastException();
+        throw new SkipTypeCastException();
     }
 }
