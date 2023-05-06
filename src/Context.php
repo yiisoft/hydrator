@@ -23,7 +23,8 @@ final class Context
         private mixed $resolvedValue,
         private array $data,
         private array $map,
-    ) {}
+    ) {
+    }
 
     public function getParameter(): ReflectionParameter|ReflectionProperty
     {
@@ -41,7 +42,7 @@ final class Context
     }
 
     /**
-     * @param string[]|string|null $key
+     * @param string|string[]|null $key
      * @throws NotResolvedException
      */
     public function getData(array|string|null $key): mixed

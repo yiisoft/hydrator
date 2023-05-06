@@ -19,7 +19,7 @@ final class DataTest extends TestCase
     {
         $service = new Hydrator(new SimpleContainer());
 
-        $model = new class() {
+        $model = new class () {
             #[Data('a')]
             public ?int $x = null;
 
@@ -45,7 +45,7 @@ final class DataTest extends TestCase
     {
         $service = new Hydrator(new SimpleContainer());
 
-        $model = new class() {
+        $model = new class () {
             #[Data]
             public array $data = [];
         };
@@ -62,7 +62,7 @@ final class DataTest extends TestCase
     {
         $service = new Hydrator(new SimpleContainer());
 
-        $model = new class() {
+        $model = new class () {
             #[Data('nested.n')]
             public ?int $y = null;
 
@@ -90,7 +90,7 @@ final class DataTest extends TestCase
     {
         $service = new Hydrator(new SimpleContainer());
 
-        $model = new class() {
+        $model = new class () {
             #[Data('a')]
             public ?int $x = null;
 

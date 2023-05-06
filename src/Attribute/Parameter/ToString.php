@@ -12,8 +12,6 @@ use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
-use function is_null;
-
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
 final class ToString implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
@@ -30,7 +28,7 @@ final class ToString implements ParameterAttributeInterface, ParameterAttributeR
 
         if ($context->isResolved()) {
             $resolvedValue = $context->getResolvedValue();
-            if (is_scalar($resolvedValue) || is_null($resolvedValue) || $resolvedValue instanceof Stringable) {
+            if (is_scalar($resolvedValue) || null === $resolvedValue || $resolvedValue instanceof Stringable) {
                 return (string) $resolvedValue;
             }
             return '';

@@ -16,5 +16,6 @@ final class SkipHydrationModel
         #[SkipHydration]
         public ?int $c = null,
         public ?int $d = null,
-    ) {}
+    ) {
+    }
 }

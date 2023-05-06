@@ -12,7 +12,8 @@ final class Counter implements ParameterAttributeInterface
 {
     public function __construct(
         private string $key
-    ) {}
+    ) {
+    }
 
     public function getKey(): string
     {

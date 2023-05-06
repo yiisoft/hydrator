@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
@@ -6,7 +7,7 @@ namespace Yiisoft\Hydrator;
 interface ParameterAttributeInterface
 {
     /**
-     * @return string|ParameterAttributeResolverInterface
+     * @return ParameterAttributeResolverInterface|string
      */
     public function getResolver(): string|ParameterAttributeResolverInterface;
 }

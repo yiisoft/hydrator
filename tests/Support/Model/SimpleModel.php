@@ -12,8 +12,7 @@ final class SimpleModel
         private string $a = '.',
         private string $b = '.',
         string $c = '.',
-    )
-    {
+    ) {
         $this->c = $c;
     }
 

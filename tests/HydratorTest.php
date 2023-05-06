@@ -200,7 +200,6 @@ final class HydratorTest extends TestCase
     public function dataTypeCast(): array
     {
         return [
-
             // Integer
             'int-to-int' => [
                 ['int' => 42],
@@ -491,12 +490,12 @@ final class HydratorTest extends TestCase
 
         $service = new Hydrator(
             new SimpleContainer([
-                FromPredefinedArrayResolver::class => $resolver
+                FromPredefinedArrayResolver::class => $resolver,
             ]),
             new NoTypeCaster()
         );
 
-        $model = new class() {
+        $model = new class () {
             #[FromPredefinedArray('number')]
             #[ToString]
             public string $a;
@@ -515,7 +514,7 @@ final class HydratorTest extends TestCase
 
         $service = new Hydrator(
             new SimpleContainer([
-                FromPredefinedArrayResolver::class => $resolver
+                FromPredefinedArrayResolver::class => $resolver,
             ]),
         );
 
@@ -534,7 +533,7 @@ final class HydratorTest extends TestCase
             new SimpleContainer([
                 DiResolver::class => new DiResolver(
                     new SimpleContainer(['stringable42' => new StringableObject('42')])
-                )
+                ),
             ]),
             typeCaster: new NoTypeCaster(),
         );
@@ -549,14 +548,15 @@ final class HydratorTest extends TestCase
     {
         $service = new Hydrator(new SimpleContainer());
 
-        $model = new class() {
+        $model = new class () {
             #[Data('a')]
             public ?string $x = null;
 
             public function __construct(
                 #[Data('b')]
                 public ?string $y = null,
-            ) {}
+            ) {
+            }
         };
 
         $service->hydrate(
@@ -598,7 +598,7 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = new class() {
+        $object = new class () {
             public ?int $value = null;
         };
         $hydrator->hydrate($object, ['a' => ['b' => 23]], ['value' => 'a.b.c']);
@@ -614,7 +614,7 @@ final class HydratorTest extends TestCase
             ])
         );
 
-        $object = new class() {
+        $object = new class () {
             #[InvalidParameterResolver]
             public int $value;
         };

@@ -13,7 +13,8 @@ final class FromPredefinedArray implements ParameterAttributeInterface, DataAttr
 {
     public function __construct(
         private ?string $key = null
-    ) {}
+    ) {
+    }
 
     public function getKey(): ?string
     {

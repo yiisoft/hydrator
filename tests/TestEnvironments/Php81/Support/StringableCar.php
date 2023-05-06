@@ -10,8 +10,7 @@ final class StringableCar implements CarInterface, Stringable
 {
     public function __construct(
         private string $color,
-    )
-    {
+    ) {
     }
 
     public function getColor(): string

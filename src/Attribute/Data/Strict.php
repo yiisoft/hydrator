@@ -15,7 +15,8 @@ final class Strict implements DataAttributeInterface, DataAttributeResolverInter
 {
     public function __construct(
         private bool $strict = true,
-    ) {}
+    ) {
+    }
 
     public function getResolver(): self
     {

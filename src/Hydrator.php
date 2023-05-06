@@ -27,7 +27,7 @@ final class Hydrator implements HydratorInterface
     private ParameterAttributesHandler $parameterAttributesHandler;
 
     public function __construct(
-        ContainerInterface   $container,
+        ContainerInterface $container,
         ?TypeCasterInterface $typeCaster = null,
     ) {
         $this->injector = new Injector($container);

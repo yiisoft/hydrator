@@ -11,9 +11,7 @@ final class ReadonlyModel
     public function __construct(
         public readonly int $b = 0,
         public int $c = 0,
-    )
-    {
+    ) {
         $this->a = 99;
     }
 }
-
