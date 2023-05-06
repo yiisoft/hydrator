@@ -30,11 +30,11 @@ use Yiisoft\Hydrator\Tests\Support\Model\TypeModel;
 use Yiisoft\Hydrator\Tests\Support\Model\NestedModel\UserModel;
 use Yiisoft\Hydrator\Tests\Support\Model\PreparePropertyModel;
 use Yiisoft\Hydrator\Tests\Support\Model\SimpleModel;
-use Yiisoft\Hydrator\Tests\Support\String42Typecast;
+use Yiisoft\Hydrator\Tests\Support\String42Typecaster;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
-use Yiisoft\Hydrator\Typecast\CompositeTypecast;
-use Yiisoft\Hydrator\Typecast\NoTypecast;
-use Yiisoft\Hydrator\Typecast\SimpleTypecast;
+use Yiisoft\Hydrator\Typecaster\CompositeTypecaster;
+use Yiisoft\Hydrator\Typecaster\NoTypecaster;
+use Yiisoft\Hydrator\Typecaster\SimpleTypecaster;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class HydratorTest extends TestCase
@@ -456,9 +456,9 @@ final class HydratorTest extends TestCase
     {
         $service = new Hydrator(
             new SimpleContainer(),
-            new CompositeTypecast(
-                new String42Typecast(),
-                new SimpleTypecast(),
+            new CompositeTypecaster(
+                new String42Typecaster(),
+                new SimpleTypecaster(),
             ),
         );
 
@@ -473,9 +473,9 @@ final class HydratorTest extends TestCase
     {
         $service = new Hydrator(
             new SimpleContainer(),
-            new CompositeTypecast(
-                new String42Typecast(),
-                new SimpleTypecast(),
+            new CompositeTypecaster(
+                new String42Typecaster(),
+                new SimpleTypecaster(),
             ),
         );
 
@@ -493,7 +493,7 @@ final class HydratorTest extends TestCase
             new SimpleContainer([
                 FromPredefinedArrayResolver::class => $resolver
             ]),
-            new NoTypecast()
+            new NoTypecaster()
         );
 
         $model = new class() {
@@ -536,7 +536,7 @@ final class HydratorTest extends TestCase
                     new SimpleContainer(['stringable42' => new StringableObject('42')])
                 )
             ]),
-            typecast: new NoTypecast(),
+            typecaster: new NoTypecaster(),
         );
 
         $model = $service->create(ConstructorParameterAttributesModel::class, ['a' => 7]);

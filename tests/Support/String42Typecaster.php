@@ -8,9 +8,9 @@ use ReflectionNamedType;
 use ReflectionType;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\SkipTypecastException;
-use Yiisoft\Hydrator\TypecastInterface;
+use Yiisoft\Hydrator\TypecasterInterface;
 
-final class String42Typecast implements TypecastInterface
+final class String42Typecaster implements TypecasterInterface
 {
     public function cast(mixed $value, ?ReflectionType $type, Hydrator $hydrator): mixed
     {

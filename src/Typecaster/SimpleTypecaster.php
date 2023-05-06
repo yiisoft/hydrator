@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Typecast;
+namespace Yiisoft\Hydrator\Typecaster;
 
 use ReflectionClass;
 use ReflectionNamedType;
@@ -11,7 +11,7 @@ use ReflectionUnionType;
 use Stringable;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\SkipTypecastException;
-use Yiisoft\Hydrator\TypecastInterface;
+use Yiisoft\Hydrator\TypecasterInterface;
 use Yiisoft\Strings\NumericHelper;
 
 use function is_array;
@@ -22,7 +22,7 @@ use function is_null;
 use function is_object;
 use function is_string;
 
-final class SimpleTypecast implements TypecastInterface
+final class SimpleTypecaster implements TypecasterInterface
 {
     public function cast(mixed $value, ?ReflectionType $type, Hydrator $hydrator): mixed
     {

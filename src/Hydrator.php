@@ -10,7 +10,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
 use Yiisoft\Hydrator\Attribute\SkipHydration;
-use Yiisoft\Hydrator\Typecast\SimpleTypecast;
+use Yiisoft\Hydrator\Typecaster\SimpleTypecaster;
 use Yiisoft\Injector\Injector;
 
 use function array_key_exists;
@@ -22,16 +22,16 @@ use function in_array;
 final class Hydrator implements HydratorInterface
 {
     private Injector $injector;
-    private TypecastInterface $typecast;
+    private TypecasterInterface $typecaster;
     private DataAttributesHandler $dataAttributesHandler;
     private ParameterAttributesHandler $parameterAttributesHandler;
 
     public function __construct(
-        ContainerInterface $container,
-        ?TypecastInterface $typecast = null,
+        ContainerInterface   $container,
+        ?TypecasterInterface $typecaster = null,
     ) {
         $this->injector = new Injector($container);
-        $this->typecast = $typecast ?? new SimpleTypecast();
+        $this->typecaster = $typecaster ?? new SimpleTypecaster();
         $this->dataAttributesHandler = new DataAttributesHandler($container);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($container);
     }
@@ -106,7 +106,7 @@ final class Hydrator implements HydratorInterface
 
             if ($resolved) {
                 try {
-                    $constructorArguments[$parameterName] = $this->typecast->cast(
+                    $constructorArguments[$parameterName] = $this->typecaster->cast(
                         $resolvedValue,
                         $parameter->getType(),
                         $this
@@ -164,7 +164,7 @@ final class Hydrator implements HydratorInterface
 
             if ($resolved) {
                 try {
-                    $hydrateData[$propertyName] = $this->typecast->cast($resolvedValue, $property->getType(), $this);
+                    $hydrateData[$propertyName] = $this->typecaster->cast($resolvedValue, $property->getType(), $this);
                 } catch (SkipTypecastException) {
                 }
             }

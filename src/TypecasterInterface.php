@@ -5,7 +5,7 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionType;
 
-interface TypecastInterface
+interface TypecasterInterface
 {
     /**
      * @throws SkipTypecastException
