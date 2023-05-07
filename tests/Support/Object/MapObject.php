@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Model;
+namespace Yiisoft\Hydrator\Tests\Support\Object;
 
 use Yiisoft\Hydrator\Attribute\Data\Map;
 use Yiisoft\Hydrator\Tests\Support\CustomData;
@@ -15,7 +15,7 @@ use Yiisoft\Hydrator\Tests\Support\CustomData;
     'a' => 'x',
     'b' => 'y',
 ])]
-final class MapModel
+final class MapObject
 {
     public string $a;
     public string $b;

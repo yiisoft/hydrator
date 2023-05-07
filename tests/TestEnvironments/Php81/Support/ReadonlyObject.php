@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support;
 
-final class ReadonlyModel
+final class ReadonlyObject
 {
     public readonly int $a;
 

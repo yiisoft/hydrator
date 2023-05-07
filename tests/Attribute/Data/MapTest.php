@@ -9,8 +9,8 @@ use Yiisoft\Hydrator\Attribute\Data\Map;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
-use Yiisoft\Hydrator\Tests\Support\Model\FromPredefinedArrayModel;
-use Yiisoft\Hydrator\Tests\Support\Model\MapModel;
+use Yiisoft\Hydrator\Tests\Support\Object\FromPredefinedArrayObject;
+use Yiisoft\Hydrator\Tests\Support\Object\MapObject;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -20,10 +20,10 @@ final class MapTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $hydrator->create(MapModel::class);
+        $object = $hydrator->create(MapObject::class);
 
-        $this->assertSame('1', $model->a);
-        $this->assertSame('2', $model->b);
+        $this->assertSame('1', $object->a);
+        $this->assertSame('2', $object->b);
     }
 
     public function testUnexpectedAttributeException(): void
@@ -32,10 +32,10 @@ final class MapTest extends TestCase
             new SimpleContainer([FromPredefinedArrayResolver::class => new Map([])])
         );
 
-        $model = new FromPredefinedArrayModel();
+        $object = new FromPredefinedArrayObject();
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage('Expected "' . Map::class . '", but "' . FromPredefinedArray::class . '" given.');
-        $hydrator->hydrate($model);
+        $hydrator->hydrate($object);
     }
 }

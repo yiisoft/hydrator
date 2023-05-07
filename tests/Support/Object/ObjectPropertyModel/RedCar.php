@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Model\ObjectPropertyModel;
+namespace Yiisoft\Hydrator\Tests\Support\Object\ObjectPropertyModel;
 
 final class RedCar extends Car
 {

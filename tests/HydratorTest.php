@@ -18,18 +18,18 @@ use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\InvalidParameterResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\NotResolver;
-use Yiisoft\Hydrator\Tests\Support\Model\ConstructorParameterAttributesModel;
-use Yiisoft\Hydrator\Tests\Support\Model\ConstructorTypeModel;
-use Yiisoft\Hydrator\Tests\Support\Model\CounterModel;
-use Yiisoft\Hydrator\Tests\Support\Model\FromPredefinedArrayModel;
-use Yiisoft\Hydrator\Tests\Support\Model\InvalidDataResolverModel;
-use Yiisoft\Hydrator\Tests\Support\Model\ObjectPropertyModel\ObjectPropertyModel;
-use Yiisoft\Hydrator\Tests\Support\Model\ObjectPropertyModel\RedCar;
-use Yiisoft\Hydrator\Tests\Support\Model\StaticModel;
-use Yiisoft\Hydrator\Tests\Support\Model\TypeModel;
-use Yiisoft\Hydrator\Tests\Support\Model\NestedModel\UserModel;
-use Yiisoft\Hydrator\Tests\Support\Model\PreparePropertyModel;
-use Yiisoft\Hydrator\Tests\Support\Model\SimpleModel;
+use Yiisoft\Hydrator\Tests\Support\Object\ConstructorParameterAttributesObject;
+use Yiisoft\Hydrator\Tests\Support\Object\ConstructorTypeObject;
+use Yiisoft\Hydrator\Tests\Support\Object\CounterObject;
+use Yiisoft\Hydrator\Tests\Support\Object\FromPredefinedArrayObject;
+use Yiisoft\Hydrator\Tests\Support\Object\InvalidDataResolverObject;
+use Yiisoft\Hydrator\Tests\Support\Object\ObjectPropertyModel\ObjectPropertyModel;
+use Yiisoft\Hydrator\Tests\Support\Object\ObjectPropertyModel\RedCar;
+use Yiisoft\Hydrator\Tests\Support\Object\StaticObject;
+use Yiisoft\Hydrator\Tests\Support\Object\TypeObject;
+use Yiisoft\Hydrator\Tests\Support\Object\NestedModel\UserModel;
+use Yiisoft\Hydrator\Tests\Support\Object\PreparePropertyObject;
+use Yiisoft\Hydrator\Tests\Support\Object\SimpleObject;
 use Yiisoft\Hydrator\Tests\Support\String42TypeCaster;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
@@ -41,64 +41,64 @@ final class HydratorTest extends TestCase
 {
     public function testSimpleCreate(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $service->create(
-            SimpleModel::class,
+        $object = $hydrator->create(
+            SimpleObject::class,
             ['a' => '1', 'b' => '2', 'c' => '3'],
         );
 
-        $this->assertSame('1', $model->getA());
-        $this->assertSame('2', $model->getB());
-        $this->assertSame('3', $model->getC());
+        $this->assertSame('1', $object->getA());
+        $this->assertSame('2', $object->getB());
+        $this->assertSame('3', $object->getC());
     }
 
     public function testSimpleHydrate(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = new SimpleModel();
-        $service->hydrate(
-            $model,
+        $object = new SimpleObject();
+        $hydrator->hydrate(
+            $object,
             ['a' => '1', 'b' => '2', 'c' => '3'],
         );
 
-        $this->assertSame('1', $model->getA());
-        $this->assertSame('2', $model->getB());
-        $this->assertSame('3', $model->getC());
+        $this->assertSame('1', $object->getA());
+        $this->assertSame('2', $object->getB());
+        $this->assertSame('3', $object->getC());
     }
 
     public function testSimpleCreateStrict(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $service->create(
-            SimpleModel::class,
+        $object = $hydrator->create(
+            SimpleObject::class,
             ['a' => '1', 'b' => '2', 'c' => '3'],
             ['b' => 'b'],
             true,
         );
 
-        $this->assertSame('.', $model->getA());
-        $this->assertSame('2', $model->getB());
-        $this->assertSame('.', $model->getC());
+        $this->assertSame('.', $object->getA());
+        $this->assertSame('2', $object->getB());
+        $this->assertSame('.', $object->getC());
     }
 
     public function testSimpleHydrateStrict(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = new SimpleModel();
-        $service->hydrate(
-            $model,
+        $object = new SimpleObject();
+        $hydrator->hydrate(
+            $object,
             ['a' => '1', 'b' => '2', 'c' => '3'],
             ['b' => 'b'],
             true,
         );
 
-        $this->assertSame('.', $model->getA());
-        $this->assertSame('2', $model->getB());
-        $this->assertSame('.', $model->getC());
+        $this->assertSame('.', $object->getA());
+        $this->assertSame('2', $object->getB());
+        $this->assertSame('.', $object->getC());
     }
 
     public function dataSimpleHydrateWithMap(): array
@@ -132,38 +132,38 @@ final class HydratorTest extends TestCase
      */
     public function testSimpleHydrateWithMap(array $data, array $map): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = new SimpleModel();
-        $service->hydrate($model, $data, $map);
+        $object = new SimpleObject();
+        $hydrator->hydrate($object, $data, $map);
 
-        $this->assertSame('1', $model->getA());
-        $this->assertSame('2', $model->getB());
-        $this->assertSame('3', $model->getC());
+        $this->assertSame('1', $object->getA());
+        $this->assertSame('2', $object->getB());
+        $this->assertSame('3', $object->getC());
     }
 
     public function testPrepareProperty(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $service->create(PreparePropertyModel::class, ['a' => 'test']);
+        $object = $hydrator->create(PreparePropertyObject::class, ['a' => 'test']);
 
-        $this->assertSame('test!', $model->getA());
+        $this->assertSame('test!', $object->getA());
     }
 
-    public function testCreateNestedModel(): void
+    public function testCreateNestedObject(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $service->create(
+        $object = $hydrator->create(
             UserModel::class,
             ['name.first' => 'Mike', 'name' => ['last' => 'Li']]
         );
 
-        $this->assertSame('Mike Li', $model->getName());
+        $this->assertSame('Mike Li', $object->getName());
     }
 
-    public function dataCreateNestedModelWithMap(): array
+    public function dataCreateNestedObjectWithMap(): array
     {
         return [
             [
@@ -186,15 +186,15 @@ final class HydratorTest extends TestCase
     }
 
     /**
-     * @dataProvider dataCreateNestedModelWithMap
+     * @dataProvider dataCreateNestedObjectWithMap
      */
-    public function testCreateNestedModelWithMap(array $data, array $map): void
+    public function testCreateNestedObjectWithMap(array $data, array $map): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $service->create(UserModel::class, $data, $map);
+        $object = $hydrator->create(UserModel::class, $data, $map);
 
-        $this->assertSame('Mike Li', $model->getName());
+        $this->assertSame('Mike Li', $object->getName());
     }
 
     public function dataTypeCast(): array
@@ -304,7 +304,7 @@ final class HydratorTest extends TestCase
             'null-to-bool' => [
                 ['bool' => false],
                 ['bool' => null],
-                fn(TypeModel $model) => $model->bool = true,
+                fn(TypeObject $object) => $object->bool = true,
             ],
             'object-to-bool' => [
                 ['bool' => true],
@@ -313,7 +313,7 @@ final class HydratorTest extends TestCase
             'resource-to-bool' => [
                 ['bool' => true],
                 ['bool' => tmpfile()],
-                fn(TypeModel $model) => $model->bool = true,
+                fn(TypeObject $object) => $object->bool = true,
             ],
 
             // Float
@@ -381,13 +381,13 @@ final class HydratorTest extends TestCase
      */
     public function testTypeCast(array $expectedValues, array $data, ?callable $prepareCallable = null): void
     {
-        $model = new TypeModel();
+        $object = new TypeObject();
         if ($prepareCallable !== null) {
-            $prepareCallable($model);
+            $prepareCallable($object);
         }
 
-        $service = new Hydrator(new SimpleContainer());
-        $service->hydrate($model, $data);
+        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator->hydrate($object, $data);
 
         $expectedValues = array_merge(
             [
@@ -406,14 +406,14 @@ final class HydratorTest extends TestCase
         $this->assertSame(
             $expectedValues,
             [
-                'noType' => $model->noType,
-                'int' => $model->int,
-                'intNullable' => $model->intNullable,
-                'string' => $model->string,
-                'stringNullable' => $model->stringNullable,
-                'bool' => $model->bool,
-                'float' => $model->float,
-                'array' => $model->array,
+                'noType' => $object->noType,
+                'int' => $object->int,
+                'intNullable' => $object->intNullable,
+                'string' => $object->string,
+                'stringNullable' => $object->stringNullable,
+                'bool' => $object->bool,
+                'float' => $object->float,
+                'array' => $object->array,
             ]
         );
     }
@@ -434,7 +434,7 @@ final class HydratorTest extends TestCase
     public function testConstructorTypeCast(array $expectedValues, array $data): void
     {
         $hydrator = new Hydrator(new SimpleContainer());
-        $model = $hydrator->create(ConstructorTypeModel::class, $data);
+        $object = $hydrator->create(ConstructorTypeObject::class, $data);
 
         $expectedValues = array_merge(
             [
@@ -446,14 +446,14 @@ final class HydratorTest extends TestCase
         $this->assertSame(
             $expectedValues,
             [
-                'int' => $model->int,
+                'int' => $object->int,
             ]
         );
     }
 
     public function testCustomTypeCast(): void
     {
-        $service = new Hydrator(
+        $hydrator = new Hydrator(
             new SimpleContainer(),
             new CompositeTypeCaster(
                 new String42TypeCaster(),
@@ -461,16 +461,16 @@ final class HydratorTest extends TestCase
             ),
         );
 
-        $model = new TypeModel();
-        $service->hydrate($model, ['string' => 'test', 'int' => 7]);
+        $object = new TypeObject();
+        $hydrator->hydrate($object, ['string' => 'test', 'int' => 7]);
 
-        $this->assertSame('42', $model->string);
-        $this->assertSame(7, $model->int);
+        $this->assertSame('42', $object->string);
+        $this->assertSame(7, $object->int);
     }
 
     public function testCompositeTypeCastWithoutCast(): void
     {
-        $service = new Hydrator(
+        $hydrator = new Hydrator(
             new SimpleContainer(),
             new CompositeTypeCaster(
                 new String42TypeCaster(),
@@ -478,24 +478,24 @@ final class HydratorTest extends TestCase
             ),
         );
 
-        $model = new TypeModel();
-        $service->hydrate($model, ['int' => new stdClass()]);
+        $object = new TypeObject();
+        $hydrator->hydrate($object, ['int' => new stdClass()]);
 
-        $this->assertSame(-1, $model->int);
+        $this->assertSame(-1, $object->int);
     }
 
     public function testWithPropertyAttributeResolver(): void
     {
         $resolver = new FromPredefinedArrayResolver();
 
-        $service = new Hydrator(
+        $hydrator = new Hydrator(
             new SimpleContainer([
                 FromPredefinedArrayResolver::class => $resolver,
             ]),
             new NoTypeCaster()
         );
 
-        $model = new class () {
+        $object = new class () {
             #[FromPredefinedArray('number')]
             #[ToString]
             public string $a;
@@ -503,33 +503,33 @@ final class HydratorTest extends TestCase
 
         $resolver->setArray(['number' => 42]);
 
-        $service->hydrate($model);
+        $hydrator->hydrate($object);
 
-        $this->assertSame('42', $model->a);
+        $this->assertSame('42', $object->a);
     }
 
     public function testWithClassAttributeResolver(): void
     {
         $resolver = new FromPredefinedArrayResolver();
 
-        $service = new Hydrator(
+        $hydrator = new Hydrator(
             new SimpleContainer([
                 FromPredefinedArrayResolver::class => $resolver,
             ]),
         );
 
-        $model = new FromPredefinedArrayModel();
+        $object = new FromPredefinedArrayObject();
 
         $resolver->setArray(['a' => 42]);
 
-        $service->hydrate($model);
+        $hydrator->hydrate($object);
 
-        $this->assertSame('42', $model->a);
+        $this->assertSame('42', $object->a);
     }
 
     public function testConstructorParameterAttributes(): void
     {
-        $service = new Hydrator(
+        $hydrator = new Hydrator(
             new SimpleContainer([
                 DiResolver::class => new DiResolver(
                     new SimpleContainer(['stringable42' => new StringableObject('42')])
@@ -538,17 +538,17 @@ final class HydratorTest extends TestCase
             typeCaster: new NoTypeCaster(),
         );
 
-        $model = $service->create(ConstructorParameterAttributesModel::class, ['a' => 7]);
+        $object = $hydrator->create(ConstructorParameterAttributesObject::class, ['a' => 7]);
 
-        $this->assertSame('7', $model->getA());
-        $this->assertSame('42', $model->getString());
+        $this->assertSame('7', $object->getA());
+        $this->assertSame('42', $object->getString());
     }
 
     public function testTypeCastAfterAttribute(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = new class () {
+        $object = new class () {
             #[Data('a')]
             public ?string $x = null;
 
@@ -559,26 +559,26 @@ final class HydratorTest extends TestCase
             }
         };
 
-        $service->hydrate(
-            $model,
+        $hydrator->hydrate(
+            $object,
             data: [
                 'a' => 1,
                 'b' => 2,
             ],
         );
 
-        $this->assertSame('1', $model->x);
-        $this->assertSame('2', $model->y);
+        $this->assertSame('1', $object->x);
+        $this->assertSame('2', $object->y);
     }
 
     public function testCountParameterAttributeHandle(): void
     {
         $counterResolver = new CounterResolver();
-        $service = new Hydrator(
+        $hydrator = new Hydrator(
             new SimpleContainer([CounterResolver::class => $counterResolver])
         );
 
-        $service->create(CounterModel::class);
+        $hydrator->create(CounterObject::class);
 
         $this->assertSame(1, $counterResolver->getCount('a'));
         $this->assertSame(1, $counterResolver->getCount('b'));
@@ -589,9 +589,9 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $hydrator->create(ObjectPropertyModel::class, ['car' => new RedCar()]);
+        $object = $hydrator->create(ObjectPropertyModel::class, ['car' => new RedCar()]);
 
-        $this->assertSame('red', $model->car->getColor());
+        $this->assertSame('red', $object->car->getColor());
     }
 
     public function testNonExistPath(): void
@@ -644,16 +644,16 @@ final class HydratorTest extends TestCase
             '" must implement "' .
             DataAttributeResolverInterface::class . '".'
         );
-        $hydrator->create(InvalidDataResolverModel::class);
+        $hydrator->create(InvalidDataResolverObject::class);
     }
 
     public function testStaticProperty(): void
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $hydrator->create(StaticModel::class, ['a' => 7, 'b' => 42]);
+        $object = $hydrator->create(StaticObject::class, ['a' => 7, 'b' => 42]);
 
-        $this->assertSame(7, $model->a);
-        $this->assertSame(0, $model::$b);
+        $this->assertSame(7, $object->a);
+        $this->assertSame(0, $object::$b);
     }
 }

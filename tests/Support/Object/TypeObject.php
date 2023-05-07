@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Model;
+namespace Yiisoft\Hydrator\Tests\Support\Object;
 
-final class TypeModel
+final class TypeObject
 {
     public $noType = -1;
     public int $int = -1;

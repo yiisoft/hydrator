@@ -9,7 +9,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
-use Yiisoft\Hydrator\Tests\Support\Model\CounterModel;
+use Yiisoft\Hydrator\Tests\Support\Object\CounterObject;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
@@ -37,28 +37,28 @@ final class ToStringTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer(), new NoTypeCaster());
 
-        $model = new class () {
+        $object = new class () {
             #[ToString]
             public string $a = '...';
         };
 
-        $hydrator->hydrate($model, ['a' => $value]);
+        $hydrator->hydrate($object, ['a' => $value]);
 
-        $this->assertSame($expected, $model->a);
+        $this->assertSame($expected, $object->a);
     }
 
     public function testNotResolved(): void
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = new class () {
+        $object = new class () {
             #[ToString]
             public string $a = '...';
         };
 
-        $hydrator->hydrate($model);
+        $hydrator->hydrate($object);
 
-        $this->assertSame('...', $model->a);
+        $this->assertSame('...', $object->a);
     }
 
     public function testUnexpectedAttributeException(): void
@@ -67,10 +67,10 @@ final class ToStringTest extends TestCase
             new SimpleContainer([CounterResolver::class => new ToString()])
         );
 
-        $model = new CounterModel();
+        $object = new CounterObject();
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage('Expected "' . ToString::class . '", but "' . Counter::class . '" given.');
-        $hydrator->hydrate($model);
+        $hydrator->hydrate($object);
     }
 }

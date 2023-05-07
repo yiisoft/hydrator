@@ -12,7 +12,7 @@ interface HydratorInterface
     /**
      * @psalm-param MapType $map
      */
-    public function hydrate(object $model, array $data = [], array $map = [], bool $strict = false): void;
+    public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void;
 
     /**
      * @psalm-template T

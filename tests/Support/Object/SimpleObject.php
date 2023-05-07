@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Model;
+namespace Yiisoft\Hydrator\Tests\Support\Object;
 
-final class SimpleModel
+final class SimpleObject
 {
     private string $c;
 

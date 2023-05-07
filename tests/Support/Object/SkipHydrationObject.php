@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Model;
+namespace Yiisoft\Hydrator\Tests\Support\Object;
 
 use Yiisoft\Hydrator\Attribute\SkipHydration;
 
-final class SkipHydrationModel
+final class SkipHydrationObject
 {
     #[SkipHydration]
     public ?int $a = null;

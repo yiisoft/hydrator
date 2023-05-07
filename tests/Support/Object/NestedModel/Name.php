@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Model\NestedModel;
+namespace Yiisoft\Hydrator\Tests\Support\Object\NestedModel;
 
 final class Name
 {
