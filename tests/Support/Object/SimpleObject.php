@@ -6,14 +6,8 @@ namespace Yiisoft\Hydrator\Tests\Support\Object;
 
 final class SimpleObject
 {
-    private string $c;
-
-    public function __construct(
-        private string $a = '.',
-        private string $b = '.',
-        string $c = '.',
-    ) {
-        $this->c = $c;
+    public function __construct(private string $a = '.', private string $b = '.', private string $c = '.')
+    {
     }
 
     public function getA(): string
