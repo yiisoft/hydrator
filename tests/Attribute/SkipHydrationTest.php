@@ -6,7 +6,7 @@ namespace Yiisoft\Hydrator\Tests\Attribute;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\Tests\Support\Object\SkipHydrationObject;
+use Yiisoft\Hydrator\Tests\Support\Classes\SkipHydrationClass;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class SkipHydrationTest extends TestCase
@@ -15,7 +15,7 @@ final class SkipHydrationTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = $hydrator->create(SkipHydrationObject::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
+        $object = $hydrator->create(SkipHydrationClass::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
 
         $this->assertNull($object->a);
         $this->assertSame(2, $object->b);

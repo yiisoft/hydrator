@@ -9,7 +9,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
-use Yiisoft\Hydrator\Tests\Support\Object\CounterObject;
+use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -130,7 +130,7 @@ final class DataTest extends TestCase
             new SimpleContainer([CounterResolver::class => new Data()])
         );
 
-        $object = new CounterObject();
+        $object = new CounterClass();
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage('Expected "' . Data::class . '", but "' . Counter::class . '" given.');

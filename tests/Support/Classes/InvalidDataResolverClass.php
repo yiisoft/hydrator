@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Object;
+namespace Yiisoft\Hydrator\Tests\Support\Classes;
 
 use Yiisoft\Hydrator\Tests\Support\Attribute\InvalidDataResolver;
 
 #[InvalidDataResolver]
-final class InvalidDataResolverObject
+final class InvalidDataResolverClass
 {
 }

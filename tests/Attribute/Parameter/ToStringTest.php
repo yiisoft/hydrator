@@ -9,7 +9,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
-use Yiisoft\Hydrator\Tests\Support\Object\CounterObject;
+use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
@@ -67,7 +67,7 @@ final class ToStringTest extends TestCase
             new SimpleContainer([CounterResolver::class => new ToString()])
         );
 
-        $object = new CounterObject();
+        $object = new CounterClass();
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage('Expected "' . ToString::class . '", but "' . Counter::class . '" given.');

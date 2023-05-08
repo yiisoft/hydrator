@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Object;
+namespace Yiisoft\Hydrator\Tests\Support\Classes;
 
 use Stringable;
 use Yiisoft\Hydrator\Attribute\Parameter\Di;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 
-final class ConstructorParameterAttributesObject
+final class ConstructorParameterAttributesClass
 {
     public function __construct(
         #[ToString]

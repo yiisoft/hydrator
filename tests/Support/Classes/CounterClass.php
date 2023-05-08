@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Object;
+namespace Yiisoft\Hydrator\Tests\Support\Classes;
 
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 
-final class CounterObject
+final class CounterClass
 {
     #[Counter('a')]
     private string $a;

@@ -9,8 +9,8 @@ use Yiisoft\Hydrator\Attribute\Data\Strict;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
-use Yiisoft\Hydrator\Tests\Support\Object\FromPredefinedArrayObject;
-use Yiisoft\Hydrator\Tests\Support\Object\StrictObject;
+use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
+use Yiisoft\Hydrator\Tests\Support\Classes\StrictClass;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -20,7 +20,7 @@ final class StrictTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = $hydrator->create(StrictObject::class);
+        $object = $hydrator->create(StrictClass::class);
 
         $this->assertSame('1', $object->a);
         $this->assertSame('2', $object->b);
@@ -33,7 +33,7 @@ final class StrictTest extends TestCase
             new SimpleContainer([FromPredefinedArrayResolver::class => new Strict()])
         );
 
-        $object = new FromPredefinedArrayObject();
+        $object = new FromPredefinedArrayClass();
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage('Expected "' . Strict::class . '", but "' . FromPredefinedArray::class . '" given.');
