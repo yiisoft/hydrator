@@ -6,7 +6,7 @@ namespace Yiisoft\Hydrator\Tests\TestEnvironments\Php81;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\ReadonlyObject;
+use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\ReadonlyClass;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\StringableCar;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\TypeObject;
 use Yiisoft\Test\Support\Container\SimpleContainer;
@@ -17,7 +17,7 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = $hydrator->create(ReadonlyObject::class, ['a' => 1, 'b' => 2, 'c' => 3]);
+        $object = $hydrator->create(ReadonlyClass::class, ['a' => 1, 'b' => 2, 'c' => 3]);
 
         $this->assertSame(99, $object->a);
         $this->assertSame(2, $object->b);
