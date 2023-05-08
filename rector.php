@@ -23,6 +23,6 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->skip([
         ClosureToArrowFunctionRector::class,
-        __DIR__ . '/tests/Support/Model/SimpleObject.php',
+        __DIR__ . '/tests/Support/Object/SimpleObject.php',
     ]);
 };
