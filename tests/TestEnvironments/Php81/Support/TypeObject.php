@@ -6,7 +6,7 @@ namespace Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support;
 
 use Stringable;
 
-final class TypeModel
+final class TypeObject
 {
     public int|string $intString = -1;
     public CarInterface&Stringable $intersection;

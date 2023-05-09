@@ -9,8 +9,8 @@ use Yiisoft\Hydrator\Attribute\Data\Strict;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
-use Yiisoft\Hydrator\Tests\Support\Model\FromPredefinedArrayModel;
-use Yiisoft\Hydrator\Tests\Support\Model\StrictModel;
+use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
+use Yiisoft\Hydrator\Tests\Support\Classes\StrictClass;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -18,13 +18,13 @@ final class StrictTest extends TestCase
 {
     public function testBase(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $service->create(StrictModel::class);
+        $object = $hydrator->create(StrictClass::class);
 
-        $this->assertSame('1', $model->a);
-        $this->assertSame('2', $model->b);
-        $this->assertSame('.', $model->c);
+        $this->assertSame('1', $object->a);
+        $this->assertSame('2', $object->b);
+        $this->assertSame('.', $object->c);
     }
 
     public function testUnexpectedAttributeException(): void
@@ -33,10 +33,10 @@ final class StrictTest extends TestCase
             new SimpleContainer([FromPredefinedArrayResolver::class => new Strict()])
         );
 
-        $model = new FromPredefinedArrayModel();
+        $object = new FromPredefinedArrayClass();
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage('Expected "' . Strict::class . '", but "' . FromPredefinedArray::class . '" given.');
-        $hydrator->hydrate($model);
+        $hydrator->hydrate($object);
     }
 }

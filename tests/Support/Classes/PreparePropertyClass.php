@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Model;
+namespace Yiisoft\Hydrator\Tests\Support\Classes;
 
-final class PreparePropertyModel
+final class PreparePropertyClass
 {
     public function __construct(
         private string $a,

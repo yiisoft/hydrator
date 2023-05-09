@@ -6,20 +6,20 @@ namespace Yiisoft\Hydrator\Tests\Attribute;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\Tests\Support\Model\SkipHydrationModel;
+use Yiisoft\Hydrator\Tests\Support\Classes\SkipHydrationClass;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class SkipHydrationTest extends TestCase
 {
     public function testBase(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $service->create(SkipHydrationModel::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
+        $object = $hydrator->create(SkipHydrationClass::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
 
-        $this->assertNull($model->a);
-        $this->assertSame(2, $model->b);
-        $this->assertNull($model->c);
-        $this->assertSame(4, $model->d);
+        $this->assertNull($object->a);
+        $this->assertSame(2, $object->b);
+        $this->assertNull($object->c);
+        $this->assertSame(4, $object->d);
     }
 }

@@ -9,7 +9,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
-use Yiisoft\Hydrator\Tests\Support\Model\CounterModel;
+use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -17,9 +17,9 @@ final class DataTest extends TestCase
 {
     public function testBase(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = new class () {
+        $object = new class () {
             #[Data('a')]
             public ?int $x = null;
 
@@ -27,8 +27,8 @@ final class DataTest extends TestCase
             public ?int $y = null;
         };
 
-        $service->hydrate(
-            $model,
+        $hydrator->hydrate(
+            $object,
             data: [
                 'a' => 99,
                 'b' => 88,
@@ -37,32 +37,32 @@ final class DataTest extends TestCase
             ],
         );
 
-        $this->assertSame(99, $model->x);
-        $this->assertSame(88, $model->y);
+        $this->assertSame(99, $object->x);
+        $this->assertSame(88, $object->y);
     }
 
     public function testWholeData(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = new class () {
+        $object = new class () {
             #[Data]
             public array $data = [];
         };
 
-        $service->hydrate(
-            $model,
+        $hydrator->hydrate(
+            $object,
             data: ['a' => 1, 'b' => 2],
         );
 
-        $this->assertSame(['a' => 1, 'b' => 2], $model->data);
+        $this->assertSame(['a' => 1, 'b' => 2], $object->data);
     }
 
     public function testPath(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = new class () {
+        $object = new class () {
             #[Data('nested.n')]
             public ?int $y = null;
 
@@ -70,8 +70,8 @@ final class DataTest extends TestCase
             public ?int $z = null;
         };
 
-        $service->hydrate(
-            $model,
+        $hydrator->hydrate(
+            $object,
             data: [
                 'nested' => [
                     'n' => 2,
@@ -82,15 +82,15 @@ final class DataTest extends TestCase
             ],
         );
 
-        $this->assertSame(2, $model->y);
-        $this->assertSame(3, $model->z);
+        $this->assertSame(2, $object->y);
+        $this->assertSame(3, $object->z);
     }
 
     public function testMapping(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = new class () {
+        $object = new class () {
             #[Data('a')]
             public ?int $x = null;
 
@@ -101,8 +101,8 @@ final class DataTest extends TestCase
             public ?int $z = null;
         };
 
-        $service->hydrate(
-            $model,
+        $hydrator->hydrate(
+            $object,
             data: [
                 'value' => 1,
                 'nested' => [
@@ -119,9 +119,9 @@ final class DataTest extends TestCase
             ]
         );
 
-        $this->assertSame(1, $model->x);
-        $this->assertSame(2, $model->y);
-        $this->assertSame(3, $model->z);
+        $this->assertSame(1, $object->x);
+        $this->assertSame(2, $object->y);
+        $this->assertSame(3, $object->z);
     }
 
     public function testUnexpectedAttributeException(): void
@@ -130,10 +130,10 @@ final class DataTest extends TestCase
             new SimpleContainer([CounterResolver::class => new Data()])
         );
 
-        $model = new CounterModel();
+        $object = new CounterClass();
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage('Expected "' . Data::class . '", but "' . Counter::class . '" given.');
-        $hydrator->hydrate($model);
+        $hydrator->hydrate($object);
     }
 }

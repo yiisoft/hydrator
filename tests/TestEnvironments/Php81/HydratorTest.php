@@ -6,22 +6,22 @@ namespace Yiisoft\Hydrator\Tests\TestEnvironments\Php81;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\ReadonlyModel;
+use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\ReadonlyClass;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\StringableCar;
-use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\TypeModel;
+use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\TypeObject;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class HydratorTest extends TestCase
 {
-    public function testReadonlyModel(): void
+    public function testReadonlyObject(): void
     {
-        $service = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator(new SimpleContainer());
 
-        $model = $service->create(ReadonlyModel::class, ['a' => 1, 'b' => 2, 'c' => 3]);
+        $object = $hydrator->create(ReadonlyClass::class, ['a' => 1, 'b' => 2, 'c' => 3]);
 
-        $this->assertSame(99, $model->a);
-        $this->assertSame(2, $model->b);
-        $this->assertSame(3, $model->c);
+        $this->assertSame(99, $object->a);
+        $this->assertSame(2, $object->b);
+        $this->assertSame(3, $object->c);
     }
 
     public function dataTypeCast(): array
@@ -50,10 +50,10 @@ final class HydratorTest extends TestCase
      */
     public function testTypeCast(array $expectedValues, array $data): void
     {
-        $model = new TypeModel();
+        $object = new TypeObject();
 
-        $service = new Hydrator(new SimpleContainer());
-        $service->hydrate($model, $data);
+        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator->hydrate($object, $data);
 
         $expectedValues = array_merge(
             [
@@ -66,8 +66,8 @@ final class HydratorTest extends TestCase
         $this->assertSame(
             $expectedValues,
             [
-                'intString' => $model->intString,
-                'intersection' => (string) $model->intersection,
+                'intString' => $object->intString,
+                'intersection' => (string) $object->intersection,
             ]
         );
     }

@@ -36,11 +36,11 @@ final class Hydrator implements HydratorInterface
         $this->parameterAttributesHandler = new ParameterAttributesHandler($container);
     }
 
-    public function hydrate(object $model, array $data = [], array $map = [], bool $strict = false): void
+    public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
         $this->populate(
-            $model,
-            $this->getHydrateData($model, $data, $map, $strict),
+            $object,
+            $this->getHydrateData($object, $data, $map, $strict),
         );
     }
 
@@ -48,14 +48,14 @@ final class Hydrator implements HydratorInterface
     {
         [$excludeProperties, $constructorArguments] = $this->getConstructorArguments($class, $data, $map, $strict);
 
-        $model = $this->injector->make($class, $constructorArguments);
+        $object = $this->injector->make($class, $constructorArguments);
 
         $this->populate(
-            $model,
-            $this->getHydrateData($model, $data, $map, $strict, $excludeProperties),
+            $object,
+            $this->getHydrateData($object, $data, $map, $strict, $excludeProperties),
         );
 
-        return $model;
+        return $object;
     }
 
     /**
