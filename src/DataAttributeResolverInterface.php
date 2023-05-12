@@ -6,5 +6,5 @@ namespace Yiisoft\Hydrator;
 
 interface DataAttributeResolverInterface
 {
-    public function prepareData(DataAttributeInterface $attribute, Data $data): void;
+    public function prepareData(DataAttributeInterface $attribute, DataInterface $data): void;
 }

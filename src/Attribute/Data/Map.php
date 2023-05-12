@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Attribute\Data;
 
 use Attribute;
-use Yiisoft\Hydrator\Data;
+use Yiisoft\Hydrator\DataInterface;
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\HydratorInterface;
@@ -30,7 +30,7 @@ final class Map implements DataAttributeInterface, DataAttributeResolverInterfac
         return $this;
     }
 
-    public function prepareData(DataAttributeInterface $attribute, Data $data): void
+    public function prepareData(DataAttributeInterface $attribute, DataInterface $data): void
     {
         if (!$attribute instanceof self) {
             throw new UnexpectedAttributeException(self::class, $attribute);

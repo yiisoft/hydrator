@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\Support;
 
 use Attribute;
-use Yiisoft\Hydrator\Data;
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
+use Yiisoft\Hydrator\DataInterface;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 final class CustomData implements DataAttributeInterface, DataAttributeResolverInterface
@@ -22,7 +22,7 @@ final class CustomData implements DataAttributeInterface, DataAttributeResolverI
         return $this;
     }
 
-    public function prepareData(DataAttributeInterface $attribute, Data $data): void
+    public function prepareData(DataAttributeInterface $attribute, DataInterface $data): void
     {
         $data->setData($this->data);
     }

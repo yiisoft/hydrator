@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\Support\Attribute;
 
 use Yiisoft\Hydrator\Context;
-use Yiisoft\Hydrator\Data;
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
+use Yiisoft\Hydrator\DataInterface;
 use Yiisoft\Hydrator\NotResolvedException;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
@@ -41,7 +41,7 @@ final class FromPredefinedArrayResolver implements ParameterAttributeResolverInt
         throw new NotResolvedException();
     }
 
-    public function prepareData(DataAttributeInterface $attribute, Data $data): void
+    public function prepareData(DataAttributeInterface $attribute, DataInterface $data): void
     {
         if (!$attribute instanceof FromPredefinedArray) {
             throw new UnexpectedAttributeException(FromPredefinedArray::class, $attribute);

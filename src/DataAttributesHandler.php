@@ -25,7 +25,7 @@ final class DataAttributesHandler
      *
      * @psalm-param ReflectionAttribute<DataAttributeInterface>[] $reflectionAttributes
      */
-    public function handle(array $reflectionAttributes, Data $data): void
+    public function handle(array $reflectionAttributes, DataInterface $data): void
     {
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();

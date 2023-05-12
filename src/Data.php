@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator;
 /**
  * @psalm-import-type MapType from HydratorInterface
  */
-final class Data
+final class Data implements DataInterface
 {
     /**
      * @psalm-param MapType $map
@@ -24,9 +24,6 @@ final class Data
         return $this->data;
     }
 
-    /**
-     * @psalm-return MapType
-     */
     public function getMap(): array
     {
         return $this->map;
@@ -42,9 +39,6 @@ final class Data
         $this->data = $data;
     }
 
-    /**
-     * @psalm-param MapType $map
-     */
     public function setMap(array $map): void
     {
         $this->map = $map;

@@ -26,7 +26,7 @@ final class ParameterAttributesHandler
         ReflectionParameter|ReflectionProperty $parameter,
         bool $resolved = false,
         mixed $resolvedValue = null,
-        ?Data $data = null
+        ?DataInterface $data = null
     ): mixed {
         $reflectionAttributes = $parameter
             ->getAttributes(ParameterAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
