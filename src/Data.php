@@ -13,9 +13,9 @@ final class Data
      * @psalm-param MapType $map
      */
     public function __construct(
-        private array $data,
-        private array $map,
-        private bool $strict,
+        private array $data = [],
+        private array $map = [],
+        private bool $strict = false,
     ) {
     }
 
