@@ -31,7 +31,7 @@ final class Hydrator implements HydratorInterface
         ?TypeCasterInterface $typeCaster = null,
     ) {
         $this->injector = new Injector($container);
-        $this->typeCaster = $typeCaster ?? new SimpleTypeCaster();
+        $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
         $this->dataAttributesHandler = new DataAttributesHandler($container);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($container);
     }
@@ -108,8 +108,7 @@ final class Hydrator implements HydratorInterface
                 try {
                     $constructorArguments[$parameterName] = $this->typeCaster->cast(
                         $resolvedValue,
-                        $parameter->getType(),
-                        $this
+                        $parameter->getType()
                     );
                 } catch (SkipTypeCastException) {
                 }
@@ -164,7 +163,7 @@ final class Hydrator implements HydratorInterface
 
             if ($resolved) {
                 try {
-                    $hydrateData[$propertyName] = $this->typeCaster->cast($resolvedValue, $property->getType(), $this);
+                    $hydrateData[$propertyName] = $this->typeCaster->cast($resolvedValue, $property->getType());
                 } catch (SkipTypeCastException) {
                 }
             }

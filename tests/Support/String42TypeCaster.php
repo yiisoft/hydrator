@@ -6,13 +6,12 @@ namespace Yiisoft\Hydrator\Tests\Support;
 
 use ReflectionNamedType;
 use ReflectionType;
-use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\SkipTypeCastException;
 use Yiisoft\Hydrator\TypeCasterInterface;
 
 final class String42TypeCaster implements TypeCasterInterface
 {
-    public function cast(mixed $value, ?ReflectionType $type, Hydrator $hydrator): mixed
+    public function cast(mixed $value, ?ReflectionType $type): mixed
     {
         if ($type instanceof ReflectionNamedType
             && $type->isBuiltin()

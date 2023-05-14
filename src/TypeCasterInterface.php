@@ -11,5 +11,5 @@ interface TypeCasterInterface
     /**
      * @throws SkipTypeCastException
      */
-    public function cast(mixed $value, ?ReflectionType $type, Hydrator $hydrator): mixed;
+    public function cast(mixed $value, ?ReflectionType $type): mixed;
 }
