@@ -16,6 +16,7 @@ final class ParameterAttributesHandler
 {
     public function __construct(
         private ContainerInterface $container,
+        private ?TypeCasterInterface $typeCaster = null,
     ) {
     }
 
@@ -52,7 +53,14 @@ final class ParameterAttributesHandler
         }
 
         if ($hereResolved) {
-            return $resolvedValue;
+            if ($this->typeCaster === null) {
+                return $resolvedValue;
+            }
+            try {
+                return $this->typeCaster->cast($resolvedValue, $parameter->getType());
+            } catch (SkipTypeCastException) {
+                return $resolvedValue;
+            }
         }
 
         throw new NotResolvedException();
