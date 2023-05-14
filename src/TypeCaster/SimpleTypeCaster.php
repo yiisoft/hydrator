@@ -9,7 +9,7 @@ use ReflectionNamedType;
 use ReflectionType;
 use ReflectionUnionType;
 use Stringable;
-use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\SkipTypeCastException;
 use Yiisoft\Hydrator\TypeCasterInterface;
 use Yiisoft\Strings\NumericHelper;
@@ -23,7 +23,16 @@ use function is_string;
 
 final class SimpleTypeCaster implements TypeCasterInterface
 {
-    public function cast(mixed $value, ?ReflectionType $type, Hydrator $hydrator): mixed
+    private ?HydratorInterface $hydrator = null;
+
+    public function withHydrator(HydratorInterface $hydrator): self
+    {
+        $new = clone $this;
+        $new->hydrator = $hydrator;
+        return $new;
+    }
+
+    public function cast(mixed $value, ?ReflectionType $type): mixed
     {
         if ($type instanceof ReflectionNamedType) {
             $types = [$type];
@@ -118,10 +127,10 @@ final class SimpleTypeCaster implements TypeCasterInterface
                 if (is_a($value, $class)) {
                     return $value;
                 }
-            } elseif (is_array($value)) {
+            } elseif (is_array($value) && $this->hydrator !== null) {
                 $reflection = new ReflectionClass($class);
                 if ($reflection->isInstantiable()) {
-                    return $hydrator->create($class, $value);
+                    return $this->hydrator->create($class, $value);
                 }
             }
         }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\TypeCaster;
 
 use ReflectionType;
-use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\SkipTypeCastException;
 use Yiisoft\Hydrator\TypeCasterInterface;
 
@@ -22,11 +21,11 @@ final class CompositeTypeCaster implements TypeCasterInterface
         $this->typeCasters = $typeCasters;
     }
 
-    public function cast(mixed $value, ?ReflectionType $type, Hydrator $hydrator): mixed
+    public function cast(mixed $value, ?ReflectionType $type): mixed
     {
         foreach ($this->typeCasters as $typeCaster) {
             try {
-                return $typeCaster->cast($value, $type, $hydrator);
+                return $typeCaster->cast($value, $type);
             } catch (SkipTypeCastException) {
             }
         }
