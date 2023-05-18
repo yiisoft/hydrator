@@ -24,4 +24,12 @@ final class UnexpectedAttributeExceptionTest extends TestCase
         $this->assertSame(255, $exception->getCode());
         $this->assertSame($previous, $exception->getPrevious());
     }
+
+    public function testDefaults(): void
+    {
+        $exception = new UnexpectedAttributeException(DiResolver::class, new stdClass());
+
+        $this->assertSame(0, $exception->getCode());
+        $this->assertNull($exception->getPrevious());
+    }
 }
