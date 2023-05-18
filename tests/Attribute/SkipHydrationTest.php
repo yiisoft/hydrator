@@ -15,11 +15,12 @@ final class SkipHydrationTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = $hydrator->create(SkipHydrationClass::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
+        $object = $hydrator->create(SkipHydrationClass::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);
 
         $this->assertNull($object->a);
         $this->assertSame(2, $object->b);
         $this->assertNull($object->c);
-        $this->assertSame(4, $object->d);
+        $this->assertSame(104, $object->d);
+        $this->assertSame(5, $object->e);
     }
 }

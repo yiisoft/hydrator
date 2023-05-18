@@ -17,5 +17,10 @@ final class SkipHydrationClass
         public ?int $c = null,
         public ?int $d = null,
     ) {
+        if ($this->d !== null) {
+            $this->d += 100;
+        }
     }
+
+    public ?int $e = null;
 }
