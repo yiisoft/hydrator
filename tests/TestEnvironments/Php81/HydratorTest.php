@@ -17,11 +17,12 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = $hydrator->create(ReadonlyClass::class, ['a' => 1, 'b' => 2, 'c' => 3]);
+        $object = $hydrator->create(ReadonlyClass::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
 
         $this->assertSame(99, $object->a);
         $this->assertSame(2, $object->b);
         $this->assertSame(3, $object->c);
+        $this->assertSame(4, $object->d);
     }
 
     public function dataTypeCast(): array

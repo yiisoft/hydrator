@@ -651,9 +651,10 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = $hydrator->create(StaticClass::class, ['a' => 7, 'b' => 42]);
+        $object = $hydrator->create(StaticClass::class, ['a' => 7, 'b' => 42, 'c' => 500]);
 
         $this->assertSame(7, $object->a);
         $this->assertSame(0, $object::$b);
+        $this->assertSame(500, $object->c);
     }
 }
