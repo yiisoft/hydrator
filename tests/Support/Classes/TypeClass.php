@@ -14,4 +14,5 @@ final class TypeClass
     public bool $bool = false;
     public float $float = -2.0;
     public array $array = [-1];
+    public array|string $arrayOrString = 'x';
 }

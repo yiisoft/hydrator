@@ -373,6 +373,12 @@ final class HydratorTest extends TestCase
                 ['array' => [7]],
                 ['array' => [7]],
             ],
+
+            // Array or string
+            'stringable-to-arrayOrString' => [
+                ['arrayOrString' => 'test'],
+                ['arrayOrString' => new StringableObject('test')],
+            ],
         ];
     }
 
@@ -399,6 +405,7 @@ final class HydratorTest extends TestCase
                 'bool' => false,
                 'float' => -2.0,
                 'array' => [-1],
+                'arrayOrString' => 'x',
             ],
             $expectedValues
         );
@@ -414,6 +421,7 @@ final class HydratorTest extends TestCase
                 'bool' => $object->bool,
                 'float' => $object->float,
                 'array' => $object->array,
+                'arrayOrString' => $object->arrayOrString,
             ]
         );
     }
@@ -651,9 +659,10 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = $hydrator->create(StaticClass::class, ['a' => 7, 'b' => 42]);
+        $object = $hydrator->create(StaticClass::class, ['a' => 7, 'b' => 42, 'c' => 500]);
 
         $this->assertSame(7, $object->a);
         $this->assertSame(0, $object::$b);
+        $this->assertSame(500, $object->c);
     }
 }
