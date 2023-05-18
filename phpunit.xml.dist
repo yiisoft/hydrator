@@ -26,6 +26,10 @@
         <testsuite name="Yii Hydrator PHP 8.1 tests">
             <directory phpVersion="8.1" phpVersionOperator=">=">./tests/TestEnvironments/Php81</directory>
         </testsuite>
+
+        <testsuite name="Yii Hydrator PHP 8.2 tests">
+            <directory phpVersion="8.2" phpVersionOperator=">=">./tests/TestEnvironments/Php82</directory>
+        </testsuite>
     </testsuites>
 
     <coverage>
