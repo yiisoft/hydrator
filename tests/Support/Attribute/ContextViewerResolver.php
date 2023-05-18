@@ -11,7 +11,7 @@ use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 
 final class ContextViewerResolver implements ParameterAttributeResolverInterface
 {
-    private ?Context $context;
+    private ?Context $context = null;
 
     public function getContext(): ?Context
     {
