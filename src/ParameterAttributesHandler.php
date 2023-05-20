@@ -35,9 +35,8 @@ final class ParameterAttributesHandler
      * @param mixed $resolvedValue The resolved value.
      * @param Data|null $data Data to be used for resolving.
      *
-     * @return mixed The resolved value.
-     *
      * @throws NotResolvedException
+     * @return mixed The resolved value.
      */
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,
@@ -84,9 +83,9 @@ final class ParameterAttributesHandler
 
     /**
      * @param ParameterAttributeInterface $attribute The attribute to be resolved.
-     * @return ParameterAttributeResolverInterface The parameter attribute resolver.
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @return ParameterAttributeResolverInterface The parameter attribute resolver.
      */
     private function getParameterResolver(ParameterAttributeInterface $attribute): ParameterAttributeResolverInterface
     {

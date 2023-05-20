@@ -42,10 +42,9 @@ final class DataAttributesHandler
      * Get data attribute resolver.
      *
      * @param DataAttributeInterface $attribute Data attribute to get resolver for.
-     * @return DataAttributeResolverInterface Resolver for the attribute.
-     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @return DataAttributeResolverInterface Resolver for the attribute.
      */
     private function getDataResolver(DataAttributeInterface $attribute): DataAttributeResolverInterface
     {
