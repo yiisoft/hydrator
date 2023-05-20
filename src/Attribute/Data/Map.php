@@ -25,7 +25,8 @@ final class Map implements DataAttributeInterface, DataAttributeResolverInterfac
      * @psalm-param MapType $map
      */
     public function __construct(
-        private array $map
+        private array $map,
+        private ?bool $strict = null,
     ) {
     }
 
@@ -41,5 +42,9 @@ final class Map implements DataAttributeInterface, DataAttributeResolverInterfac
         }
 
         $data->setMap($this->map);
+
+        if ($this->strict !== null) {
+            $data->setStrict($this->strict);
+        }
     }
 }

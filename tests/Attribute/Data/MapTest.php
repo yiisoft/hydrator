@@ -11,6 +11,8 @@ use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapClass;
+use Yiisoft\Hydrator\Tests\Support\Classes\MapNonStrictClass;
+use Yiisoft\Hydrator\Tests\Support\Classes\MapStrictClass;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -24,6 +26,28 @@ final class MapTest extends TestCase
 
         $this->assertSame('1', $object->a);
         $this->assertSame('2', $object->b);
+    }
+
+    public function testStrict(): void
+    {
+        $hydrator = new Hydrator(new SimpleContainer());
+
+        $object = $hydrator->create(MapStrictClass::class);
+
+        $this->assertSame('1', $object->a);
+        $this->assertSame('2', $object->b);
+        $this->assertSame('.', $object->c);
+    }
+
+    public function testNonStrict(): void
+    {
+        $hydrator = new Hydrator(new SimpleContainer());
+
+        $object = $hydrator->create(MapNonStrictClass::class, strict: true);
+
+        $this->assertSame('1', $object->a);
+        $this->assertSame('2', $object->b);
+        $this->assertSame('3', $object->c);
     }
 
     public function testUnexpectedAttributeException(): void
