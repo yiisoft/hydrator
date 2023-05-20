@@ -15,7 +15,63 @@
 [![type-coverage](https://shepherd.dev/github/yiisoft/hydrator/coverage.svg)](https://shepherd.dev/github/yiisoft/hydrator)
 [![psalm-level](https://shepherd.dev/github/yiisoft/hydrator/level.svg)](https://shepherd.dev/github/yiisoft/hydrator)
 
-The package ...
+The package provides a way to create or populate objects from a set of raw data.
+
+Features are:
+
+- It uses constructor arguments to create/hydrate objects.
+- Resolves dependencies when creating objects using DI container provided.
+- Supports dot-notation for nested data.
+- Supports custom properties to data keys mapping via PHP attributes. 
+
+## Basic usage
+
+To hydrate existing object:
+
+```php
+use Yiisoft\Hydrator\Hydrator;
+
+$hydrator = new Hydrator($container);
+$hydrator->hydrate($object, $data);
+```
+
+To create a new object and fill it with the data: 
+
+```php
+use Yiisoft\Hydrator\Hydrator;
+
+$hydrator = new Hydrator($container);
+$object = $hydrator->create(MyClass::class, $data);
+```
+
+To pass arguments to the constructor of a nested object, use dot-notation:
+
+```php
+$object = $hydrator->create(Car::class, [
+    'name' => 'Ferrari',
+    'engine' => [
+        'name' => 'V8',
+    ]
+]);
+
+That would pass the `name` constructor argument of the  `Car` object and create a new `Engine` object for `engine`
+argument passing `V8` as the `name` argument to its constructor.
+
+## Configuring mapping
+
+You can configure how the hydrator creates or hydrates a specific class using attributes:
+
+```php
+use \Yiisoft\Hydrator\Attribute\Data\Map;
+
+#[Map([
+    
+])]
+class MyClass
+{
+
+}
+```
 
 ## Requirements
 
@@ -74,7 +130,7 @@ Use [ComposerRequireChecker](https://github.com/maglnet/ComposerRequireChecker) 
 
 ## License
 
-The Yii Hydrator is free software. It is released under the terms of the BSD License.
+The Yii Hydrator is free software. It's released under the terms of the BSD License.
 Please see [`LICENSE`](./LICENSE.md) for more information.
 
 Maintained by [Yii Software](https://www.yiiframework.com/).
