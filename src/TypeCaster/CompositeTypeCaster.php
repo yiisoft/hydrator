@@ -9,12 +9,12 @@ use Yiisoft\Hydrator\SkipTypeCastException;
 use Yiisoft\Hydrator\TypeCasterInterface;
 
 /**
- * Allows using multiple type casters one by one before the value is casted successfully.
+ * Allows using many type casters one by one before the value cast successfully.
  */
 final class CompositeTypeCaster implements TypeCasterInterface
 {
     /**
-     * @var TypeCasterInterface[]
+     * @var TypeCasterInterface[] Type casters to use.
      */
     private array $typeCasters;
 

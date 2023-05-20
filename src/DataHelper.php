@@ -11,14 +11,19 @@ use function is_string;
 use function strlen;
 
 /**
+ * A set of static methods to work with data.
+ *
  * @internal
  */
 final class DataHelper
 {
     /**
-     * @param string|string[] $path
+     * Get value from an array given a path.
+     *
+     * @param string|string[] $path Path to the value.
      *
      * @throws NotResolvedException
+     * @see StringHelper::parsePath()
      */
     public static function getValueByPath(array $data, string|array $path): mixed
     {
@@ -38,6 +43,11 @@ final class DataHelper
     }
 
     /**
+     * Get value from an array given a key.
+     *
+     * @param array $data Array to get value from.
+     * @param string $pathKey Key to get value for.
+     *
      * @throws NotResolvedException
      */
     private static function getValueByKey(array $data, string $pathKey): mixed

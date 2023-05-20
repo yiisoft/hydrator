@@ -11,19 +11,24 @@ use RuntimeException;
 use function is_string;
 
 /**
+ * Handles data attributes.
+ *
  * @internal
  */
 final class DataAttributesHandler
 {
+    /**
+     * @param ContainerInterface $container Container to use for getting data resolvers.
+     */
     public function __construct(
         private ContainerInterface $container,
     ) {
     }
 
     /**
-     * @param ReflectionAttribute[] $reflectionAttributes
-     *
+     * @param ReflectionAttribute[] $reflectionAttributes Reflections of attributes to handle.
      * @psalm-param ReflectionAttribute<DataAttributeInterface>[] $reflectionAttributes
+     * @param Data $data Data to handle attributes for.
      */
     public function handle(array $reflectionAttributes, Data $data): void
     {
@@ -33,6 +38,15 @@ final class DataAttributesHandler
         }
     }
 
+    /**
+     * Get data attribute resolver.
+     *
+     * @param DataAttributeInterface $attribute Data attribute to get resolver for.
+     * @return DataAttributeResolverInterface Resolver for the attribute.
+     *
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     private function getDataResolver(DataAttributeInterface $attribute): DataAttributeResolverInterface
     {
         $resolver = $attribute->getResolver();

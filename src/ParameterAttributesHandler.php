@@ -13,10 +13,14 @@ use RuntimeException;
 use function is_string;
 
 /**
- * TODO: write description.
+ * Handles parameters and attributes.
  */
 final class ParameterAttributesHandler
 {
+    /**
+     * @param ContainerInterface $container DI container to get resolvers from.
+     * @param TypeCasterInterface|null $typeCaster Type caster to use to cast values.
+     */
     public function __construct(
         private ContainerInterface $container,
         private ?TypeCasterInterface $typeCaster = null,
@@ -24,6 +28,15 @@ final class ParameterAttributesHandler
     }
 
     /**
+     * Handle resolving.
+     *
+     * @param ReflectionParameter|ReflectionProperty $parameter Parameter or property to resolve.
+     * @param bool $resolved Whether the parameter or property is resolved.
+     * @param mixed $resolvedValue The resolved value.
+     * @param Data|null $data Data to be used for resolving.
+     *
+     * @return mixed The resolved value.
+     *
      * @throws NotResolvedException
      */
     public function handle(
@@ -69,6 +82,12 @@ final class ParameterAttributesHandler
         throw new NotResolvedException();
     }
 
+    /**
+     * @param ParameterAttributeInterface $attribute The attribute to be resolved.
+     * @return ParameterAttributeResolverInterface The parameter attribute resolver.
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     private function getParameterResolver(ParameterAttributeInterface $attribute): ParameterAttributeResolverInterface
     {
         $resolver = $attribute->getResolver();

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 /**
- * DataAttributeInterface is an interface for data attributes.
+ * A data attribute is an attribute that can be used to change the way data to be assigned is obtained.
  */
 interface DataAttributeInterface
 {

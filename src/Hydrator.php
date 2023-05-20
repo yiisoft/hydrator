@@ -23,9 +23,24 @@ use function in_array;
  */
 final class Hydrator implements HydratorInterface
 {
+    /**
+     * @var Injector Injector used to create objects.
+     */
     private Injector $injector;
+
+    /**
+     * @var TypeCasterInterface Type caster to use to cast raw values.
+     */
     private TypeCasterInterface $typeCaster;
+
+    /**
+     * @var DataAttributesHandler Data attributes handler.
+     */
     private DataAttributesHandler $dataAttributesHandler;
+
+    /**
+     * @var ParameterAttributesHandler Parameter attributes handler.
+     */
     private ParameterAttributesHandler $parameterAttributesHandler;
 
     /**
