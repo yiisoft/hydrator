@@ -22,7 +22,9 @@ use Yiisoft\Hydrator\UnexpectedAttributeException;
 final class Map implements DataAttributeInterface, DataAttributeResolverInterface
 {
     /**
+     * @param array $map Object property names mapped to keys in the data array.
      * @psalm-param MapType $map
+     * @param bool|null $strict Whether to throw an exception if a data key isn't found in the map.
      */
     public function __construct(
         private array $map,

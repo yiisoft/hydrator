@@ -17,6 +17,8 @@ use function array_key_exists;
 use function in_array;
 
 /**
+ * Creates or populates objects from a set of raw data.
+ *
  * @psalm-import-type MapType from HydratorInterface
  */
 final class Hydrator implements HydratorInterface
@@ -26,6 +28,10 @@ final class Hydrator implements HydratorInterface
     private DataAttributesHandler $dataAttributesHandler;
     private ParameterAttributesHandler $parameterAttributesHandler;
 
+    /**
+     * @param ContainerInterface $container DI container used to resolve created object dependencies.
+     * @param TypeCasterInterface|null $typeCaster Type caster to use to cast raw values.
+     */
     public function __construct(
         ContainerInterface $container,
         ?TypeCasterInterface $typeCaster = null,

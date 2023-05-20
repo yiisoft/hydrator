@@ -10,6 +10,11 @@ use ReflectionProperty;
 use function is_string;
 
 /**
+ * Holds parameter attributes data.
+ *
+ * TODO: document!!!
+ *
+ * @internal This class is internal to the hydrator and shouldn't be used outside of it.
  * @psalm-import-type MapType from HydratorInterface
  */
 final class Context

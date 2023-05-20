@@ -6,6 +6,9 @@ namespace Yiisoft\Hydrator;
 
 use Exception;
 
+/**
+ * Used to skip type casting.
+ */
 final class SkipTypeCastException extends Exception
 {
 }

@@ -22,7 +22,7 @@ Features are:
 - It uses constructor arguments to create/hydrate objects.
 - Resolves dependencies when creating objects using DI container provided.
 - Supports dot-notation for nested data.
-- Supports custom properties to data keys mapping via PHP attributes. 
+- Allows fine-tuning hydration via PHP attributes.
 
 ## Basic usage
 
@@ -53,25 +53,124 @@ $object = $hydrator->create(Car::class, [
         'name' => 'V8',
     ]
 ]);
+```
 
 That would pass the `name` constructor argument of the  `Car` object and create a new `Engine` object for `engine`
 argument passing `V8` as the `name` argument to its constructor.
 
-## Configuring mapping
+## Configuration with PHP attributes
 
-You can configure how the hydrator creates or hydrates a specific class using attributes:
+You can configure how the hydrator creates or hydrates a specific class using attributes. 
+
+### Mapping 
+
+To map attributes to specific data keys, use `Map` attribute:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\Data\Map;
 
 #[Map([
-    
+    'firstName' => 'first_name',
+    'lastName' => 'last_name',
 ])]
+class Person
+{
+    public function __construct(
+        private $firstName,
+        private $lastName,
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, [
+    'first_name' => 'John',
+    'last_name' => 'Doe',
+]);
+```
+
+When using the `Map`, you can set `strict` argument to `true`.
+That instructs the hydrator that all data should be mapped explicitly.
+If not, it will throw an exception.
+
+Alternatively you can map each property using `Data` attribute:
+
+```php
+use \Yiisoft\Hydrator\Attribute\Parameter\Data;
+
+class Person
+{
+    public function __construct(
+        #[Data('first_name')]
+        private $firstName,
+        #[Data('last_name')]
+        private $lastName,
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, [
+    'first_name' => 'John',
+    'last_name' => 'Doe',
+]);
+```
+
+You could use the `strict` option as well.
+
+### Casting value to string
+
+To cast a value to string, use `ToString` attribute:
+
+```php
+use \Yiisoft\Hydrator\Attribute\Parameter\ToString;
+
+class Money
+{
+    public function __construct(
+        #[ToString]
+        private string $value,
+        private string $currency,
+    ) {}
+}
+
+$money = $hydrator->create(Money::class, [
+    'value' => 4200,
+    'currency' => 'AMD',
+]);
+```
+
+### Skipping hydration
+
+To skip hydration of a specific property, use `SkipHydration` attribute:
+
+```php
+use \Yiisoft\Hydrator\Attribute\SkipHydration;
+
 class MyClass
 {
-
+    #[SkipHydration]
+    private $property;
 }
 ```
+
+### Resolving dependencies
+
+To resolve dependencies using DI container, use `Di` attribute:
+
+```php
+ues \Yiisoft\Hydrator\Attribute\Parameter\Di;
+
+class MyClass
+{
+    public function __construct(
+        #[Di(id: 'importConnection')]
+        private ConnectionInterface $connection,
+    ) {}
+}
+```
+
+The annotation will instruct hydrator to get `$connection` from DI container by `importConnection` id.
+
+### Your own attributes
+
+TODO: document how to create your own attributes.
 
 ## Requirements
 

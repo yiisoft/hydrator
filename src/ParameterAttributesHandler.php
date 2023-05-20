@@ -12,6 +12,9 @@ use RuntimeException;
 
 use function is_string;
 
+/**
+ * TODO: write description.
+ */
 final class ParameterAttributesHandler
 {
     public function __construct(

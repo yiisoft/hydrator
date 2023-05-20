@@ -10,11 +10,14 @@ use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
+/**
+ * Maps a parameter or a property to the data key specified.
+ */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 final class Data implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
     /**
-     * @param string|string[]|null $key
+     * @param string|string[]|null $key Data key to map to.
      */
     public function __construct(
         private array|string|null $key = null,

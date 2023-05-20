@@ -21,10 +21,20 @@ use function is_int;
 use function is_object;
 use function is_string;
 
+/**
+ * Casts value to a type obtained from {@see ReflectionType} passed.
+ * Hydrator is used on arrays to cast these to objects.
+ */
 final class SimpleTypeCaster implements TypeCasterInterface
 {
+    /**
+     * @var HydratorInterface|null Hydrator to use to cast arrays to objects.
+     */
     private ?HydratorInterface $hydrator = null;
 
+    /**
+     * @param HydratorInterface $hydrator Hydrator to use to cast arrays to objects.
+     */
     public function withHydrator(HydratorInterface $hydrator): self
     {
         $new = clone $this;

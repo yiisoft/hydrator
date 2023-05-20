@@ -7,6 +7,9 @@ namespace Yiisoft\Hydrator;
 use InvalidArgumentException;
 use Throwable;
 
+/**
+ * Thrown when an attribute isn't of the expected class.
+ */
 final class UnexpectedAttributeException extends InvalidArgumentException
 {
     /**

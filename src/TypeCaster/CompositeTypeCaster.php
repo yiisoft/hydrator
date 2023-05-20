@@ -8,6 +8,9 @@ use ReflectionType;
 use Yiisoft\Hydrator\SkipTypeCastException;
 use Yiisoft\Hydrator\TypeCasterInterface;
 
+/**
+ * Allows using multiple type casters one by one before the value is casted successfully.
+ */
 final class CompositeTypeCaster implements TypeCasterInterface
 {
     /**
@@ -15,6 +18,9 @@ final class CompositeTypeCaster implements TypeCasterInterface
      */
     private array $typeCasters;
 
+    /**
+     * @param TypeCasterInterface ...$typeCasters Type casters to use.
+     */
     public function __construct(
         TypeCasterInterface ...$typeCasters
     ) {
