@@ -35,12 +35,17 @@ final class DiResolver implements ParameterAttributeResolverInterface
             throw new UnexpectedAttributeException(Di::class, $attribute);
         }
 
+        $parameter = $context->getParameter();
+
         $id = $attribute->getId();
         if ($id !== null) {
-            return $this->container->get($id);
+            try {
+                return $this->container->get($id);
+            } catch (NotFoundExceptionInterface $e) {
+                throw new DiNotFoundException($parameter, $e);
+            }
         }
 
-        $parameter = $context->getParameter();
         $type = $parameter->getType();
         if ($type instanceof ReflectionNamedType) {
             if (!$type->isBuiltin()) {

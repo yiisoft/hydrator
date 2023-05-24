@@ -24,6 +24,7 @@ use Yiisoft\Hydrator\Tests\Support\Classes\DiUnion;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefault;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefaultConstructor;
 use Yiisoft\Hydrator\Tests\Support\Classes\Engine1;
+use Yiisoft\Hydrator\Tests\Support\Classes\Engine2;
 use Yiisoft\Hydrator\Tests\Support\Classes\EngineInterface;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
@@ -202,6 +203,19 @@ final class DiTest extends TestCase
 
         $this->assertSame($engine, $object->engine1);
         $this->assertSame($engine, $object->engine2);
+    }
+
+    public function testNotFoundId(): void
+    {
+        $hydrator = $this->createHydrator();
+
+        $object = new class () {
+            #[Di('non-exists-id')]
+            public EngineInterface $engine;
+        };
+
+        $this->expectException(DiNotFoundException::class);
+        $hydrator->hydrate($object);
     }
 
     public function testUnexpectedAttributeException(): void
