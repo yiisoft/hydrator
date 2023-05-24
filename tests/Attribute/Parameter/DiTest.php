@@ -24,7 +24,6 @@ use Yiisoft\Hydrator\Tests\Support\Classes\DiUnion;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefault;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefaultConstructor;
 use Yiisoft\Hydrator\Tests\Support\Classes\Engine1;
-use Yiisoft\Hydrator\Tests\Support\Classes\Engine2;
 use Yiisoft\Hydrator\Tests\Support\Classes\EngineInterface;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
@@ -45,9 +44,8 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $object = $hydrator->create(DiSingleWithoutType::class);
-
-        $this->assertNull($object->engine);
+        $this->expectException(DiNotFoundException::class);
+        $hydrator->create(DiSingleWithoutType::class);
     }
 
     public function testSingleWithoutTypeConstructorNotResolved(): void
@@ -100,7 +98,6 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-
         $this->expectException(DiNotFoundException::class);
         $this->expectExceptionMessage(
             'Constructor parameter "engine" of class "'
@@ -136,18 +133,16 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $object = $hydrator->create(DiSingleNulledWithDefault::class);
-
-        $this->assertNull($object->engine);
+        $this->expectException(DiNotFoundException::class);
+        $hydrator->create(DiSingleNulledWithDefault::class);
     }
 
     public function testSingleNulledWithDefaultConstructorNotResolved(): void
     {
         $hydrator = $this->createHydrator();
 
-        $object = $hydrator->create(DiSingleNulledWithDefaultConstructor::class);
-
-        $this->assertNull($object->engine);
+        $this->expectException(DiNotFoundException::class);
+        $hydrator->create(DiSingleNulledWithDefaultConstructor::class);
     }
 
     public function testUnion(): void
@@ -188,10 +183,8 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $object = $hydrator->create(DiUnionWithDefault::class);
-
-        $this->assertSame('', $object->engine1);
-        $this->assertSame('', $object->engine2);
+        $this->expectException(DiNotFoundException::class);
+        $hydrator->create(DiUnionWithDefault::class);
     }
 
     public function testUnionWithDefaultConstructor(): void

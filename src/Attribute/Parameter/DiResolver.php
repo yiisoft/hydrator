@@ -8,11 +8,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionNamedType;
-use ReflectionParameter;
-use ReflectionProperty;
 use ReflectionUnionType;
 use Yiisoft\Hydrator\Context;
-use Yiisoft\Hydrator\NotResolvedException;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
@@ -27,7 +24,6 @@ final class DiResolver implements ParameterAttributeResolverInterface
     /**
      * @throws ContainerExceptionInterface
      * @throws DiNotFoundException
-     * @throws NotResolvedException
      */
     public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): mixed
     {
@@ -52,9 +48,7 @@ final class DiResolver implements ParameterAttributeResolverInterface
                 try {
                     return $this->container->get($type->getName());
                 } catch (NotFoundExceptionInterface $e) {
-                    throw $this->hasDefaultValue($parameter)
-                        ? new NotResolvedException()
-                        : new DiNotFoundException($parameter, $e);
+                    throw new DiNotFoundException($parameter, $e);
                 }
             }
         } elseif ($type instanceof ReflectionUnionType) {
@@ -69,15 +63,6 @@ final class DiResolver implements ParameterAttributeResolverInterface
             }
         }
 
-        throw $this->hasDefaultValue($parameter)
-            ? new NotResolvedException()
-            : new DiNotFoundException($parameter);
-    }
-
-    private function hasDefaultValue(ReflectionParameter|ReflectionProperty $reflection): bool
-    {
-        return $reflection instanceof ReflectionParameter
-            ? $reflection->isDefaultValueAvailable()
-            : $reflection->hasDefaultValue();
+        throw new DiNotFoundException($parameter);
     }
 }
