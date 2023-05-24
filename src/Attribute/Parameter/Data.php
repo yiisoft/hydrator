@@ -14,10 +14,10 @@ use Yiisoft\Hydrator\UnexpectedAttributeException;
 final class Data implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
     /**
-     * @param string|string[]|null $key
+     * @param string|string[] $key
      */
     public function __construct(
-        private array|string|null $key = null,
+        private array|string $key,
     ) {
     }
 
