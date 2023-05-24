@@ -45,7 +45,7 @@ final class Context
      * @param string|string[]|null $key
      * @throws NotResolvedException
      */
-    public function getData(array|string|null $key): mixed
+    public function getData(array|string|null $key = null): mixed
     {
         if ($key === null) {
             return $this->data;
