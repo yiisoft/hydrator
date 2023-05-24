@@ -25,7 +25,6 @@ final class DiNotFoundException extends RuntimeException implements NotFoundExce
             $message = 'Class property "' . $className . '::$' . $reflection->getName() . '"';
         }
 
-
         $type = $reflection->getType();
         $message .= $type === null
             ? ' without type'
