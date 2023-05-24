@@ -13,5 +13,4 @@ final class DiUnion
 
     #[Di]
     public string|EngineInterface $engine2;
-
 }
