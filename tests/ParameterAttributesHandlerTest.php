@@ -6,7 +6,6 @@ namespace Yiisoft\Hydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Context;
-use Yiisoft\Hydrator\NotResolvedException;
 use Yiisoft\Hydrator\ParameterAttributesHandler;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewer;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewerResolver;
