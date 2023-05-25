@@ -11,11 +11,11 @@ use Yiisoft\Hydrator\ParameterAttributeInterface;
 final class Di implements ParameterAttributeInterface
 {
     public function __construct(
-        private string $id
+        private ?string $id = null
     ) {
     }
 
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
