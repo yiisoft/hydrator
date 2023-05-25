@@ -56,11 +56,9 @@ final class ParameterAttributesHandler
             if ($this->typeCaster === null) {
                 return $resolvedValue;
             }
-            try {
-                return $this->typeCaster->cast($resolvedValue, $parameter->getType());
-            } catch (SkipTypeCastException) {
-                return $resolvedValue;
-            }
+
+            $result = $this->typeCaster->cast($resolvedValue, $parameter->getType());
+            return $result->isCasted() ? $result->getValue() : $resolvedValue;
         }
 
         throw new NotResolvedException();

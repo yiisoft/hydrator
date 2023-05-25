@@ -105,12 +105,12 @@ final class Hydrator implements HydratorInterface
             }
 
             if ($resolved) {
-                try {
-                    $constructorArguments[$parameterName] = $this->typeCaster->cast(
-                        $resolvedValue,
-                        $parameter->getType()
-                    );
-                } catch (SkipTypeCastException) {
+                $result = $this->typeCaster->cast(
+                    $resolvedValue,
+                    $parameter->getType()
+                );
+                if ($result->isCasted()) {
+                    $constructorArguments[$parameterName] = $result->getValue();
                 }
             }
         }
@@ -162,9 +162,9 @@ final class Hydrator implements HydratorInterface
             }
 
             if ($resolved) {
-                try {
-                    $hydrateData[$propertyName] = $this->typeCaster->cast($resolvedValue, $property->getType());
-                } catch (SkipTypeCastException) {
+                $result = $this->typeCaster->cast($resolvedValue, $property->getType());
+                if ($result->isCasted()) {
+                    $hydrateData[$propertyName] = $result->getValue();
                 }
             }
         }
