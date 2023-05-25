@@ -47,6 +47,21 @@ $object = $hydrator->create(MyClass::class, $data);
 To pass arguments to the constructor of a nested object, use dot-notation:
 
 ```php
+final class Engine
+{
+    public function __construct(
+        private string $name,
+    ) {}
+}
+
+final class Car
+{
+    public function __construct(
+        private string $name,
+        private Engine $engine,
+    ) {}
+}
+
 $object = $hydrator->create(Car::class, [
     'name' => 'Ferrari',
     'engine' => [
@@ -89,7 +104,6 @@ $person = $hydrator->create(Person::class, [
 
 When using the `Map`, you can set `strict` argument to `true`.
 That instructs the hydrator that all data should be mapped explicitly.
-If not, it will throw an exception.
 
 Alternatively you can map each property using `Data` attribute:
 
@@ -170,7 +184,35 @@ The annotation will instruct hydrator to get `$connection` from DI container by 
 
 ### Your own attributes
 
-TODO: document how to create your own attributes.
+There are two main parts:
+
+- Attribute class.
+  It only stores configuration options and a reference to its handler.
+- Attribute resolver.
+  Given an attribute reflection and extra data, it resolves an attribute.
+
+Besides responsibilities' separation,
+this approach allows the package to automatically resolve dependencies for attribute resolver.
+
+#### Data attributes
+
+You apply data attributes to a whole class.
+The main goal is getting data from external sources such as from request.
+Additionally, it's possible to specify how external source attributes map to hydrated class.
+
+Data attribute class should implement `DataAttributeInterface` and the corresponding data attribute resolver should
+implement `DataAttributeResolverInterface`.
+
+#### Parameter attributes
+
+You apply parameter attributes to class properties and constructor parameters.
+You use these attributes for getting value for specific parameter or for preparing the value
+(for example, by type casting).
+
+Parameter attribute class should implement `ParameterAttributeInterface` and the corresponding parameter attribute
+resolver should implement `ParameterAttributeResolverInterface`.
+
+If value isn't resolved then you must throw `NotResolvedException`.
 
 ## Requirements
 
