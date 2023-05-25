@@ -22,7 +22,7 @@ final class MapTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = $hydrator->create(MapClass::class);
+        $object = $hydrator->create(MapClass::class, ['x' => 1, 'y' => 2]);
 
         $this->assertSame('1', $object->a);
         $this->assertSame('2', $object->b);
@@ -32,7 +32,7 @@ final class MapTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = $hydrator->create(MapStrictClass::class);
+        $object = $hydrator->create(MapStrictClass::class, ['a' => 1, 'y' => 2, 'c' => 3]);
 
         $this->assertSame('1', $object->a);
         $this->assertSame('2', $object->b);
@@ -43,7 +43,7 @@ final class MapTest extends TestCase
     {
         $hydrator = new Hydrator(new SimpleContainer());
 
-        $object = $hydrator->create(MapNonStrictClass::class, strict: true);
+        $object = $hydrator->create(MapNonStrictClass::class, ['a' => 1, 'y' => 2, 'c' => 3], strict: true);
 
         $this->assertSame('1', $object->a);
         $this->assertSame('2', $object->b);
