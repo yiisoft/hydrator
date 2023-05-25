@@ -11,7 +11,7 @@ use ReflectionUnionType;
 use Stringable;
 use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\TypeCasterInterface;
-use Yiisoft\Hydrator\TypeCastResult;
+use Yiisoft\Hydrator\Value;
 use Yiisoft\Strings\NumericHelper;
 
 use function is_array;
@@ -32,7 +32,7 @@ final class SimpleTypeCaster implements TypeCasterInterface
         return $new;
     }
 
-    public function cast(mixed $value, ?ReflectionType $type): TypeCastResult
+    public function cast(mixed $value, ?ReflectionType $type): Value
     {
         if ($type instanceof ReflectionNamedType) {
             $types = [$type];
@@ -42,44 +42,44 @@ final class SimpleTypeCaster implements TypeCasterInterface
                 static fn(mixed $type) => $type instanceof ReflectionNamedType,
             );
         } elseif ($type === null) {
-            return TypeCastResult::success($value);
+            return Value::success($value);
         } else {
-            return TypeCastResult::skip();
+            return Value::fail();
         }
 
         foreach ($types as $t) {
             if (null === $value && $t->allowsNull()) {
-                return TypeCastResult::success(null);
+                return Value::success(null);
             }
             if ($t->isBuiltin()) {
                 switch ($t->getName()) {
                     case 'string':
                         if (is_string($value)) {
-                            return TypeCastResult::success($value);
+                            return Value::success($value);
                         }
                         break;
 
                     case 'int':
                         if (is_int($value)) {
-                            return TypeCastResult::success($value);
+                            return Value::success($value);
                         }
                         break;
 
                     case 'float':
                         if (is_float($value)) {
-                            return TypeCastResult::success($value);
+                            return Value::success($value);
                         }
                         break;
 
                     case 'bool':
                         if (is_bool($value)) {
-                            return TypeCastResult::success($value);
+                            return Value::success($value);
                         }
                         break;
 
                     case 'array':
                         if (is_array($value)) {
-                            return TypeCastResult::success($value);
+                            return Value::success($value);
                         }
                         break;
                 }
@@ -91,31 +91,31 @@ final class SimpleTypeCaster implements TypeCasterInterface
                 switch ($t->getName()) {
                     case 'string':
                         if (is_scalar($value) || null === $value || $value instanceof Stringable) {
-                            return TypeCastResult::success((string) $value);
+                            return Value::success((string) $value);
                         }
                         break;
 
                     case 'int':
                         if (is_bool($value) || is_float($value) || null === $value) {
-                            return TypeCastResult::success((int) $value);
+                            return Value::success((int) $value);
                         }
                         if ($value instanceof Stringable || is_string($value)) {
-                            return TypeCastResult::success((int) NumericHelper::normalize((string) $value));
+                            return Value::success((int) NumericHelper::normalize((string) $value));
                         }
                         break;
 
                     case 'float':
                         if (is_int($value) || is_bool($value) || null === $value) {
-                            return TypeCastResult::success((float) $value);
+                            return Value::success((float) $value);
                         }
                         if ($value instanceof Stringable || is_string($value)) {
-                            return TypeCastResult::success((float) NumericHelper::normalize((string) $value));
+                            return Value::success((float) NumericHelper::normalize((string) $value));
                         }
                         break;
 
                     case 'bool':
                         if (is_scalar($value) || null === $value || is_array($value) || is_object($value)) {
-                            return TypeCastResult::success((bool) $value);
+                            return Value::success((bool) $value);
                         }
                         break;
                 }
@@ -125,18 +125,18 @@ final class SimpleTypeCaster implements TypeCasterInterface
             $class = $t->getName();
             if (is_object($value)) {
                 if (is_a($value, $class)) {
-                    return TypeCastResult::success($value);
+                    return Value::success($value);
                 }
             } elseif (is_array($value) && $this->hydrator !== null) {
                 $reflection = new ReflectionClass($class);
                 if ($reflection->isInstantiable()) {
-                    return TypeCastResult::success(
+                    return Value::success(
                         $this->hydrator->create($class, $value)
                     );
                 }
             }
         }
 
-        return TypeCastResult::skip();
+        return Value::fail();
     }
 }

@@ -6,12 +6,12 @@ namespace Yiisoft\Hydrator\TypeCaster;
 
 use ReflectionType;
 use Yiisoft\Hydrator\TypeCasterInterface;
-use Yiisoft\Hydrator\TypeCastResult;
+use Yiisoft\Hydrator\Value;
 
 final class NoTypeCaster implements TypeCasterInterface
 {
-    public function cast(mixed $value, ?ReflectionType $type): TypeCastResult
+    public function cast(mixed $value, ?ReflectionType $type): Value
     {
-        return TypeCastResult::success($value);
+        return Value::success($value);
     }
 }

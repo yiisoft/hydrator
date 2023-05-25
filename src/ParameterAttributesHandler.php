@@ -46,9 +46,9 @@ final class ParameterAttributesHandler
         }
 
         if ($this->typeCaster !== null && $hereResolvedValue->exist()) {
-            $typeCastResult = $this->typeCaster->cast($hereResolvedValue->getValue(), $parameter->getType());
-            if ($typeCastResult->isCasted()) {
-                $hereResolvedValue = Value::success($typeCastResult->getValue());
+            $typeCastedValue = $this->typeCaster->cast($hereResolvedValue->getValue(), $parameter->getType());
+            if ($typeCastedValue->exist()) {
+                $hereResolvedValue = $typeCastedValue;
             }
         }
 

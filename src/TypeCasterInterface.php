@@ -8,5 +8,5 @@ use ReflectionType;
 
 interface TypeCasterInterface
 {
-    public function cast(mixed $value, ?ReflectionType $type): TypeCastResult;
+    public function cast(mixed $value, ?ReflectionType $type): Value;
 }
