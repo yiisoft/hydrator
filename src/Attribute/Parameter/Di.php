@@ -8,13 +8,13 @@ use Attribute;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 
 /**
- * Maps a property or parameter to an instance obtained from container by the specified id.
+ * Maps a property or parameter to an instance obtained from container by the specified ID.
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 final class Di implements ParameterAttributeInterface
 {
     /**
-     * @param string $id Container id to obtain instance from.
+     * @param string $id Container ID to obtain instance from.
      */
     public function __construct(
         private string $id
@@ -22,9 +22,9 @@ final class Di implements ParameterAttributeInterface
     }
 
     /**
-     * Get container id to obtain instance from.
+     * Get container ID to obtain instance from.
      *
-     * @return string Container id to obtain instance from.
+     * @return string Container ID to obtain instance from.
      */
     public function getId(): string
     {

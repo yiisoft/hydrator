@@ -166,7 +166,7 @@ class MyClass
 }
 ```
 
-The annotation will instruct hydrator to get `$connection` from DI container by `importConnection` id.
+The annotation will instruct hydrator to get `$connection` from DI container by `importConnection` ID.
 
 ### Your own attributes
 

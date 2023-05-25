@@ -12,7 +12,6 @@ use function is_string;
 /**
  * Holds attribute context data.
  *
- * @internal This class is internal to the hydrator and shouldn't be used outside of it.
  * @psalm-import-type MapType from HydratorInterface
  */
 final class Context

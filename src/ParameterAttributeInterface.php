@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 /**
- * ParameterAttributeInterface is an interface for parameter attributes.
+ * `ParameterAttributeInterface` is an interface for parameter attributes.
  */
 interface ParameterAttributeInterface
 {

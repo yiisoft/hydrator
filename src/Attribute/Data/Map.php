@@ -24,7 +24,7 @@ final class Map implements DataAttributeInterface, DataAttributeResolverInterfac
     /**
      * @param array $map Object property names mapped to keys in the data array.
      * @psalm-param MapType $map
-     * @param bool|null $strict Whether to throw an exception if a data key isn't found in the map.
+     * @param bool|null $strict Whether to populate properties from the map only.
      */
     public function __construct(
         private array $map,

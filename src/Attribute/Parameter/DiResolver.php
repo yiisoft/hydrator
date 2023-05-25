@@ -11,12 +11,12 @@ use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 /**
- * Resolver for {@see Di} attribute. Obtains dependency from DI container by id specified.
+ * Resolver for {@see Di} attribute. Obtains dependency from DI container by ID specified.
  */
 final class DiResolver implements ParameterAttributeResolverInterface
 {
     /**
-     * @param ContainerInterface $container Container to obtain dependecny from.
+     * @param ContainerInterface $container Container to obtain dependency from.
      */
     public function __construct(
         private ContainerInterface $container,

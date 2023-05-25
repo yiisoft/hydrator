@@ -15,7 +15,7 @@ final class Data
      * @param array $data Data to hydrate object from.
      * @param array $map Object property names mapped to keys in the data array that hydrator will use when populating an object.
      * @psalm-param MapType $map
-     * @param bool $strict Whether to throw an exception if a data key isn't found in the map.
+     * @param bool $strict Whether to populate properties from the map only.
      */
     public function __construct(
         private array $data = [],
@@ -48,7 +48,7 @@ final class Data
     /**
      * Whether to throw an exception if a data key isn't found in the map.
      *
-     * @return bool Whether to throw an exception if a data key isn't found in the map.
+     * @return bool Whether to populate properties from the map only.
      */
     public function isStrict(): bool
     {
@@ -77,9 +77,9 @@ final class Data
     }
 
     /**
-     * Set whether to throw an exception if a data key isn't found in the map.
+     * Set whether to populate properties from the map only.
      *
-     * @param bool $strict Whether to throw an exception if a data key isn't found in the map.
+     * @param bool $strict Whether to populate properties from the map only.
      */
     public function setStrict(bool $strict): void
     {

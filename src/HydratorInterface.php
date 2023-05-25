@@ -18,7 +18,7 @@ interface HydratorInterface
      * @param array $data Data to populate an object with.
      * @param array $map Object property names mapped to keys in the data array that hydrator will use when populating an object.
      * @psalm-param MapType $map
-     * @param bool $strict Whether to throw an exception if a data key isn't found in the map.
+     * @param bool $strict Whether to populate properties from the map only.
      */
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void;
 
@@ -32,7 +32,7 @@ interface HydratorInterface
      * @param array $data Data to populate an object with.
      * @param array $map Object property names mapped to keys in the data array that hydrator will use when populating an object.
      * @psalm-param MapType $map
-     * @param bool $strict Whether to throw an exception if a data key isn't found in the map.
+     * @param bool $strict Whether to populate properties from the map only.
      *
      * @return object Created and populated object.
      * @psalm-return T

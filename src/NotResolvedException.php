@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator;
 use Exception;
 
 /**
- * Thrown when a value isn't in the map and strict mode is on.
+ * Thrown when a value for class property or constructor parameter is not resolved.
  */
 final class NotResolvedException extends Exception
 {
