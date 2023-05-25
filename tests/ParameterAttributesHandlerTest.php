@@ -10,7 +10,7 @@ use Yiisoft\Hydrator\NotResolvedException;
 use Yiisoft\Hydrator\ParameterAttributesHandler;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewer;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewerResolver;
-use Yiisoft\Hydrator\Tests\Support\Attribute\Value;
+use Yiisoft\Hydrator\Tests\Support\Attribute\CustomValue;
 use Yiisoft\Hydrator\Tests\Support\SkipTypeCaster;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
@@ -29,10 +29,7 @@ final class ParameterAttributesHandlerTest extends TestCase
 
         $parameter = TestHelper::getFirstParameter(static fn(#[ContextViewer] int $a) => null);
 
-        try {
-            $handler->handle($parameter);
-        } catch (NotResolvedException) {
-        }
+        $handler->handle($parameter);
 
         $context = $contextViewerResolver->getContext();
         $this->assertInstanceOf(Context::class, $context);
@@ -47,11 +44,11 @@ final class ParameterAttributesHandlerTest extends TestCase
             new SimpleTypeCaster(),
         );
 
-        $parameter = TestHelper::getFirstParameter(static fn(#[Value('42')] int $a) => null);
+        $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
 
-        $value = $handler->handle($parameter);
+        $result = $handler->handle($parameter);
 
-        $this->assertSame(42, $value);
+        $this->assertSame(42, $result->getValue());
     }
 
     public function testNonTypeCasted(): void
@@ -61,10 +58,10 @@ final class ParameterAttributesHandlerTest extends TestCase
             new SkipTypeCaster(),
         );
 
-        $parameter = TestHelper::getFirstParameter(static fn(#[Value('42')] int $a) => null);
+        $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
 
-        $value = $handler->handle($parameter);
+        $result = $handler->handle($parameter);
 
-        $this->assertSame('42', $value);
+        $this->assertSame('42', $result->getValue());
     }
 }

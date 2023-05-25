@@ -12,6 +12,7 @@ use ReflectionUnionType;
 use Yiisoft\Hydrator\Context;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\Value;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 final class DiResolver implements ParameterAttributeResolverInterface
@@ -25,7 +26,7 @@ final class DiResolver implements ParameterAttributeResolverInterface
      * @throws ContainerExceptionInterface
      * @throws DiNotFoundException
      */
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): mixed
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value
     {
         if (!$attribute instanceof Di) {
             throw new UnexpectedAttributeException(Di::class, $attribute);
@@ -36,7 +37,9 @@ final class DiResolver implements ParameterAttributeResolverInterface
         $id = $attribute->getId();
         if ($id !== null) {
             try {
-                return $this->container->get($id);
+                return Value::success(
+                    $this->container->get($id)
+                );
             } catch (NotFoundExceptionInterface $e) {
                 throw new DiNotFoundException($parameter, $e);
             }
@@ -46,7 +49,9 @@ final class DiResolver implements ParameterAttributeResolverInterface
         if ($type instanceof ReflectionNamedType) {
             if (!$type->isBuiltin()) {
                 try {
-                    return $this->container->get($type->getName());
+                    return Value::success(
+                        $this->container->get($type->getName())
+                    );
                 } catch (NotFoundExceptionInterface $e) {
                     throw new DiNotFoundException($parameter, $e);
                 }
@@ -56,7 +61,9 @@ final class DiResolver implements ParameterAttributeResolverInterface
                 /** @psalm-suppress RedundantConditionGivenDocblockType Need for PHP less than 8.2 */
                 if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                     try {
-                        return $this->container->get($type->getName());
+                        return Value::success(
+                            $this->container->get($type->getName())
+                        );
                     } catch (NotFoundExceptionInterface) {
                     }
                 }

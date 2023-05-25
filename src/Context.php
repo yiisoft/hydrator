@@ -19,8 +19,7 @@ final class Context
      */
     public function __construct(
         private ReflectionParameter|ReflectionProperty $parameter,
-        private bool $resolved,
-        private mixed $resolvedValue,
+        private Value $resolvedValue,
         private array $data,
         private array $map,
     ) {
@@ -33,22 +32,21 @@ final class Context
 
     public function isResolved(): bool
     {
-        return $this->resolved;
+        return $this->resolvedValue->exist();
     }
 
     public function getResolvedValue(): mixed
     {
-        return $this->resolvedValue;
+        return $this->resolvedValue->getValue();
     }
 
     /**
      * @param string|string[]|null $key
-     * @throws NotResolvedException
      */
-    public function getData(array|string|null $key = null): mixed
+    public function getData(array|string|null $key = null): Value
     {
         if ($key === null) {
-            return $this->data;
+            return Value::success($this->data);
         }
 
         if (is_string($key)) {
