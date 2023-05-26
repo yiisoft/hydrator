@@ -7,6 +7,7 @@ namespace Yiisoft\Hydrator\Tests;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Yiisoft\Hydrator\Context;
+use Yiisoft\Hydrator\Value;
 
 final class ContextTest extends TestCase
 {
@@ -18,11 +19,12 @@ final class ContextTest extends TestCase
             }
         ))->getProperties()[0];
 
-        $context = new Context($parameter, true, 7, ['a' => 5], []);
+        $context = new Context($parameter, Value::success(7), ['a' => 5, 'b' => 6], []);
 
         $this->assertSame($parameter, $context->getParameter());
         $this->assertTrue($context->isResolved());
         $this->assertSame(7, $context->getResolvedValue());
-        $this->assertSame(5, $context->getData('a'));
+        $this->assertSame(5, $context->getData('a')->getValue());
+        $this->assertSame(['a' => 5, 'b' => 6], $context->getData()->getValue());
     }
 }

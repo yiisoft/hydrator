@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\Support\Attribute;
 
 use Yiisoft\Hydrator\Context;
-use Yiisoft\Hydrator\NotResolvedException;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\Value;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 final class CounterResolver implements ParameterAttributeResolverInterface
@@ -19,7 +19,7 @@ final class CounterResolver implements ParameterAttributeResolverInterface
         return $this->data[$key] ?? 0;
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): mixed
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value
     {
         if (!$attribute instanceof Counter) {
             throw new UnexpectedAttributeException(Counter::class, $attribute);
@@ -33,6 +33,6 @@ final class CounterResolver implements ParameterAttributeResolverInterface
 
         $this->data[$key]++;
 
-        throw new NotResolvedException();
+        return Value::fail();
     }
 }

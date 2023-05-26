@@ -8,18 +8,19 @@ use Attribute;
 use Yiisoft\Hydrator\Context;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\Value;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-final class Value implements ParameterAttributeInterface, ParameterAttributeResolverInterface
+final class CustomValue implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
     public function __construct(
         private mixed $value,
     ) {
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): mixed
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value
     {
-        return $this->value;
+        return Value::success($this->value);
     }
 
     public function getResolver(): self

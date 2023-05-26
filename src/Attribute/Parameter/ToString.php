@@ -7,9 +7,9 @@ namespace Yiisoft\Hydrator\Attribute\Parameter;
 use Attribute;
 use Stringable;
 use Yiisoft\Hydrator\Context;
-use Yiisoft\Hydrator\NotResolvedException;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\Value;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 /**
@@ -23,7 +23,7 @@ final class ToString implements ParameterAttributeInterface, ParameterAttributeR
         return $this;
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): mixed
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value
     {
         if (!$attribute instanceof self) {
             throw new UnexpectedAttributeException(self::class, $attribute);
@@ -32,11 +32,12 @@ final class ToString implements ParameterAttributeInterface, ParameterAttributeR
         if ($context->isResolved()) {
             $resolvedValue = $context->getResolvedValue();
             if (is_scalar($resolvedValue) || null === $resolvedValue || $resolvedValue instanceof Stringable) {
-                return (string) $resolvedValue;
+                return Value::success((string) $resolvedValue);
             }
-            return '';
+
+            return Value::success('');
         }
 
-        throw new NotResolvedException();
+        return Value::fail();
     }
 }

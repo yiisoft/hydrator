@@ -41,23 +41,6 @@ final class DataTest extends TestCase
         $this->assertSame(88, $object->y);
     }
 
-    public function testWholeData(): void
-    {
-        $hydrator = new Hydrator(new SimpleContainer());
-
-        $object = new class () {
-            #[Data]
-            public array $data = [];
-        };
-
-        $hydrator->hydrate(
-            $object,
-            data: ['a' => 1, 'b' => 2],
-        );
-
-        $this->assertSame(['a' => 1, 'b' => 2], $object->data);
-    }
-
     public function testPath(): void
     {
         $hydrator = new Hydrator(new SimpleContainer());
@@ -127,7 +110,7 @@ final class DataTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new Data()])
+            new SimpleContainer([CounterResolver::class => new Data([])])
         );
 
         $object = new CounterClass();

@@ -15,8 +15,7 @@ interface ParameterAttributeResolverInterface
      * @param ParameterAttributeInterface $attribute The attribute to be resolved.
      * @param Context $context The context of the attribute.
      *
-     * @throws NotResolvedException
-     * @return mixed The parameter value for the attribute specified.
+     * @return Value The parameter value for the attribute specified.
      */
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): mixed;
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value;
 }

@@ -8,6 +8,7 @@ use Attribute;
 use Yiisoft\Hydrator\Context;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\Value;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 /**
@@ -17,14 +18,14 @@ use Yiisoft\Hydrator\UnexpectedAttributeException;
 final class Data implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
     /**
-     * @param string|string[]|null $key Data key to map to.
+     * @param string|string[] $key Data key to map to.
      */
     public function __construct(
-        private array|string|null $key = null,
+        private array|string $key,
     ) {
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): mixed
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value
     {
         if (!$attribute instanceof self) {
             throw new UnexpectedAttributeException(self::class, $attribute);

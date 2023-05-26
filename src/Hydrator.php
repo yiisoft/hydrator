@@ -102,36 +102,26 @@ final class Hydrator implements HydratorInterface
             }
 
             $parameterName = $parameter->getName();
-            $resolvedValue = null;
-            $resolved = false;
+            $resolvedValue = Value::fail();
 
             if ($parameter->isPromoted()) {
                 $excludeParameterNames[] = $parameterName;
-                try {
-                    $resolvedValue = $this->resolve($parameterName, $data);
-                    $resolved = true;
-                } catch (NotResolvedException) {
-                }
+                $resolvedValue = $this->resolve($parameterName, $data);
             }
 
-            try {
-                $resolvedValue = $this->parameterAttributesHandler->handle(
-                    $parameter,
-                    $resolved,
-                    $resolvedValue,
-                    $data,
-                );
-                $resolved = true;
-            } catch (NotResolvedException) {
+            $valueFromAttributes = $this->parameterAttributesHandler->handle(
+                $parameter,
+                $resolvedValue,
+                $data
+            );
+            if ($valueFromAttributes->isResolved()) {
+                $resolvedValue = $valueFromAttributes;
             }
 
-            if ($resolved) {
-                try {
-                    $constructorArguments[$parameterName] = $this->typeCaster->cast(
-                        $resolvedValue,
-                        $parameter->getType()
-                    );
-                } catch (SkipTypeCastException) {
+            if ($resolvedValue->isResolved()) {
+                $typeCastedValue = $this->typeCaster->cast($resolvedValue->getValue(), $parameter->getType());
+                if ($typeCastedValue->isResolved()) {
+                    $constructorArguments[$parameterName] = $typeCastedValue->getValue();
                 }
             }
         }
@@ -163,29 +153,21 @@ final class Hydrator implements HydratorInterface
                 continue;
             }
 
-            $resolved = false;
-            $resolvedValue = null;
-            try {
-                $resolvedValue = $this->resolve($propertyName, $data);
-                $resolved = true;
-            } catch (NotResolvedException) {
+            $resolvedValue = $this->resolve($propertyName, $data);
+
+            $valueFromAttributes = $this->parameterAttributesHandler->handle(
+                $property,
+                $resolvedValue,
+                $data
+            );
+            if ($valueFromAttributes->isResolved()) {
+                $resolvedValue = $valueFromAttributes;
             }
 
-            try {
-                $resolvedValue = $this->parameterAttributesHandler->handle(
-                    $property,
-                    $resolved,
-                    $resolved ? $resolvedValue : null,
-                    $data,
-                );
-                $resolved = true;
-            } catch (NotResolvedException) {
-            }
-
-            if ($resolved) {
-                try {
-                    $hydrateData[$propertyName] = $this->typeCaster->cast($resolvedValue, $property->getType());
-                } catch (SkipTypeCastException) {
+            if ($resolvedValue->isResolved()) {
+                $typeCastedValue = $this->typeCaster->cast($resolvedValue->getValue(), $property->getType());
+                if ($typeCastedValue->isResolved()) {
+                    $hydrateData[$propertyName] = $typeCastedValue->getValue();
                 }
             }
         }
@@ -193,15 +175,12 @@ final class Hydrator implements HydratorInterface
         return $hydrateData;
     }
 
-    /**
-     * @throws NotResolvedException
-     */
-    private function resolve(string $name, Data $data): mixed
+    private function resolve(string $name, Data $data): Value
     {
         $map = $data->getMap();
 
         if ($data->isStrict() && !array_key_exists($name, $map)) {
-            throw new NotResolvedException();
+            return Value::fail();
         }
 
         return DataHelper::getValueByPath($data->getData(), $map[$name] ?? $name);

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\TypeCaster;
 
 use ReflectionType;
-use Yiisoft\Hydrator\SkipTypeCastException;
 use Yiisoft\Hydrator\TypeCasterInterface;
+use Yiisoft\Hydrator\Value;
 
 /**
  * Allows using many type casters one by one before the value cast successfully.
@@ -27,15 +27,15 @@ final class CompositeTypeCaster implements TypeCasterInterface
         $this->typeCasters = $typeCasters;
     }
 
-    public function cast(mixed $value, ?ReflectionType $type): mixed
+    public function cast(mixed $value, ?ReflectionType $type): Value
     {
         foreach ($this->typeCasters as $typeCaster) {
-            try {
-                return $typeCaster->cast($value, $type);
-            } catch (SkipTypeCastException) {
+            $result = $typeCaster->cast($value, $type);
+            if ($result->isResolved()) {
+                return $result;
             }
         }
 
-        throw new SkipTypeCastException();
+        return Value::fail();
     }
 }

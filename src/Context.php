@@ -18,16 +18,14 @@ final class Context
 {
     /**
      * @param ReflectionParameter|ReflectionProperty $parameter Resolved parameter or property reflection.
-     * @param bool $resolved Whether the parameter or property is resolved.
-     * @param mixed $resolvedValue The resolved value.
+     * @param Value $resolvedValue The resolved value object.
      * @param array $data Data to be used for resolving.
      * @param array $map Map of data keys to object property names.
      * @psalm-param MapType $map
      */
     public function __construct(
         private ReflectionParameter|ReflectionProperty $parameter,
-        private bool $resolved,
-        private mixed $resolvedValue,
+        private Value $resolvedValue,
         private array $data,
         private array $map,
     ) {
@@ -50,7 +48,7 @@ final class Context
      */
     public function isResolved(): bool
     {
-        return $this->resolved;
+        return $this->resolvedValue->isResolved();
     }
 
     /**
@@ -60,7 +58,7 @@ final class Context
      */
     public function getResolvedValue(): mixed
     {
-        return $this->resolvedValue;
+        return $this->resolvedValue->getValue();
     }
 
     /**
@@ -68,12 +66,11 @@ final class Context
      *
      * @param string|string[]|null $key The key to get the data item for. If null, the whole data array is returned.
      * If an array, the key is treated as a path.
-     * @throws NotResolvedException
      */
-    public function getData(array|string|null $key): mixed
+    public function getData(array|string|null $key = null): Value
     {
         if ($key === null) {
-            return $this->data;
+            return Value::success($this->data);
         }
 
         if (is_string($key)) {

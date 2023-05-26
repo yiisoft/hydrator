@@ -14,19 +14,19 @@ use Yiisoft\Hydrator\ParameterAttributeInterface;
 final class Di implements ParameterAttributeInterface
 {
     /**
-     * @param string $id Container ID to obtain instance from.
+     * @param string|null $id Container ID to obtain instance from.
      */
     public function __construct(
-        private string $id
+        private ?string $id = null
     ) {
     }
 
     /**
      * Get container ID to obtain instance from.
      *
-     * @return string Container ID to obtain instance from.
+     * @return string|null Container ID to obtain instance from.
      */
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }

@@ -14,7 +14,6 @@ interface TypeCasterInterface
     /**
      * @param mixed $value Value to cast.
      * @param ReflectionType|null $type Type to cast to.
-     * @throws SkipTypeCastException If type casting should be skipped.
      */
-    public function cast(mixed $value, ?ReflectionType $type): mixed;
+    public function cast(mixed $value, ?ReflectionType $type): Value;
 }
