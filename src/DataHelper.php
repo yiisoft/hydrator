@@ -31,7 +31,7 @@ final class DataHelper
                 return Value::fail();
             }
             $result = self::getValueByKey($currentValue, $pathKey);
-            if (!$result->exist()) {
+            if (!$result->isResolved()) {
                 return $result;
             }
         }

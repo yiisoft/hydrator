@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator;
 final class Value
 {
     private function __construct(
-        private bool $exist,
+        private bool $isResolved,
         private mixed $value = null,
     ) {
     }
@@ -22,9 +22,9 @@ final class Value
         return new self(false);
     }
 
-    public function exist(): bool
+    public function isResolved(): bool
     {
-        return $this->exist;
+        return $this->isResolved;
     }
 
     public function getValue(): mixed

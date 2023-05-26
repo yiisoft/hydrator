@@ -32,7 +32,7 @@ final class Context
 
     public function isResolved(): bool
     {
-        return $this->resolvedValue->exist();
+        return $this->resolvedValue->isResolved();
     }
 
     public function getResolvedValue(): mixed

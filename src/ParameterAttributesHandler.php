@@ -37,7 +37,7 @@ final class ParameterAttributesHandler
 
             $context = new Context(
                 $parameter,
-                $hereResolvedValue->exist() ? $hereResolvedValue : $resolvedValue,
+                $hereResolvedValue->isResolved() ? $hereResolvedValue : $resolvedValue,
                 $data?->getData() ?? [],
                 $data?->getMap() ?? [],
             );
@@ -45,9 +45,9 @@ final class ParameterAttributesHandler
             $hereResolvedValue = $resolver->getParameterValue($attribute, $context);
         }
 
-        if ($this->typeCaster !== null && $hereResolvedValue->exist()) {
+        if ($this->typeCaster !== null && $hereResolvedValue->isResolved()) {
             $typeCastedValue = $this->typeCaster->cast($hereResolvedValue->getValue(), $parameter->getType());
-            if ($typeCastedValue->exist()) {
+            if ($typeCastedValue->isResolved()) {
                 $hereResolvedValue = $typeCastedValue;
             }
         }

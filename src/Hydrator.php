@@ -93,13 +93,13 @@ final class Hydrator implements HydratorInterface
                 $resolvedValue,
                 $data
             );
-            if ($valueFromAttributes->exist()) {
+            if ($valueFromAttributes->isResolved()) {
                 $resolvedValue = $valueFromAttributes;
             }
 
-            if ($resolvedValue->exist()) {
+            if ($resolvedValue->isResolved()) {
                 $typeCastedValue = $this->typeCaster->cast($resolvedValue->getValue(), $parameter->getType());
-                if ($typeCastedValue->exist()) {
+                if ($typeCastedValue->isResolved()) {
                     $constructorArguments[$parameterName] = $typeCastedValue->getValue();
                 }
             }
@@ -139,13 +139,13 @@ final class Hydrator implements HydratorInterface
                 $resolvedValue,
                 $data
             );
-            if ($valueFromAttributes->exist()) {
+            if ($valueFromAttributes->isResolved()) {
                 $resolvedValue = $valueFromAttributes;
             }
 
-            if ($resolvedValue->exist()) {
+            if ($resolvedValue->isResolved()) {
                 $typeCastedValue = $this->typeCaster->cast($resolvedValue->getValue(), $property->getType());
-                if ($typeCastedValue->exist()) {
+                if ($typeCastedValue->isResolved()) {
                     $hydrateData[$propertyName] = $typeCastedValue->getValue();
                 }
             }

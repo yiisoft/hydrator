@@ -25,7 +25,7 @@ final class CompositeTypeCaster implements TypeCasterInterface
     {
         foreach ($this->typeCasters as $typeCaster) {
             $result = $typeCaster->cast($value, $type);
-            if ($result->exist()) {
+            if ($result->isResolved()) {
                 return $result;
             }
         }
