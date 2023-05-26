@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\Support\Attribute;
 
 use Yiisoft\Hydrator\Context;
-use Yiisoft\Hydrator\NotResolvedException;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\Value;
 
 final class ContextViewerResolver implements ParameterAttributeResolverInterface
 {
@@ -18,9 +18,9 @@ final class ContextViewerResolver implements ParameterAttributeResolverInterface
         return $this->context;
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): mixed
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value
     {
         $this->context = $context;
-        throw new NotResolvedException();
+        return Value::fail();
     }
 }

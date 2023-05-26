@@ -6,12 +6,12 @@ namespace Yiisoft\Hydrator\Tests\Support;
 
 use ReflectionType;
 use Yiisoft\Hydrator\TypeCasterInterface;
-use Yiisoft\Hydrator\TypeCastResult;
+use Yiisoft\Hydrator\Value;
 
 final class SkipTypeCaster implements TypeCasterInterface
 {
-    public function cast(mixed $value, ?ReflectionType $type): TypeCastResult
+    public function cast(mixed $value, ?ReflectionType $type): Value
     {
-        return TypeCastResult::skip();
+        return Value::fail();
     }
 }

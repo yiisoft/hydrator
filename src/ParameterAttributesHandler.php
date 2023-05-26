@@ -20,48 +20,39 @@ final class ParameterAttributesHandler
     ) {
     }
 
-    /**
-     * @throws NotResolvedException
-     */
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,
-        bool $resolved = false,
-        mixed $resolvedValue = null,
+        ?Value $resolvedValue = null,
         ?Data $data = null
-    ): mixed {
+    ): Value {
+        $resolvedValue ??= Value::fail();
+
         $reflectionAttributes = $parameter
             ->getAttributes(ParameterAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
 
-        $hereResolved = false;
+        $hereResolvedValue = Value::fail();
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
             $resolver = $this->getParameterResolver($attribute);
 
             $context = new Context(
                 $parameter,
-                $resolved || $hereResolved,
-                $resolvedValue,
+                $hereResolvedValue->isResolved() ? $hereResolvedValue : $resolvedValue,
                 $data?->getData() ?? [],
                 $data?->getMap() ?? [],
             );
 
-            try {
-                $resolvedValue = $resolver->getParameterValue($attribute, $context);
-                $hereResolved = true;
-            } catch (NotResolvedException) {
+            $hereResolvedValue = $resolver->getParameterValue($attribute, $context);
+        }
+
+        if ($this->typeCaster !== null && $hereResolvedValue->isResolved()) {
+            $typeCastedValue = $this->typeCaster->cast($hereResolvedValue->getValue(), $parameter->getType());
+            if ($typeCastedValue->isResolved()) {
+                $hereResolvedValue = $typeCastedValue;
             }
         }
 
-        if ($hereResolved) {
-            if ($this->typeCaster === null) {
-                return $resolvedValue;
-            }
-
-            $result = $this->typeCaster->cast($resolvedValue, $parameter->getType());
-            return $result->isCasted() ? $result->getValue() : $resolvedValue;
-        }
-
-        throw new NotResolvedException();
+        return $hereResolvedValue;
     }
 
     private function getParameterResolver(ParameterAttributeInterface $attribute): ParameterAttributeResolverInterface

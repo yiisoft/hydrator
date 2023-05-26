@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
-final class TypeCastResult
+final class Value
 {
     private function __construct(
-        private bool $isCasted,
+        private bool $isResolved,
         private mixed $value = null,
     ) {
     }
@@ -17,14 +17,14 @@ final class TypeCastResult
         return new self(true, $value);
     }
 
-    public static function skip(): self
+    public static function fail(): self
     {
         return new self(false);
     }
 
-    public function isCasted(): bool
+    public function isResolved(): bool
     {
-        return $this->isCasted;
+        return $this->isResolved;
     }
 
     public function getValue(): mixed

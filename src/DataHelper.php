@@ -17,30 +17,29 @@ final class DataHelper
 {
     /**
      * @param string|string[] $path
-     *
-     * @throws NotResolvedException
      */
-    public static function getValueByPath(array $data, string|array $path): mixed
+    public static function getValueByPath(array $data, string|array $path): Value
     {
         if (is_string($path)) {
             $path = StringHelper::parsePath($path);
         }
 
-        $value = $data;
+        $result = Value::success($data);
         foreach ($path as $pathKey) {
-            if (!is_array($value)) {
-                throw new NotResolvedException();
+            $currentValue = $result->getValue();
+            if (!is_array($currentValue)) {
+                return Value::fail();
             }
-            $value = self::getValueByKey($value, $pathKey);
+            $result = self::getValueByKey($currentValue, $pathKey);
+            if (!$result->isResolved()) {
+                return $result;
+            }
         }
 
-        return $value;
+        return $result;
     }
 
-    /**
-     * @throws NotResolvedException
-     */
-    private static function getValueByKey(array $data, string $pathKey): mixed
+    private static function getValueByKey(array $data, string $pathKey): Value
     {
         $found = false;
         $result = null;
@@ -67,10 +66,6 @@ final class DataHelper
             }
         }
 
-        if (!$found) {
-            throw new NotResolvedException();
-        }
-
-        return $result;
+        return $found ? Value::success($result) : Value::fail();
     }
 }
