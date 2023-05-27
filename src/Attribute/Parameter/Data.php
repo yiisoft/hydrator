@@ -12,13 +12,13 @@ use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 /**
- * Maps a parameter or a property to the data key specified.
+ * Resolve value from the data array used for object hydration by key specified.
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 final class Data implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
     /**
-     * @param string|string[] $key Data key to map to.
+     * @param string|string[] $key The data array key.
      */
     public function __construct(
         private array|string $key,

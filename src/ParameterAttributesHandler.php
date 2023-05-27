@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
@@ -13,13 +15,13 @@ use RuntimeException;
 use function is_string;
 
 /**
- * Handles parameters and attributes.
+ * Handles parameters attributes that implement {@see ParameterAttributeInterface}.
  */
 final class ParameterAttributesHandler
 {
     /**
-     * @param ContainerInterface $container DI container to get resolvers from.
-     * @param TypeCasterInterface|null $typeCaster Type caster to use to cast values.
+     * @param ContainerInterface $container Container to get attributes' resolvers from.
+     * @param TypeCasterInterface|null $typeCaster Type caster used to cast values.
      */
     public function __construct(
         private ContainerInterface $container,
@@ -28,13 +30,17 @@ final class ParameterAttributesHandler
     }
 
     /**
-     * Handle resolving.
+     * Handle parameters' attributes of passed parameter.
      *
-     * @param ReflectionParameter|ReflectionProperty $parameter Parameter or property to resolve.
-     * @param Result|null $resolveResult The resolved value object.
-     * @param Data|null $data Data to be used for resolving.
+     * @param ReflectionParameter|ReflectionProperty $parameter Parameter or property reflection to handle attributes
+     * from.
+     * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see Context}.
+     * @param Data|null $data Raw data and map to pass to attribute resolver via {@see Context}.
      *
-     * @return Result The resolved value object.
+     * @return Result The resolved from attributes value object.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,
@@ -72,10 +78,14 @@ final class ParameterAttributesHandler
     }
 
     /**
-     * @param ParameterAttributeInterface $attribute The attribute to be resolved.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @return ParameterAttributeResolverInterface The parameter attribute resolver.
+     * Get parameter attribute resolver.
+     *
+     * @param ParameterAttributeInterface $attribute The parameter attribute to be resolved.
+     *
+     * @return ParameterAttributeResolverInterface Resolver for the specified attribute.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function getParameterResolver(ParameterAttributeInterface $attribute): ParameterAttributeResolverInterface
     {

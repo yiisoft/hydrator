@@ -17,7 +17,7 @@ use function array_key_exists;
 use function in_array;
 
 /**
- * Creates or populates objects from a set of raw data.
+ * Creates or hydrate objects from a set of raw data.
  *
  * @psalm-import-type MapType from HydratorInterface
  */
@@ -29,7 +29,7 @@ final class Hydrator implements HydratorInterface
     private Injector $injector;
 
     /**
-     * @var TypeCasterInterface Type caster to use to cast raw values.
+     * @var TypeCasterInterface Type caster used to cast raw values.
      */
     private TypeCasterInterface $typeCaster;
 
@@ -44,13 +44,12 @@ final class Hydrator implements HydratorInterface
     private ParameterAttributesHandler $parameterAttributesHandler;
 
     /**
-     * @param ContainerInterface $container DI container used to resolve created object dependencies.
-     * @param TypeCasterInterface|null $typeCaster Type caster to use to cast raw values.
+     * @param ContainerInterface $container Container used to resolve created object dependencies and get attributes'
+     * resolvers.
+     * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
      */
-    public function __construct(
-        ContainerInterface $container,
-        ?TypeCasterInterface $typeCaster = null,
-    ) {
+    public function __construct(ContainerInterface $container, ?TypeCasterInterface $typeCaster = null)
+    {
         $this->injector = new Injector($container);
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
         $this->dataAttributesHandler = new DataAttributesHandler($container);
@@ -109,11 +108,7 @@ final class Hydrator implements HydratorInterface
                 $resolveResult = $this->resolve($parameterName, $data);
             }
 
-            $attributesHandleResult = $this->parameterAttributesHandler->handle(
-                $parameter,
-                $resolveResult,
-                $data
-            );
+            $attributesHandleResult = $this->parameterAttributesHandler->handle($parameter, $resolveResult, $data);
             if ($attributesHandleResult->isResolved()) {
                 $resolveResult = $attributesHandleResult;
             }
@@ -155,11 +150,7 @@ final class Hydrator implements HydratorInterface
 
             $resolveResult = $this->resolve($propertyName, $data);
 
-            $attributesHandleResult = $this->parameterAttributesHandler->handle(
-                $property,
-                $resolveResult,
-                $data
-            );
+            $attributesHandleResult = $this->parameterAttributesHandler->handle($property, $resolveResult, $data);
             if ($attributesHandleResult->isResolved()) {
                 $resolveResult = $attributesHandleResult;
             }

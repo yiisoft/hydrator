@@ -11,7 +11,7 @@ use function is_string;
 use function strlen;
 
 /**
- * A set of static methods to work with data.
+ * A set of static methods to work with data array.
  *
  * @internal
  */
@@ -50,6 +50,8 @@ final class DataHelper
      *
      * @param array $data Array to get value from.
      * @param string $pathKey Key to get value for.
+     *
+     * @return Result The result object.
      */
     private static function getValueByKey(array $data, string $pathKey): Result
     {

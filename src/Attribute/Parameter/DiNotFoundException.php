@@ -10,8 +10,15 @@ use ReflectionProperty;
 use RuntimeException;
 use Throwable;
 
+/**
+ * Exception that thrown into {@see DiResolver} when object not found or object ID autoresolving is fail.
+ */
 final class DiNotFoundException extends RuntimeException implements NotFoundExceptionInterface
 {
+    /**
+     * @param ReflectionParameter|ReflectionProperty $reflection Parameter or property reflection.
+     * @param Throwable|null $previous The previous throwable used for the exception chaining.
+     */
     public function __construct(ReflectionParameter|ReflectionProperty $reflection, ?Throwable $previous = null)
     {
         /**

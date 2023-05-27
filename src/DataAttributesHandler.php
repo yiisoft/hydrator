@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
 use RuntimeException;
 
 use function is_string;
 
 /**
- * Handles data attributes.
+ * Handles data attributes that implement {@see DataAttributeInterface}.
  *
  * @internal
  */
 final class DataAttributesHandler
 {
     /**
-     * @param ContainerInterface $container Container to use for getting data resolvers.
+     * @param ContainerInterface $container Container to get attributes' resolvers from.
      */
     public function __construct(
         private ContainerInterface $container,
@@ -26,9 +28,15 @@ final class DataAttributesHandler
     }
 
     /**
+     * Handle data attributes.
+     *
      * @param ReflectionAttribute[] $reflectionAttributes Reflections of attributes to handle.
+     * @param Data $data Current {@see Data} object.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     *
      * @psalm-param ReflectionAttribute<DataAttributeInterface>[] $reflectionAttributes
-     * @param Data $data Data to handle attributes for.
      */
     public function handle(array $reflectionAttributes, Data $data): void
     {
@@ -41,10 +49,12 @@ final class DataAttributesHandler
     /**
      * Get data attribute resolver.
      *
-     * @param DataAttributeInterface $attribute Data attribute to get resolver for.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @return DataAttributeResolverInterface Resolver for the attribute.
+     * @param DataAttributeInterface $attribute The data attribute to be resolved.
+     *
+     * @return DataAttributeResolverInterface Resolver for the specified attribute.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function getDataResolver(DataAttributeInterface $attribute): DataAttributeResolverInterface
     {

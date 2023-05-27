@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 /**
- * `ParameterAttributeInterface` is an interface for parameter attributes.
+ * An interface for resolvers of attributes that implement {@see ParameterAttributeInterface}.
  */
 interface ParameterAttributeResolverInterface
 {
     /**
-     * Returns the parameter value for the attribute specified.
+     * Returns the resolved from specified attribute value object.
      *
      * @param ParameterAttributeInterface $attribute The attribute to be resolved.
-     * @param Context $context The context of the attribute.
+     * @param Context $context The context of value resolving from attribute.
      *
-     * @return Result The parameter value for the attribute specified.
+     * @return Result The resolved from specified attribute value object.
      */
     public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Result;
 }

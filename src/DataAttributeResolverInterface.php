@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 /**
- * Data attribute allows preparing data for the attribute.
+ * An interface for resolvers of attributes that implement {@see DataAttributeInterface}.
  */
 interface DataAttributeResolverInterface
 {
     /**
-     * Prepare data for the attribute.
+     * Prepare {@see Data} object that used for hydration.
      *
-     * @param DataAttributeInterface $attribute Data attribute to resolve.
-     * @param Data $data Data to resolve attribute for.
+     * @param DataAttributeInterface $attribute The attribute to be resolved.
+     * @param Data $data Current {@see Data} object.
      */
     public function prepareData(DataAttributeInterface $attribute, Data $data): void;
 }

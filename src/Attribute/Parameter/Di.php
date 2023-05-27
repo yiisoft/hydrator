@@ -8,7 +8,7 @@ use Attribute;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 
 /**
- * Maps a property or parameter to an instance obtained from container by the specified ID.
+ * Resolve value as instance obtained from container by the specified ID or autoresolvied ID by PHP type.
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 final class Di implements ParameterAttributeInterface

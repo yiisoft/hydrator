@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 /**
- * `ParameterAttributeInterface` is an interface for parameter attributes.
+ * An interface for parameters' attributes (allowed only in class properties and constructor parameters). Can be used
+ * for getting value (e. g, from request) or type casting value.
  */
 interface ParameterAttributeInterface
 {
     /**
-     * Returns resolver for the attribute.
+     * A matching resolver name or an instance used for processing this attribute.
      *
-     * @return ParameterAttributeResolverInterface|string Resolver for the attribute.
+     * @return ParameterAttributeResolverInterface|string An attribute resolver name or an instance.
      */
     public function getResolver(): string|ParameterAttributeResolverInterface;
 }

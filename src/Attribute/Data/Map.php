@@ -12,9 +12,7 @@ use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 /**
- * Maps object property names to keys in the data array.
- * When a class has the attribute, hydrator fills object properties
- * according to the map instead of using same-named data keys.
+ * Override mapping of object property names to keys in the data array in hydrator.
  *
  * @psalm-import-type MapType from HydratorInterface
  */
@@ -23,8 +21,9 @@ final class Map implements DataAttributeInterface, DataAttributeResolverInterfac
 {
     /**
      * @param array $map Object property names mapped to keys in the data array.
+     * @param bool|null $strict Whether to hydrate properties from the map only.
+     *
      * @psalm-param MapType $map
-     * @param bool|null $strict Whether to populate properties from the map only.
      */
     public function __construct(
         private array $map,

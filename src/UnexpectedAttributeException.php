@@ -8,14 +8,14 @@ use InvalidArgumentException;
 use Throwable;
 
 /**
- * Thrown when an attribute isn't of the expected class.
+ * Thrown when an attribute isn't of the expected class. Used in data and parameter attribute handlers.
  */
 final class UnexpectedAttributeException extends InvalidArgumentException
 {
     /**
      * @param string $expectedClassName Expected class name of an attribute.
      * @param object $actualObject An actual given object that's not an instance of `$expectedClassName`.
-     * @param int $code The Exception code.
+     * @param int $code The exception code.
      * @param Throwable|null $previous The previous throwable used for the exception chaining.
      */
     public function __construct(

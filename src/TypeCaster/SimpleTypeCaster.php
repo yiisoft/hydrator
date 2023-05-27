@@ -23,7 +23,7 @@ use function is_string;
 
 /**
  * Casts value to a type obtained from {@see ReflectionType} passed.
- * Hydrator is used on arrays to cast these to objects.
+ * {@see Hydrator} is used on arrays to cast these to objects.
  */
 final class SimpleTypeCaster implements TypeCasterInterface
 {
