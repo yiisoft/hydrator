@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
-final class Value
+final class Result
 {
     private function __construct(
         private bool $isResolved,

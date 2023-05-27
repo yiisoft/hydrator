@@ -7,19 +7,19 @@ namespace Yiisoft\Hydrator\Tests\Support;
 use ReflectionNamedType;
 use ReflectionType;
 use Yiisoft\Hydrator\TypeCasterInterface;
-use Yiisoft\Hydrator\Value;
+use Yiisoft\Hydrator\Result;
 
 final class String42TypeCaster implements TypeCasterInterface
 {
-    public function cast(mixed $value, ?ReflectionType $type): Value
+    public function cast(mixed $value, ?ReflectionType $type): Result
     {
         if ($type instanceof ReflectionNamedType
             && $type->isBuiltin()
             && $type->getName() === 'string'
         ) {
-            return Value::success('42');
+            return Result::success('42');
         }
 
-        return Value::fail();
+        return Result::fail();
     }
 }

@@ -6,5 +6,5 @@ namespace Yiisoft\Hydrator;
 
 interface ParameterAttributeResolverInterface
 {
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value;
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Result;
 }

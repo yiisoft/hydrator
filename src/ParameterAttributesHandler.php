@@ -22,37 +22,37 @@ final class ParameterAttributesHandler
 
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,
-        ?Value $resolvedValue = null,
+        ?Result $resolveResult = null,
         ?Data $data = null
-    ): Value {
-        $resolvedValue ??= Value::fail();
+    ): Result {
+        $resolveResult ??= Result::fail();
 
         $reflectionAttributes = $parameter
             ->getAttributes(ParameterAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
 
-        $hereResolvedValue = Value::fail();
+        $hereResolveResult = Result::fail();
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
             $resolver = $this->getParameterResolver($attribute);
 
             $context = new Context(
                 $parameter,
-                $hereResolvedValue->isResolved() ? $hereResolvedValue : $resolvedValue,
+                $hereResolveResult->isResolved() ? $hereResolveResult : $resolveResult,
                 $data?->getData() ?? [],
                 $data?->getMap() ?? [],
             );
 
-            $hereResolvedValue = $resolver->getParameterValue($attribute, $context);
+            $hereResolveResult = $resolver->getParameterValue($attribute, $context);
         }
 
-        if ($this->typeCaster !== null && $hereResolvedValue->isResolved()) {
-            $typeCastedValue = $this->typeCaster->cast($hereResolvedValue->getValue(), $parameter->getType());
-            if ($typeCastedValue->isResolved()) {
-                $hereResolvedValue = $typeCastedValue;
+        if ($this->typeCaster !== null && $hereResolveResult->isResolved()) {
+            $result = $this->typeCaster->cast($hereResolveResult->getValue(), $parameter->getType());
+            if ($result->isResolved()) {
+                $hereResolveResult = $result;
             }
         }
 
-        return $hereResolvedValue;
+        return $hereResolveResult;
     }
 
     private function getParameterResolver(ParameterAttributeInterface $attribute): ParameterAttributeResolverInterface

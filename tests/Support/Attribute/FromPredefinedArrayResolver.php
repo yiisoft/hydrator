@@ -10,7 +10,7 @@ use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
-use Yiisoft\Hydrator\Value;
+use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 use function array_key_exists;
@@ -24,7 +24,7 @@ final class FromPredefinedArrayResolver implements ParameterAttributeResolverInt
         $this->array = $array;
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Result
     {
         if (!$attribute instanceof FromPredefinedArray) {
             throw new UnexpectedAttributeException(FromPredefinedArray::class, $attribute);
@@ -32,13 +32,13 @@ final class FromPredefinedArrayResolver implements ParameterAttributeResolverInt
 
         $key = $attribute->getKey();
         if ($key === null) {
-            return Value::success($this->array);
+            return Result::success($this->array);
         }
         if (array_key_exists($key, $this->array)) {
-            return Value::success($this->array[$key]);
+            return Result::success($this->array[$key]);
         }
 
-        return Value::fail();
+        return Result::fail();
     }
 
     public function prepareData(DataAttributeInterface $attribute, Data $data): void

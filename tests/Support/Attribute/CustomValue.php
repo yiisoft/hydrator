@@ -8,7 +8,7 @@ use Attribute;
 use Yiisoft\Hydrator\Context;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
-use Yiisoft\Hydrator\Value;
+use Yiisoft\Hydrator\Result;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 final class CustomValue implements ParameterAttributeInterface, ParameterAttributeResolverInterface
@@ -18,9 +18,9 @@ final class CustomValue implements ParameterAttributeInterface, ParameterAttribu
     ) {
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Result
     {
-        return Value::success($this->value);
+        return Result::success($this->value);
     }
 
     public function getResolver(): self
