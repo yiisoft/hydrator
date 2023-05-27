@@ -18,7 +18,7 @@ final class Context
 {
     /**
      * @param ReflectionParameter|ReflectionProperty $parameter Resolved parameter or property reflection.
-     * @param Value $resolvedValue The resolved value object.
+     * @param Result $resolveResult The resolved value object.
      * @param array $data Data to be used for resolving.
      * @param array $map Map of data keys to object property names.
      * @psalm-param MapType $map

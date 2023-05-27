@@ -31,10 +31,10 @@ final class ParameterAttributesHandler
      * Handle resolving.
      *
      * @param ReflectionParameter|ReflectionProperty $parameter Parameter or property to resolve.
-     * @param Value $resolvedValue The resolved value object.
+     * @param Result|null $resolveResult The resolved value object.
      * @param Data|null $data Data to be used for resolving.
      *
-     * @return Value The resolved value object.
+     * @return Result The resolved value object.
      */
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,
