@@ -51,10 +51,9 @@ final class DataAttributesHandler
      *
      * @param DataAttributeInterface $attribute The data attribute to be resolved.
      *
-     * @return DataAttributeResolverInterface Resolver for the specified attribute.
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @return DataAttributeResolverInterface Resolver for the specified attribute.
      */
     private function getDataResolver(DataAttributeInterface $attribute): DataAttributeResolverInterface
     {

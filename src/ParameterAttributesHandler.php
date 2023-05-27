@@ -37,10 +37,9 @@ final class ParameterAttributesHandler
      * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see Context}.
      * @param Data|null $data Raw data and map to pass to attribute resolver via {@see Context}.
      *
-     * @return Result The resolved from attributes value object.
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @return Result The resolved from attributes value object.
      */
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,
@@ -82,10 +81,9 @@ final class ParameterAttributesHandler
      *
      * @param ParameterAttributeInterface $attribute The parameter attribute to be resolved.
      *
-     * @return ParameterAttributeResolverInterface Resolver for the specified attribute.
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @return ParameterAttributeResolverInterface Resolver for the specified attribute.
      */
     private function getParameterResolver(ParameterAttributeInterface $attribute): ParameterAttributeResolverInterface
     {
