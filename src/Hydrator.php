@@ -102,24 +102,24 @@ final class Hydrator implements HydratorInterface
             }
 
             $parameterName = $parameter->getName();
-            $resolvedValue = Value::fail();
+            $resolveResult = Result::fail();
 
             if ($parameter->isPromoted()) {
                 $excludeParameterNames[] = $parameterName;
-                $resolvedValue = $this->resolve($parameterName, $data);
+                $resolveResult = $this->resolve($parameterName, $data);
             }
 
-            $valueFromAttributes = $this->parameterAttributesHandler->handle(
+            $attributesHandleResult = $this->parameterAttributesHandler->handle(
                 $parameter,
-                $resolvedValue,
+                $resolveResult,
                 $data
             );
-            if ($valueFromAttributes->isResolved()) {
-                $resolvedValue = $valueFromAttributes;
+            if ($attributesHandleResult->isResolved()) {
+                $resolveResult = $attributesHandleResult;
             }
 
-            if ($resolvedValue->isResolved()) {
-                $typeCastedValue = $this->typeCaster->cast($resolvedValue->getValue(), $parameter->getType());
+            if ($resolveResult->isResolved()) {
+                $typeCastedValue = $this->typeCaster->cast($resolveResult->getValue(), $parameter->getType());
                 if ($typeCastedValue->isResolved()) {
                     $constructorArguments[$parameterName] = $typeCastedValue->getValue();
                 }
@@ -153,21 +153,21 @@ final class Hydrator implements HydratorInterface
                 continue;
             }
 
-            $resolvedValue = $this->resolve($propertyName, $data);
+            $resolveResult = $this->resolve($propertyName, $data);
 
-            $valueFromAttributes = $this->parameterAttributesHandler->handle(
+            $attributesHandleResult = $this->parameterAttributesHandler->handle(
                 $property,
-                $resolvedValue,
+                $resolveResult,
                 $data
             );
-            if ($valueFromAttributes->isResolved()) {
-                $resolvedValue = $valueFromAttributes;
+            if ($attributesHandleResult->isResolved()) {
+                $resolveResult = $attributesHandleResult;
             }
 
-            if ($resolvedValue->isResolved()) {
-                $typeCastedValue = $this->typeCaster->cast($resolvedValue->getValue(), $property->getType());
-                if ($typeCastedValue->isResolved()) {
-                    $hydrateData[$propertyName] = $typeCastedValue->getValue();
+            if ($resolveResult->isResolved()) {
+                $result = $this->typeCaster->cast($resolveResult->getValue(), $property->getType());
+                if ($result->isResolved()) {
+                    $hydrateData[$propertyName] = $result->getValue();
                 }
             }
         }
@@ -175,12 +175,12 @@ final class Hydrator implements HydratorInterface
         return $hydrateData;
     }
 
-    private function resolve(string $name, Data $data): Value
+    private function resolve(string $name, Data $data): Result
     {
         $map = $data->getMap();
 
         if ($data->isStrict() && !array_key_exists($name, $map)) {
-            return Value::fail();
+            return Result::fail();
         }
 
         return DataHelper::getValueByPath($data->getData(), $map[$name] ?? $name);

@@ -25,7 +25,7 @@ final class Context
      */
     public function __construct(
         private ReflectionParameter|ReflectionProperty $parameter,
-        private Value $resolvedValue,
+        private Result $resolveResult,
         private array $data,
         private array $map,
     ) {
@@ -48,7 +48,7 @@ final class Context
      */
     public function isResolved(): bool
     {
-        return $this->resolvedValue->isResolved();
+        return $this->resolveResult->isResolved();
     }
 
     /**
@@ -58,7 +58,7 @@ final class Context
      */
     public function getResolvedValue(): mixed
     {
-        return $this->resolvedValue->getValue();
+        return $this->resolveResult->getValue();
     }
 
     /**
@@ -67,10 +67,10 @@ final class Context
      * @param string|string[]|null $key The key to get the data item for. If null, the whole data array is returned.
      * If an array, the key is treated as a path.
      */
-    public function getData(array|string|null $key = null): Value
+    public function getData(array|string|null $key = null): Result
     {
         if ($key === null) {
-            return Value::success($this->data);
+            return Result::success($this->data);
         }
 
         if (is_string($key)) {

@@ -15,5 +15,5 @@ interface TypeCasterInterface
      * @param mixed $value Value to cast.
      * @param ReflectionType|null $type Type to cast to.
      */
-    public function cast(mixed $value, ?ReflectionType $type): Value;
+    public function cast(mixed $value, ?ReflectionType $type): Result;
 }

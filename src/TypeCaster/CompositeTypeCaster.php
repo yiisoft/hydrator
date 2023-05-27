@@ -6,7 +6,7 @@ namespace Yiisoft\Hydrator\TypeCaster;
 
 use ReflectionType;
 use Yiisoft\Hydrator\TypeCasterInterface;
-use Yiisoft\Hydrator\Value;
+use Yiisoft\Hydrator\Result;
 
 /**
  * Allows using many type casters one by one before the value cast successfully.
@@ -27,7 +27,7 @@ final class CompositeTypeCaster implements TypeCasterInterface
         $this->typeCasters = $typeCasters;
     }
 
-    public function cast(mixed $value, ?ReflectionType $type): Value
+    public function cast(mixed $value, ?ReflectionType $type): Result
     {
         foreach ($this->typeCasters as $typeCaster) {
             $result = $typeCaster->cast($value, $type);
@@ -36,6 +36,6 @@ final class CompositeTypeCaster implements TypeCasterInterface
             }
         }
 
-        return Value::fail();
+        return Result::fail();
     }
 }

@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator\Tests\Support\Attribute;
 use Yiisoft\Hydrator\Context;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
-use Yiisoft\Hydrator\Value;
+use Yiisoft\Hydrator\Result;
 
 final class ContextViewerResolver implements ParameterAttributeResolverInterface
 {
@@ -18,9 +18,9 @@ final class ContextViewerResolver implements ParameterAttributeResolverInterface
         return $this->context;
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Value
+    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Result
     {
         $this->context = $context;
-        return Value::fail();
+        return Result::fail();
     }
 }

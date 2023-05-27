@@ -24,17 +24,17 @@ final class DataHelper
      *
      * @see StringHelper::parsePath()
      */
-    public static function getValueByPath(array $data, string|array $path): Value
+    public static function getValueByPath(array $data, string|array $path): Result
     {
         if (is_string($path)) {
             $path = StringHelper::parsePath($path);
         }
 
-        $result = Value::success($data);
+        $result = Result::success($data);
         foreach ($path as $pathKey) {
             $currentValue = $result->getValue();
             if (!is_array($currentValue)) {
-                return Value::fail();
+                return Result::fail();
             }
             $result = self::getValueByKey($currentValue, $pathKey);
             if (!$result->isResolved()) {
@@ -51,7 +51,7 @@ final class DataHelper
      * @param array $data Array to get value from.
      * @param string $pathKey Key to get value for.
      */
-    private static function getValueByKey(array $data, string $pathKey): Value
+    private static function getValueByKey(array $data, string $pathKey): Result
     {
         $found = false;
         $result = null;
@@ -78,6 +78,6 @@ final class DataHelper
             }
         }
 
-        return $found ? Value::success($result) : Value::fail();
+        return $found ? Result::success($result) : Result::fail();
     }
 }
