@@ -18,7 +18,7 @@ final class ReadMeTest extends TestCase
             'name' => 'Ferrari',
             'engine' => [
                 'name' => 'V8',
-            ]
+            ],
         ]);
 
         $this->assertSame('Ferrari', $car->getName());
