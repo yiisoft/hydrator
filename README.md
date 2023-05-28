@@ -15,14 +15,17 @@
 [![type-coverage](https://shepherd.dev/github/yiisoft/hydrator/coverage.svg)](https://shepherd.dev/github/yiisoft/hydrator)
 [![psalm-level](https://shepherd.dev/github/yiisoft/hydrator/level.svg)](https://shepherd.dev/github/yiisoft/hydrator)
 
-The package provides a way to create or populate objects from a set of raw data.
+The package provides a way to create or hydrate objects from a set of raw data.
 
 Features are:
 
-- It uses constructor arguments to create/hydrate objects.
-- Resolves dependencies when creating objects using DI container provided.
-- Supports dot-notation for nested data.
-- Allows fine-tuning hydration via PHP attributes.
+- supports properties of any visibility;
+- uses constructor arguments to create objects;
+- resolves dependencies when creating objects using [PSR-11](http://www.php-fig.org/psr/psr-11/) compatible DI container
+  provided;
+- supports nested objects;
+- supports mapping;
+- allows fine-tuning hydration via PHP attributes.
 
 ## Basic usage
 
@@ -44,7 +47,7 @@ $hydrator = new Hydrator($container);
 $object = $hydrator->create(MyClass::class, $data);
 ```
 
-To pass arguments to the constructor of a nested object, use dot-notation:
+To pass arguments to the constructor of a nested object, use nested array or dot-notation:
 
 ```php
 final class Engine
@@ -62,15 +65,22 @@ final class Car
     ) {}
 }
 
+// nested array
 $object = $hydrator->create(Car::class, [
     'name' => 'Ferrari',
     'engine' => [
         'name' => 'V8',
     ]
 ]);
+
+// or dot-notation
+$object = $hydrator->create(Car::class, [
+    'name' => 'Ferrari',
+    'engine.name' => 'V8',
+]);
 ```
 
-That would pass the `name` constructor argument of the  `Car` object and create a new `Engine` object for `engine`
+That would pass the `name` constructor argument of the `Car` object and create a new `Engine` object for `engine`
 argument passing `V8` as the `name` argument to its constructor.
 
 ## Configuration with PHP attributes
@@ -88,11 +98,11 @@ use \Yiisoft\Hydrator\Attribute\Data\Map;
     'firstName' => 'first_name',
     'lastName' => 'last_name',
 ])]
-class Person
+final class Person
 {
     public function __construct(
-        private $firstName,
-        private $lastName,
+        private string $firstName,
+        private string $lastName,
     ) {}
 }
 
@@ -102,21 +112,21 @@ $person = $hydrator->create(Person::class, [
 ]);
 ```
 
-When using the `Map`, you can set `strict` argument to `true`.
-That instructs the hydrator that all data should be mapped explicitly.
+When using the `Map`, you can set `strict` argument to `true`. That instructs the hydrator that all data should be 
+mapped explicitly.
 
 Alternatively you can map each property using `Data` attribute:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\Parameter\Data;
 
-class Person
+final class Person
 {
     public function __construct(
         #[Data('first_name')]
-        private $firstName,
+        private string $firstName,
         #[Data('last_name')]
-        private $lastName,
+        private string $lastName,
     ) {}
 }
 
@@ -125,8 +135,6 @@ $person = $hydrator->create(Person::class, [
     'last_name' => 'Doe',
 ]);
 ```
-
-You could use the `strict` option as well.
 
 ### Casting value to string
 
@@ -166,7 +174,7 @@ class MyClass
 
 ### Resolving dependencies
 
-To resolve dependencies using DI container, use `Di` attribute:
+To resolve dependencies by specific ID using DI container, use `Di` attribute:
 
 ```php
 ues \Yiisoft\Hydrator\Attribute\Parameter\Di;
@@ -211,8 +219,6 @@ You use these attributes for getting value for specific parameter or for prepari
 
 Parameter attribute class should implement `ParameterAttributeInterface` and the corresponding parameter attribute
 resolver should implement `ParameterAttributeResolverInterface`.
-
-If value isn't resolved then you must throw `NotResolvedException`.
 
 ## Requirements
 
