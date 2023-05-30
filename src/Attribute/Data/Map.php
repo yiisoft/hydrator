@@ -12,12 +12,17 @@ use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
 /**
+ * Override mapping of object property names to keys in the data array in hydrator.
+ *
  * @psalm-import-type MapType from HydratorInterface
  */
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Map implements DataAttributeInterface, DataAttributeResolverInterface
 {
     /**
+     * @param array $map Object property names mapped to keys in the data array.
+     * @param bool|null $strict Whether to hydrate properties from the map only.
+     *
      * @psalm-param MapType $map
      */
     public function __construct(

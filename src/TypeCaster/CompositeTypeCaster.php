@@ -8,13 +8,19 @@ use ReflectionType;
 use Yiisoft\Hydrator\TypeCasterInterface;
 use Yiisoft\Hydrator\Result;
 
+/**
+ * Allows using many type casters one by one before the value cast successfully.
+ */
 final class CompositeTypeCaster implements TypeCasterInterface
 {
     /**
-     * @var TypeCasterInterface[]
+     * @var TypeCasterInterface[] Type casters to use.
      */
     private array $typeCasters;
 
+    /**
+     * @param TypeCasterInterface ...$typeCasters Type casters to use.
+     */
     public function __construct(
         TypeCasterInterface ...$typeCasters
     ) {

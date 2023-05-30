@@ -15,8 +15,14 @@ use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
+/**
+ * Resolver for {@see Di} attribute. Obtains dependency from container by ID specified or autoresolved ID by PHP type.
+ */
 final class DiResolver implements ParameterAttributeResolverInterface
 {
+    /**
+     * @param ContainerInterface $container Container to obtain dependency from.
+     */
     public function __construct(
         private ContainerInterface $container,
     ) {
@@ -24,7 +30,7 @@ final class DiResolver implements ParameterAttributeResolverInterface
 
     /**
      * @throws ContainerExceptionInterface
-     * @throws DiNotFoundException
+     * @throws DiNotFoundException When object not found in container or object ID autoresolving is fail.
      */
     public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Result
     {

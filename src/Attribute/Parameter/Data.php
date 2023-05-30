@@ -11,11 +11,14 @@ use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 
+/**
+ * Resolve value from the data array used for object hydration by key specified.
+ */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 final class Data implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
     /**
-     * @param string|string[] $key
+     * @param string|string[] $key The data array key.
      */
     public function __construct(
         private array|string $key,
