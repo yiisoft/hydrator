@@ -8,6 +8,7 @@ final class Car
 {
     public function __construct(
         public EngineInterface $engine,
+        public string $name = 'default',
     ) {
     }
 }

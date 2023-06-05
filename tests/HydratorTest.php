@@ -18,9 +18,12 @@ use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\InvalidParameterResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\NotResolver;
+use Yiisoft\Hydrator\Tests\Support\Classes\Car;
 use Yiisoft\Hydrator\Tests\Support\Classes\ConstructorParameterAttributesClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\ConstructorTypeClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
+use Yiisoft\Hydrator\Tests\Support\Classes\Engine1;
+use Yiisoft\Hydrator\Tests\Support\Classes\EngineInterface;
 use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\InvalidDataResolverClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\ObjectPropertyModel\ObjectPropertyModel;
@@ -662,5 +665,21 @@ final class HydratorTest extends TestCase
         $this->assertSame(7, $object->a);
         $this->assertSame(0, $object::$b);
         $this->assertSame(500, $object->c);
+    }
+
+    public function testDependencyContainer(): void
+    {
+        $engine = new Engine1();
+        $hydrator = new Hydrator(
+            dependencyContainer: new SimpleContainer([
+                EngineInterface::class => $engine,
+            ]),
+        );
+
+        $object = $hydrator->create(Car::class, ['name' => 'red car']);
+
+        $this->assertInstanceOf(Car::class, $object);
+        $this->assertSame($engine, $object->engine);
+        $this->assertSame('red car', $object->name);
     }
 }
