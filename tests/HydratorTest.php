@@ -41,7 +41,7 @@ final class HydratorTest extends TestCase
 {
     public function testSimpleCreate(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(
             SimpleClass::class,
@@ -55,7 +55,7 @@ final class HydratorTest extends TestCase
 
     public function testSimpleHydrate(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new SimpleClass();
         $hydrator->hydrate(
@@ -70,7 +70,7 @@ final class HydratorTest extends TestCase
 
     public function testSimpleCreateStrict(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(
             SimpleClass::class,
@@ -86,7 +86,7 @@ final class HydratorTest extends TestCase
 
     public function testSimpleHydrateStrict(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new SimpleClass();
         $hydrator->hydrate(
@@ -132,7 +132,7 @@ final class HydratorTest extends TestCase
      */
     public function testSimpleHydrateWithMap(array $data, array $map): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new SimpleClass();
         $hydrator->hydrate($object, $data, $map);
@@ -144,7 +144,7 @@ final class HydratorTest extends TestCase
 
     public function testPrepareProperty(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(PreparePropertyClass::class, ['a' => 'test']);
 
@@ -153,7 +153,7 @@ final class HydratorTest extends TestCase
 
     public function testCreateNestedObject(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(
             UserModel::class,
@@ -190,7 +190,7 @@ final class HydratorTest extends TestCase
      */
     public function testCreateNestedObjectWithMap(array $data, array $map): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(UserModel::class, $data, $map);
 
@@ -392,7 +392,7 @@ final class HydratorTest extends TestCase
             $prepareCallable($object);
         }
 
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
         $hydrator->hydrate($object, $data);
 
         $expectedValues = array_merge(
@@ -441,7 +441,7 @@ final class HydratorTest extends TestCase
      */
     public function testConstructorTypeCast(array $expectedValues, array $data): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
         $object = $hydrator->create(ConstructorTypeClass::class, $data);
 
         $expectedValues = array_merge(
@@ -462,7 +462,6 @@ final class HydratorTest extends TestCase
     public function testCustomTypeCast(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer(),
             new CompositeTypeCaster(
                 new String42TypeCaster(),
                 new SimpleTypeCaster(),
@@ -479,7 +478,6 @@ final class HydratorTest extends TestCase
     public function testCompositeTypeCastWithoutCast(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer(),
             new CompositeTypeCaster(
                 new String42TypeCaster(),
                 new SimpleTypeCaster(),
@@ -497,10 +495,10 @@ final class HydratorTest extends TestCase
         $resolver = new FromPredefinedArrayResolver();
 
         $hydrator = new Hydrator(
-            new SimpleContainer([
+            new NoTypeCaster(),
+            attributeResolverContainer: new SimpleContainer([
                 FromPredefinedArrayResolver::class => $resolver,
             ]),
-            new NoTypeCaster()
         );
 
         $object = new class () {
@@ -521,7 +519,7 @@ final class HydratorTest extends TestCase
         $resolver = new FromPredefinedArrayResolver();
 
         $hydrator = new Hydrator(
-            new SimpleContainer([
+            attributeResolverContainer: new SimpleContainer([
                 FromPredefinedArrayResolver::class => $resolver,
             ]),
         );
@@ -538,7 +536,7 @@ final class HydratorTest extends TestCase
     public function testConstructorParameterAttributes(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([
+            attributeResolverContainer: new SimpleContainer([
                 DiResolver::class => new DiResolver(
                     new SimpleContainer(['stringable42' => new StringableObject('42')])
                 ),
@@ -554,7 +552,7 @@ final class HydratorTest extends TestCase
 
     public function testTypeCastAfterAttribute(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new class () {
             #[Data('a')]
@@ -583,7 +581,7 @@ final class HydratorTest extends TestCase
     {
         $counterResolver = new CounterResolver();
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => $counterResolver])
+            attributeResolverContainer: new SimpleContainer([CounterResolver::class => $counterResolver])
         );
 
         $hydrator->create(CounterClass::class);
@@ -595,7 +593,7 @@ final class HydratorTest extends TestCase
 
     public function testObjectProperty(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(ObjectPropertyModel::class, ['car' => new RedCar()]);
 
@@ -604,7 +602,7 @@ final class HydratorTest extends TestCase
 
     public function testNonExistPath(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new class () {
             public ?int $value = null;
@@ -617,7 +615,7 @@ final class HydratorTest extends TestCase
     public function testInvalidParameterAttributeResolver(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([
+            attributeResolverContainer: new SimpleContainer([
                 NotResolver::class => new NotResolver(),
             ])
         );
@@ -640,7 +638,7 @@ final class HydratorTest extends TestCase
     public function testInvalidDataAttributeResolver(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([
+            attributeResolverContainer: new SimpleContainer([
                 NotResolver::class => new NotResolver(),
             ])
         );
@@ -657,7 +655,7 @@ final class HydratorTest extends TestCase
 
     public function testStaticProperty(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(StaticClass::class, ['a' => 7, 'b' => 42, 'c' => 500]);
 

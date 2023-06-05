@@ -12,7 +12,7 @@ final class ReadMeTest extends TestCase
 {
     public function testBasicUsageNestedArray(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $car = $hydrator->create(Car::class, [
             'name' => 'Ferrari',
@@ -27,7 +27,7 @@ final class ReadMeTest extends TestCase
 
     public function testBasicUsageDotNotation(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $car = $hydrator->create(Car::class, [
             'name' => 'Ferrari',
@@ -40,7 +40,7 @@ final class ReadMeTest extends TestCase
 
     public function testMapping1(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $person = $hydrator->create(Person1::class, [
             'first_name' => 'John',
@@ -53,7 +53,7 @@ final class ReadMeTest extends TestCase
 
     public function testMapping2(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $person = $hydrator->create(Person2::class, [
             'first_name' => 'John',
@@ -66,7 +66,7 @@ final class ReadMeTest extends TestCase
 
     public function testToString(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $money = $hydrator->create(Money::class, [
             'value' => 4200,

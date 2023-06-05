@@ -214,7 +214,9 @@ final class DiTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new DiResolver(new SimpleContainer())])
+            attributeResolverContainer: new SimpleContainer([
+                CounterResolver::class => new DiResolver(new SimpleContainer())
+            ])
         );
 
         $object = new CounterClass();
@@ -227,7 +229,7 @@ final class DiTest extends TestCase
     private function createHydrator(array $definitions = []): Hydrator
     {
         return new Hydrator(
-            new SimpleContainer([
+            attributeResolverContainer: new SimpleContainer([
                 DiResolver::class => new DiResolver(
                     new SimpleContainer($definitions)
                 ),

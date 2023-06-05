@@ -13,7 +13,7 @@ final class SkipHydrationTest extends TestCase
 {
     public function testBase(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(SkipHydrationClass::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);
 

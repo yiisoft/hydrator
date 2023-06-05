@@ -20,7 +20,7 @@ final class MapTest extends TestCase
 {
     public function testBase(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(MapClass::class, ['x' => 1, 'y' => 2]);
 
@@ -30,7 +30,7 @@ final class MapTest extends TestCase
 
     public function testStrict(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(MapStrictClass::class, ['a' => 1, 'y' => 2, 'c' => 3]);
 
@@ -41,7 +41,7 @@ final class MapTest extends TestCase
 
     public function testNonStrict(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(MapNonStrictClass::class, ['a' => 1, 'y' => 2, 'c' => 3], strict: true);
 
@@ -53,7 +53,7 @@ final class MapTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([FromPredefinedArrayResolver::class => new Map([])])
+            attributeResolverContainer: new SimpleContainer([FromPredefinedArrayResolver::class => new Map([])])
         );
 
         $object = new FromPredefinedArrayClass();

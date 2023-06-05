@@ -17,7 +17,7 @@ final class DataTest extends TestCase
 {
     public function testBase(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new class () {
             #[Data('a')]
@@ -43,7 +43,7 @@ final class DataTest extends TestCase
 
     public function testPath(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new class () {
             #[Data('nested.n')]
@@ -71,7 +71,7 @@ final class DataTest extends TestCase
 
     public function testMapping(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new class () {
             #[Data('a')]
@@ -110,7 +110,7 @@ final class DataTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new Data([])])
+            attributeResolverContainer: new SimpleContainer([CounterResolver::class => new Data([])])
         );
 
         $object = new CounterClass();

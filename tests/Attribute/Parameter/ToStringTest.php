@@ -35,7 +35,7 @@ final class ToStringTest extends TestCase
      */
     public function testBase(string $expected, mixed $value): void
     {
-        $hydrator = new Hydrator(new SimpleContainer(), new NoTypeCaster());
+        $hydrator = new Hydrator(new NoTypeCaster());
 
         $object = new class () {
             #[ToString]
@@ -49,7 +49,7 @@ final class ToStringTest extends TestCase
 
     public function testNotResolved(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new class () {
             #[ToString]
@@ -64,7 +64,7 @@ final class ToStringTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new ToString()])
+            attributeResolverContainer: new SimpleContainer([CounterResolver::class => new ToString()])
         );
 
         $object = new CounterClass();

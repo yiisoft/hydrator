@@ -28,7 +28,7 @@ final class HydratorTest extends TestCase
     {
         $object = new TypeObject();
 
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
         $hydrator->hydrate($object, $data);
 
         $expectedValues = array_merge(
