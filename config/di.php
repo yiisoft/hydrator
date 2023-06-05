@@ -12,7 +12,7 @@ return [
         'class' => Hydrator::class,
         '__construct()' => [
             'attributeResolverContainer' => Reference::to(ContainerInterface::class),
-            'injectorContainer' => Reference::to(ContainerInterface::class),
+            'dependencyContainer' => Reference::to(ContainerInterface::class),
         ],
     ],
 ];

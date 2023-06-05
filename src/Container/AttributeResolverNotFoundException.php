@@ -49,7 +49,7 @@ final class AttributeResolverNotFoundException
             ];
             ```
 
-            Or configure attribute resolvers container in constructor hydrator if use it directly:
+            Or configure attribute resolvers container in hydrator constructor if use it directly:
 
             ```php
             new Hydrator(

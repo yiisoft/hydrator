@@ -53,12 +53,12 @@ final class Hydrator implements HydratorInterface
     public function __construct(
         ?TypeCasterInterface $typeCaster = null,
         ?ContainerInterface $attributeResolverContainer = null,
-        ?ContainerInterface $injectorContainer = null,
+        ?ContainerInterface $dependencyContainer = null,
     ) {
         $attributeResolverContainer ??= new EmptyAttributeResolverContainer();
-        $injectorContainer ??= new EmptyDependencyContainer();
+        $dependencyContainer ??= new EmptyDependencyContainer();
 
-        $this->injector = new Injector($injectorContainer);
+        $this->injector = new Injector($dependencyContainer);
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
         $this->dataAttributesHandler = new DataAttributesHandler($attributeResolverContainer);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverContainer);
