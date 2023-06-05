@@ -27,14 +27,26 @@ Features are:
 - supports mapping;
 - allows fine-tuning hydration via PHP attributes.
 
-## Basic usage
+## Requirements
+
+- PHP 8.0 or higher.
+
+## Installation
+
+The package could be installed with composer:
+
+```shell
+composer require yiisoft/hydrator
+```
+
+## General usage
 
 To hydrate existing object:
 
 ```php
 use Yiisoft\Hydrator\Hydrator;
 
-$hydrator = new Hydrator($container);
+$hydrator = new Hydrator();
 $hydrator->hydrate($object, $data);
 ```
 
@@ -43,7 +55,7 @@ To create a new object and fill it with the data:
 ```php
 use Yiisoft\Hydrator\Hydrator;
 
-$hydrator = new Hydrator($container);
+$hydrator = new Hydrator();
 $object = $hydrator->create(MyClass::class, $data);
 ```
 
@@ -219,20 +231,6 @@ You use these attributes for getting value for specific parameter or for prepari
 
 Parameter attribute class should implement `ParameterAttributeInterface` and the corresponding parameter attribute
 resolver should implement `ParameterAttributeResolverInterface`.
-
-## Requirements
-
-- PHP 8.0 or higher.
-
-## Installation
-
-The package could be installed with composer:
-
-```shell
-composer require yiisoft/hydrator
-```
-
-## General usage
 
 ## Testing
 
