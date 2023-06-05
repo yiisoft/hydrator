@@ -28,8 +28,8 @@ final class DependencyNotFoundException
     public function getSolution(): ?string
     {
         return <<<SOLUTION
-            Dependency container not configured in hydrator. Without it, dependencies resolving on create objects is not
-            available.
+            Dependency "$this->id" not resolved because dependency container not configured in hydrator. Without it,
+            dependencies resolving on create objects is not available.
 
             Define `dependencyContainer` constructor parameter of `Hydrator` in configuration:
 
