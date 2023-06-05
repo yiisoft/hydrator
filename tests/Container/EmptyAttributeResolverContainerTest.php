@@ -18,7 +18,7 @@ final class EmptyAttributeResolverContainerTest extends TestCase
     {
         $hydrator = new Hydrator();
 
-        $object = new class() {
+        $object = new class () {
             #[Di]
             private EngineInterface $service;
         };

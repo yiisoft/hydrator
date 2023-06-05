@@ -7,7 +7,6 @@ namespace Yiisoft\Hydrator\Tests\TestEnvironments\Php82;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php82\Support\TypeObject;
-use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class HydratorTest extends TestCase
 {

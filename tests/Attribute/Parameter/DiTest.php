@@ -215,7 +215,7 @@ final class DiTest extends TestCase
     {
         $hydrator = new Hydrator(
             attributeResolverContainer: new SimpleContainer([
-                CounterResolver::class => new DiResolver(new SimpleContainer())
+                CounterResolver::class => new DiResolver(new SimpleContainer()),
             ])
         );
 

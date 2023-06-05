@@ -7,7 +7,6 @@ namespace Yiisoft\Hydrator\Tests\Attribute;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Classes\SkipHydrationClass;
-use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class SkipHydrationTest extends TestCase
 {

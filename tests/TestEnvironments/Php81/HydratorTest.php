@@ -9,7 +9,6 @@ use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\ReadonlyClass;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\StringableCar;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\TypeObject;
-use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class HydratorTest extends TestCase
 {

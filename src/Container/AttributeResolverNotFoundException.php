@@ -8,9 +8,7 @@ use LogicException;
 use Psr\Container\NotFoundExceptionInterface;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
-final class AttributeResolverNotFoundException
-    extends LogicException
-    implements NotFoundExceptionInterface, FriendlyExceptionInterface
+final class AttributeResolverNotFoundException extends LogicException implements NotFoundExceptionInterface, FriendlyExceptionInterface
 {
     public function __construct(
         private string $id,

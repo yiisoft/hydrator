@@ -6,7 +6,6 @@ namespace Yiisoft\Hydrator\Tests\ReadMe;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class ReadMeTest extends TestCase
 {
