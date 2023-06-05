@@ -46,9 +46,9 @@ final class Hydrator implements HydratorInterface
     private ParameterAttributesHandler $parameterAttributesHandler;
 
     /**
-     * @param ContainerInterface $container Container used to resolve created object dependencies and get attributes'
-     * resolvers.
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
+     * @param ContainerInterface|null $attributeResolverContainer Container used to get attributes' resolvers.
+     * @param ContainerInterface|null $dependencyContainer Container used to resolve created object dependencies.
      */
     public function __construct(
         ?TypeCasterInterface $typeCaster = null,
