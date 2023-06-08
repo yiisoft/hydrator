@@ -21,10 +21,10 @@ final class AttributeResolverInitiator
     }
 
     /**
-     * @param string|object $resolver
-     * @return object|mixed|string|DataAttributeResolverInterface
+     * @param object|string $resolver
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @return DataAttributeResolverInterface|mixed|object|string
      */
     public function initiate(string|object $resolver): object
     {
@@ -46,6 +46,6 @@ final class AttributeResolverInitiator
             throw new NonInitiableException();
         }
 
-        return new $resolver;
+        return new $resolver();
     }
 }
