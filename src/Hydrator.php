@@ -4,17 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
-use Closure;
-use Psr\Container\ContainerInterface;
 use ReflectionAttribute;
 use ReflectionClass;
-use ReflectionProperty;
 use Yiisoft\Hydrator\Attribute\SkipHydration;
-use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 use Yiisoft\Injector\Injector;
 
 use function array_key_exists;
-use function in_array;
 
 /**
  * Creates or hydrate objects from a set of raw data.
@@ -23,45 +18,29 @@ use function in_array;
  */
 final class Hydrator implements HydratorInterface
 {
-    /**
-     * @var Injector Injector used to create objects.
-     */
-    private Injector $injector;
+    public function __construct(
+        private HydratorInterface $decoratedHydrator,
+        private Injector $injector,
+        /**
+         * @var TypeCasterInterface Type caster used to cast raw values.
+         */
+        private TypeCasterInterface $typeCaster,
 
-    /**
-     * @var TypeCasterInterface Type caster used to cast raw values.
-     */
-    private TypeCasterInterface $typeCaster;
+        /**
+         * @var DataAttributesHandler Data attributes handler.
+         */
+        private DataAttributesHandler $dataAttributesHandler,
 
-    /**
-     * @var DataAttributesHandler Data attributes handler.
-     */
-    private DataAttributesHandler $dataAttributesHandler;
-
-    /**
-     * @var ParameterAttributesHandler Parameter attributes handler.
-     */
-    private ParameterAttributesHandler $parameterAttributesHandler;
-
-    /**
-     * @param ContainerInterface $container Container used to resolve created object dependencies and get attributes'
-     * resolvers.
-     * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
-     */
-    public function __construct(ContainerInterface $container, ?TypeCasterInterface $typeCaster = null)
-    {
-        $this->injector = new Injector($container);
-        $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
-        $this->dataAttributesHandler = new DataAttributesHandler($container);
-        $this->parameterAttributesHandler = new ParameterAttributesHandler($container);
+        /**
+         * @var ParameterAttributesHandler Parameter attributes handler.
+         */
+        private ParameterAttributesHandler $parameterAttributesHandler,
+    ) {
     }
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
-        $this->populate(
-            $object,
-            $this->getHydrateData($object, $data, $map, $strict),
-        );
+        $this->decoratedHydrator->hydrate($object, $data, $map, $strict);
     }
 
     public function create(string $class, array $data = [], array $map = [], bool $strict = false): object
@@ -69,10 +48,13 @@ final class Hydrator implements HydratorInterface
         [$excludeProperties, $constructorArguments] = $this->getConstructorArguments($class, $data, $map, $strict);
 
         $object = $this->injector->make($class, $constructorArguments);
+        // todo handle $excludeProperties
 
-        $this->populate(
+        $this->decoratedHydrator->hydrate(
             $object,
-            $this->getHydrateData($object, $data, $map, $strict, $excludeProperties),
+            $data,
+            $map,
+            $strict
         );
 
         return $object;
@@ -124,48 +106,6 @@ final class Hydrator implements HydratorInterface
         return [$excludeParameterNames, $constructorArguments];
     }
 
-    /**
-     * @psalm-param MapType $map
-     */
-    private function getHydrateData(
-        object $object,
-        array $sourceData,
-        array $map,
-        bool $strict,
-        array $excludeProperties = []
-    ): array {
-        $hydrateData = [];
-
-        $data = $this->createData($object, $sourceData, $map, $strict);
-
-        foreach ($this->getObjectProperties($object) as $property) {
-            if (!empty($property->getAttributes(SkipHydration::class))) {
-                continue;
-            }
-
-            $propertyName = $property->getName();
-            if (in_array($propertyName, $excludeProperties, true)) {
-                continue;
-            }
-
-            $resolveResult = $this->resolve($propertyName, $data);
-
-            $attributesHandleResult = $this->parameterAttributesHandler->handle($property, $resolveResult, $data);
-            if ($attributesHandleResult->isResolved()) {
-                $resolveResult = $attributesHandleResult;
-            }
-
-            if ($resolveResult->isResolved()) {
-                $result = $this->typeCaster->cast($resolveResult->getValue(), $property->getType());
-                if ($result->isResolved()) {
-                    $hydrateData[$propertyName] = $result->getValue();
-                }
-            }
-        }
-
-        return $hydrateData;
-    }
-
     private function resolve(string $name, Data $data): Result
     {
         $map = $data->getMap();
@@ -175,46 +115,6 @@ final class Hydrator implements HydratorInterface
         }
 
         return DataHelper::getValueByPath($data->getData(), $map[$name] ?? $name);
-    }
-
-    private function populate(object $object, array $values): void
-    {
-        /** @var Closure $setter */
-        $setter = Closure::bind(
-            static function (object $object, string $propertyName, mixed $value): void {
-                $object->$propertyName = $value;
-            },
-            null,
-            $object
-        );
-
-        foreach ($values as $propertyName => $value) {
-            $setter($object, $propertyName, $value);
-        }
-    }
-
-    /**
-     * @psalm-return array<string, ReflectionProperty>
-     */
-    private function getObjectProperties(object $object): array
-    {
-        $result = [];
-
-        $properties = (new ReflectionClass($object))->getProperties();
-        foreach ($properties as $property) {
-            if ($property->isStatic()) {
-                continue;
-            }
-
-            /** @psalm-suppress UndefinedMethod Need for PHP 8.0 only */
-            if (PHP_VERSION_ID >= 80100 && $property->isReadOnly()) {
-                continue;
-            }
-
-            $result[$property->getName()] = $property;
-        }
-
-        return $result;
     }
 
     /**

@@ -10,9 +10,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
-use RuntimeException;
-
-use function is_string;
+use Yiisoft\Hydrator\Initiator\AttributeResolverInitiator;
 
 /**
  * Handles parameters attributes that implement {@see ParameterAttributeInterface}.
@@ -24,7 +22,7 @@ final class ParameterAttributesHandler
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast values.
      */
     public function __construct(
-        private ContainerInterface $container,
+        private AttributeResolverInitiator $attributeResolverInitiator,
         private ?TypeCasterInterface $typeCaster = null,
     ) {
     }
@@ -54,7 +52,7 @@ final class ParameterAttributesHandler
         $hereResolveResult = Result::fail();
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
-            $resolver = $this->getParameterResolver($attribute);
+            $resolver = $this->attributeResolverInitiator->initiate($attribute->getResolver());
 
             $context = new Context(
                 $parameter,
@@ -74,33 +72,5 @@ final class ParameterAttributesHandler
         }
 
         return $hereResolveResult;
-    }
-
-    /**
-     * Get parameter attribute resolver.
-     *
-     * @param ParameterAttributeInterface $attribute The parameter attribute to be resolved.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @return ParameterAttributeResolverInterface Resolver for the specified attribute.
-     */
-    private function getParameterResolver(ParameterAttributeInterface $attribute): ParameterAttributeResolverInterface
-    {
-        $resolver = $attribute->getResolver();
-        if (is_string($resolver)) {
-            $resolver = $this->container->get($resolver);
-            if (!$resolver instanceof ParameterAttributeResolverInterface) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Parameter attribute resolver "%1$s" must implement "%2$s".',
-                        $resolver::class,
-                        ParameterAttributeResolverInterface::class,
-                    )
-                );
-            }
-        }
-
-        return $resolver;
     }
 }

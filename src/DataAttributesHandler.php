@@ -8,9 +8,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
-use RuntimeException;
-
-use function is_string;
+use Yiisoft\Hydrator\Initiator\AttributeResolverInitiator;
 
 /**
  * Handles data attributes that implement {@see DataAttributeInterface}.
@@ -23,7 +21,7 @@ final class DataAttributesHandler
      * @param ContainerInterface $container Container to get attributes' resolvers from.
      */
     public function __construct(
-        private ContainerInterface $container,
+        private AttributeResolverInitiator $attributeResolverInitiator,
     ) {
     }
 
@@ -42,35 +40,8 @@ final class DataAttributesHandler
     {
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
-            $this->getDataResolver($attribute)->prepareData($attribute, $data);
+            $resolver = $this->attributeResolverInitiator->initiate($attribute->getResolver());
+            $resolver->prepareData($attribute, $data);
         }
-    }
-
-    /**
-     * Get data attribute resolver.
-     *
-     * @param DataAttributeInterface $attribute The data attribute to be resolved.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @return DataAttributeResolverInterface Resolver for the specified attribute.
-     */
-    private function getDataResolver(DataAttributeInterface $attribute): DataAttributeResolverInterface
-    {
-        $resolver = $attribute->getResolver();
-        if (is_string($resolver)) {
-            $resolver = $this->container->get($resolver);
-            if (!$resolver instanceof DataAttributeResolverInterface) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Data attribute resolver "%s" must implement "%s".',
-                        $resolver::class,
-                        DataAttributeResolverInterface::class,
-                    )
-                );
-            }
-        }
-
-        return $resolver;
     }
 }
