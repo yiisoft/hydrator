@@ -21,7 +21,6 @@ final class AttributeResolverInitiator
     }
 
     /**
-     * @param object|string $resolver
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @return DataAttributeResolverInterface|mixed|object|string

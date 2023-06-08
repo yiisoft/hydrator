@@ -42,7 +42,7 @@ final class SimpleHydrator implements HydratorInterface
      */
     public function __construct(?TypeCasterInterface $typeCaster = null, ?AttributeResolverInitiator $initiator = null)
     {
-        $initiator = $initiator ?? new AttributeResolverInitiator();
+        $initiator ??= new AttributeResolverInitiator();
 
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
         $this->dataAttributesHandler = new DataAttributesHandler($initiator);
