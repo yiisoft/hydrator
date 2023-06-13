@@ -14,6 +14,6 @@ return [
         '__construct()' => [
             'decoratedHydrator' => Reference::to(SimpleHydrator::class),
             'typeCaster' => Reference::to(NoTypeCaster::class),
-        ]
+        ],
     ],
 ];
