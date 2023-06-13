@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\TestEnvironments\Php81;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\SimpleHydrator;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\ReadonlyClass;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\StringableCar;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support\TypeObject;
-use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class HydratorTest extends TestCase
 {
     public function testReadonlyObject(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new SimpleHydrator();
 
         $object = $hydrator->create(ReadonlyClass::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
 
@@ -53,7 +52,7 @@ final class HydratorTest extends TestCase
     {
         $object = new TypeObject();
 
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new SimpleHydrator();
         $hydrator->hydrate($object, $data);
 
         $expectedValues = array_merge(

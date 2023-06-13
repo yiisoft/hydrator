@@ -8,7 +8,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
-use Yiisoft\Hydrator\Initiator\AttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
 
 /**
  * Handles data attributes that implement {@see DataAttributeInterface}.

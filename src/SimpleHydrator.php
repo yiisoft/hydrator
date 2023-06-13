@@ -9,8 +9,8 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
 use Yiisoft\Hydrator\Attribute\SkipHydration;
-use Yiisoft\Hydrator\Initiator\AttributeResolverInitiator;
-use Yiisoft\Hydrator\Initiator\NonInitiableException;
+use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\NonInitiableException;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 
 use function array_key_exists;
@@ -51,9 +51,10 @@ final class SimpleHydrator implements HydratorInterface
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
+        $values = $this->getHydrateData($object, $data, $map, $strict);
         $this->populate(
             $object,
-            $this->getHydrateData($object, $data, $map, $strict),
+            $values,
         );
     }
 
@@ -62,17 +63,20 @@ final class SimpleHydrator implements HydratorInterface
         if (!class_exists($class)) {
             throw new NonInitiableException();
         }
+        [$excludeProperties, $constructorArguments] = $this->getConstructorArguments($class, $data, $map, $strict);
 
         $reflection = new \ReflectionClass($class);
         $constructorReflection = $reflection->getConstructor();
-        if ($constructorReflection->getNumberOfRequiredParameters() > 0) {
+        if ($constructorReflection && $constructorReflection->getNumberOfRequiredParameters() > count($constructorArguments)) {
             throw new NonInitiableException();
         }
-        $object = new $class();
+        $object = new $class(...$constructorArguments);
+
+        $values = $this->getHydrateData($object, $data, $map, $strict, $excludeProperties);
 
         $this->populate(
             $object,
-            $this->getHydrateData($object, $data, $map, $strict),
+            $values,
         );
 
         return $object;
@@ -86,6 +90,7 @@ final class SimpleHydrator implements HydratorInterface
         array $sourceData,
         array $map,
         bool $strict,
+        array $excludeProperties = [],
     ): array {
         $hydrateData = [];
 
@@ -97,8 +102,12 @@ final class SimpleHydrator implements HydratorInterface
             }
 
             $propertyName = $property->getName();
+            if (in_array($propertyName, $excludeProperties, true)) {
+                continue;
+            }
 
             $resolveResult = $this->resolve($propertyName, $data);
+
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle($property, $resolveResult, $data);
             if ($attributesHandleResult->isResolved()) {
@@ -163,7 +172,6 @@ final class SimpleHydrator implements HydratorInterface
 
             $result[$property->getName()] = $property;
         }
-
         return $result;
     }
 
@@ -182,4 +190,51 @@ final class SimpleHydrator implements HydratorInterface
 
         return $data;
     }
+
+    /**
+     * @psalm-param class-string $class
+     * @psalm-param MapType $map
+     * @psalm-return array{0:list<string>,1:array<string,mixed>}
+     */
+    private function getConstructorArguments(string $class, array $sourceData, array $map, bool $strict): array
+    {
+        $excludeParameterNames = [];
+        $constructorArguments = [];
+
+        $constructor = (new ReflectionClass($class))->getConstructor();
+        if ($constructor === null) {
+            return [$excludeParameterNames, $constructorArguments];
+        }
+
+        $data = $this->createData($class, $sourceData, $map, $strict);
+
+        foreach ($constructor->getParameters() as $parameter) {
+            if (!empty($parameter->getAttributes(SkipHydration::class))) {
+                continue;
+            }
+
+            $parameterName = $parameter->getName();
+            $resolveResult = Result::fail();
+
+            if ($parameter->isPromoted()) {
+                $excludeParameterNames[] = $parameterName;
+                $resolveResult = $this->resolve($parameterName, $data);
+            }
+
+            $attributesHandleResult = $this->parameterAttributesHandler->handle($parameter, $resolveResult, $data);
+            if ($attributesHandleResult->isResolved()) {
+                $resolveResult = $attributesHandleResult;
+            }
+
+            if ($resolveResult->isResolved()) {
+                $typeCastedValue = $this->typeCaster->cast($resolveResult->getValue(), $parameter->getType());
+                if ($typeCastedValue->isResolved()) {
+                    $constructorArguments[$parameterName] = $typeCastedValue->getValue();
+                }
+            }
+        }
+
+        return [$excludeParameterNames, $constructorArguments];
+    }
+
 }

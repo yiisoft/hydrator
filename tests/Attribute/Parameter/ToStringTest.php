@@ -6,14 +6,11 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
-use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\SimpleHydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
-use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
-use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
-use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class ToStringTest extends TestCase
 {
@@ -35,7 +32,7 @@ final class ToStringTest extends TestCase
      */
     public function testBase(string $expected, mixed $value): void
     {
-        $hydrator = new Hydrator(new SimpleContainer(), new NoTypeCaster());
+        $hydrator = new SimpleHydrator();
 
         $object = new class () {
             #[ToString]
@@ -49,7 +46,7 @@ final class ToStringTest extends TestCase
 
     public function testNotResolved(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new SimpleHydrator();
 
         $object = new class () {
             #[ToString]
@@ -63,9 +60,7 @@ final class ToStringTest extends TestCase
 
     public function testUnexpectedAttributeException(): void
     {
-        $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new ToString()])
-        );
+        $hydrator = new SimpleHydrator();
 
         $object = new CounterClass();
 

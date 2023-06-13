@@ -8,11 +8,14 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
 use Yiisoft\Hydrator\Attribute\Parameter\Di;
-use Yiisoft\Hydrator\Attribute\Parameter\DiNotFoundException;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
+use Yiisoft\Hydrator\DataAttributesHandler;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ParameterAttributesHandler;
+use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\NonInitiableException;
+use Yiisoft\Hydrator\SimpleHydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
-use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiSingle;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiSingleConstructor;
@@ -25,7 +28,9 @@ use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefault;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefaultConstructor;
 use Yiisoft\Hydrator\Tests\Support\Classes\Engine1;
 use Yiisoft\Hydrator\Tests\Support\Classes\EngineInterface;
+use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
+use Yiisoft\Injector\Injector;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class DiTest extends TestCase
@@ -44,7 +49,7 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $this->expectException(DiNotFoundException::class);
+        $this->expectException(NonInitiableException::class);
         $hydrator->create(DiSingleWithoutType::class);
     }
 
@@ -52,7 +57,7 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $this->expectException(DiNotFoundException::class);
+        $this->expectException(NonInitiableException::class);
         $this->expectExceptionMessage(
             'Constructor parameter "engine" of class "'
             . DiSingleWithoutTypeConstructor::class
@@ -67,12 +72,12 @@ final class DiTest extends TestCase
 
         $exception = null;
         try {
-            $hydrator->create(DiSingle::class);
+            $r = $hydrator->create(DiSingle::class);
         } catch (Throwable $e) {
             $exception = $e;
         }
 
-        $this->assertInstanceOf(DiNotFoundException::class, $exception);
+        $this->assertInstanceOf(NonInitiableException::class, $exception);
         $this->assertSame(
             'Class property "'
             . DiSingle::class
@@ -98,7 +103,7 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $this->expectException(DiNotFoundException::class);
+        $this->expectException(NonInitiableException::class);
         $this->expectExceptionMessage(
             'Constructor parameter "engine" of class "'
             . DiSingleConstructor::class
@@ -133,7 +138,7 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $this->expectException(DiNotFoundException::class);
+        $this->expectException(NonInitiableException::class);
         $hydrator->create(DiSingleNulledWithDefault::class);
     }
 
@@ -141,7 +146,7 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $this->expectException(DiNotFoundException::class);
+        $this->expectException(NonInitiableException::class);
         $hydrator->create(DiSingleNulledWithDefaultConstructor::class);
     }
 
@@ -160,7 +165,7 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $this->expectException(DiNotFoundException::class);
+        $this->expectException(NonInitiableException::class);
         $this->expectExceptionMessage(
             'Class property "' . DiUnion::class . '::$engine1" with type "' .
             EngineInterface::class . '|string" not resolved.'
@@ -183,7 +188,7 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $this->expectException(DiNotFoundException::class);
+        $this->expectException(NonInitiableException::class);
         $hydrator->create(DiUnionWithDefault::class);
     }
 
@@ -207,15 +212,13 @@ final class DiTest extends TestCase
             public EngineInterface $engine;
         };
 
-        $this->expectException(DiNotFoundException::class);
+        $this->expectException(NonInitiableException::class);
         $hydrator->hydrate($object);
     }
 
     public function testUnexpectedAttributeException(): void
     {
-        $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new DiResolver(new SimpleContainer())])
-        );
+        $hydrator = $this->createHydrator();
 
         $object = new CounterClass();
 
@@ -226,12 +229,19 @@ final class DiTest extends TestCase
 
     private function createHydrator(array $definitions = []): Hydrator
     {
+        $container = new SimpleContainer([
+            DiResolver::class => new DiResolver(
+                new SimpleContainer($definitions)
+            ),
+        ]);
+        $attributeResolverInitiator = new AttributeResolverInitiator($container);
+        $typeCaster = new SimpleTypeCaster();
         return new Hydrator(
-            new SimpleContainer([
-                DiResolver::class => new DiResolver(
-                    new SimpleContainer($definitions)
-                ),
-            ]),
+            new SimpleHydrator($typeCaster,$attributeResolverInitiator),
+            new Injector($container),
+            $typeCaster,
+            new DataAttributesHandler($attributeResolverInitiator),
+            new ParameterAttributesHandler($attributeResolverInitiator),
         );
     }
 }

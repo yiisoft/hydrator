@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Initiator;
+namespace Yiisoft\Hydrator\ResolverInitiator;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Yiisoft\Hydrator\DataAttributeResolverInterface;
+use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 
 use function is_string;
 
@@ -41,10 +43,18 @@ final class AttributeResolverInitiator
 
         $reflection = new \ReflectionClass($resolver);
         $constructorReflection = $reflection->getConstructor();
-        if ($constructorReflection->getNumberOfRequiredParameters() > 0) {
+        if ($constructorReflection && $constructorReflection->getNumberOfRequiredParameters() > 0) {
             throw new NonInitiableException();
         }
 
-        return new $resolver();
+
+        $resolver1 = new $resolver();
+        if (!$resolver1 instanceof ParameterAttributeResolverInterface) {
+            throw new \RuntimeException('Parameter attribute resolver "' .
+                $resolver .
+                '" must implement "' .
+                ParameterAttributeResolverInterface::class . '".');
+        }
+        return $resolver1;
     }
 }

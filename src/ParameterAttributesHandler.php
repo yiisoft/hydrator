@@ -10,7 +10,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
-use Yiisoft\Hydrator\Initiator\AttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
 
 /**
  * Handles parameters attributes that implement {@see ParameterAttributeInterface}.

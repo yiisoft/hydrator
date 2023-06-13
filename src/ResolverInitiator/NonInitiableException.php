@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Initiator;
+namespace Yiisoft\Hydrator\ResolverInitiator;
 
 use Exception;
 

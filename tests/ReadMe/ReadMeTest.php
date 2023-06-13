@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\ReadMe;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Test\Support\Container\SimpleContainer;
+use Yiisoft\Hydrator\SimpleHydrator;
 
 final class ReadMeTest extends TestCase
 {
     public function testBasicUsageNestedArray(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new SimpleHydrator();
 
         $car = $hydrator->create(Car::class, [
             'name' => 'Ferrari',
@@ -27,7 +26,7 @@ final class ReadMeTest extends TestCase
 
     public function testBasicUsageDotNotation(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new SimpleHydrator();
 
         $car = $hydrator->create(Car::class, [
             'name' => 'Ferrari',
@@ -40,7 +39,7 @@ final class ReadMeTest extends TestCase
 
     public function testMapping1(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new SimpleHydrator();
 
         $person = $hydrator->create(Person1::class, [
             'first_name' => 'John',
@@ -53,7 +52,7 @@ final class ReadMeTest extends TestCase
 
     public function testMapping2(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new SimpleHydrator();
 
         $person = $hydrator->create(Person2::class, [
             'first_name' => 'John',
@@ -66,7 +65,7 @@ final class ReadMeTest extends TestCase
 
     public function testToString(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new SimpleHydrator();
 
         $money = $hydrator->create(Money::class, [
             'value' => 4200,
