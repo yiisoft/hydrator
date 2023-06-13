@@ -236,5 +236,4 @@ final class SimpleHydrator implements HydratorInterface
 
         return [$excludeParameterNames, $constructorArguments];
     }
-
 }

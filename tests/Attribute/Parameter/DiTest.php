@@ -237,7 +237,7 @@ final class DiTest extends TestCase
         $attributeResolverInitiator = new AttributeResolverInitiator($container);
         $typeCaster = new SimpleTypeCaster();
         return new Hydrator(
-            new SimpleHydrator($typeCaster,$attributeResolverInitiator),
+            new SimpleHydrator($typeCaster, $attributeResolverInitiator),
             new Injector($container),
             $typeCaster,
             new DataAttributesHandler($attributeResolverInitiator),

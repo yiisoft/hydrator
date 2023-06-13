@@ -38,7 +38,7 @@ final class ParameterAttributesHandlerTest extends TestCase
 
     public function testTypeCasted(): void
     {
-        $handler = new ParameterAttributesHandler(new AttributeResolverInitiator(),new SimpleTypeCaster(),);
+        $handler = new ParameterAttributesHandler(new AttributeResolverInitiator(), new SimpleTypeCaster(), );
 
         $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
 
