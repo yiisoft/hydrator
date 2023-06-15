@@ -44,8 +44,7 @@ final class Hydrator implements HydratorInterface
         ?TypeCasterInterface $typeCaster = null,
         ?AttributeResolverInitiator $initiator = null,
         ?ObjectInitiator $objectInitiator = null,
-    )
-    {
+    ) {
         $initiator ??= new AttributeResolverInitiator();
 
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);

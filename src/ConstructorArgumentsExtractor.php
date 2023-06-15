@@ -18,8 +18,7 @@ class ConstructorArgumentsExtractor
         TypeCasterInterface $typeCaster,
         ObjectPropertiesExtractor $objectPropertiesExtractor,
         DataPropertyAccessor $dataPropertyAccessor
-    )
-    {
+    ) {
         $this->parameterAttributesHandler = $parameterAttributesHandler;
         $this->typeCaster = $typeCaster;
         $this->objectPropertiesExtractor = $objectPropertiesExtractor;
