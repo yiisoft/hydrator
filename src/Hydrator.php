@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use ReflectionClass;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 use Yiisoft\Injector\Injector;
 
@@ -27,7 +28,7 @@ final class Hydrator implements HydratorInterface
         /**
          * @var DataAttributesHandler Data attributes handler.
          */
-        DataAttributesHandler $dataAttributesHandler,
+        private DataAttributesHandler $dataAttributesHandler,
 
         /**
          * @var ParameterAttributesHandler Parameter attributes handler.
@@ -36,7 +37,6 @@ final class Hydrator implements HydratorInterface
     ) {
         $typeCaster = $typeCaster instanceof SimpleTypeCaster ? $typeCaster->withHydrator($this) : $typeCaster;
         $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
-            $dataAttributesHandler,
             $parameterAttributesHandler,
             $typeCaster,
             new ObjectPropertiesExtractor(),
@@ -53,9 +53,7 @@ final class Hydrator implements HydratorInterface
     {
         [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->getConstructorArguments(
             $class,
-            $data,
-            $map,
-            $strict
+            $this->createData($class, $data, $map, $strict),
         );
 
         $object = $this->injector->make($class, $constructorArguments);
@@ -69,5 +67,21 @@ final class Hydrator implements HydratorInterface
         );
 
         return $object;
+    }
+
+    /**
+     * @psalm-param object|class-string $object
+     * @psalm-param MapType $map
+     */
+    private function createData(object|string $object, array $sourceData, array $map, bool $strict): Data
+    {
+        $data = new Data($sourceData, $map, $strict);
+
+        $attributes = (new ReflectionClass($object))
+            ->getAttributes(DataAttributeInterface::class, \ReflectionAttribute::IS_INSTANCEOF);
+
+        $this->dataAttributesHandler->handle($attributes, $data);
+
+        return $data;
     }
 }

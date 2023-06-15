@@ -49,7 +49,6 @@ final class SimpleHydrator implements HydratorInterface
         $this->objectPropertiesExtractor = new ObjectPropertiesExtractor();
         $this->dataPropertyAccessor = new DataPropertyAccessor();
         $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
-            $this->dataAttributesHandler,
             $this->parameterAttributesHandler,
             $this->typeCaster,
             $this->objectPropertiesExtractor,
@@ -59,7 +58,8 @@ final class SimpleHydrator implements HydratorInterface
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
-        $values = $this->getHydrateData($object, $data, $map, $strict, []);
+        $data = $this->createData($object, $data, $map, $strict);
+        $values = $this->getHydrateData($object, $data, []);
         $this->populate(
             $object,
             $values,
@@ -71,11 +71,10 @@ final class SimpleHydrator implements HydratorInterface
         if (!class_exists($class)) {
             throw new NonInitiableException();
         }
+        $data = $this->createData($class, $data, $map, $strict);
         [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->getConstructorArguments(
             $class,
             $data,
-            $map,
-            $strict
         );
 
         $reflection = new \ReflectionClass($class);
@@ -87,7 +86,7 @@ final class SimpleHydrator implements HydratorInterface
         }
         $object = new $class(...$constructorArguments);
 
-        $values = $this->getHydrateData($object, $data, $map, $strict, $excludeProperties);
+        $values = $this->getHydrateData($object, $data, $excludeProperties);
 
         $this->populate(
             $object,
@@ -102,14 +101,10 @@ final class SimpleHydrator implements HydratorInterface
      */
     private function getHydrateData(
         object $object,
-        array $sourceData,
-        array $map,
-        bool $strict,
+        Data $data,
         array $excludeProperties,
     ): array {
         $hydrateData = [];
-
-        $data = $this->createData($object, $sourceData, $map, $strict);
 
         $properties = (new ReflectionClass($object))->getProperties();
         $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties($properties);
