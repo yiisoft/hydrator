@@ -11,8 +11,6 @@ use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
 use Yiisoft\Hydrator\ResolverInitiator\NonInitiableException;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 
-use function array_key_exists;
-
 /**
  * Creates or hydrate objects from a set of raw data.
  *
@@ -36,6 +34,7 @@ final class SimpleHydrator implements HydratorInterface
      */
     private ParameterAttributesHandler $parameterAttributesHandler;
     private ObjectPropertiesExtractor $objectPropertiesExtractor;
+    private DataPropertyAccessor $dataPropertyAccessor;
 
     /**
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
@@ -48,11 +47,13 @@ final class SimpleHydrator implements HydratorInterface
         $this->dataAttributesHandler = new DataAttributesHandler($initiator);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($initiator);
         $this->objectPropertiesExtractor = new ObjectPropertiesExtractor();
+        $this->dataPropertyAccessor = new DataPropertyAccessor();
         $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
             $this->dataAttributesHandler,
             $this->parameterAttributesHandler,
             $this->typeCaster,
             $this->objectPropertiesExtractor,
+            $this->dataPropertyAccessor,
         );
     }
 
@@ -118,7 +119,7 @@ final class SimpleHydrator implements HydratorInterface
                 continue;
             }
 
-            $resolveResult = $this->resolve($propertyName, $data);
+            $resolveResult = $this->dataPropertyAccessor->resolve($propertyName, $data);
 
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle($property, $resolveResult, $data);
@@ -135,17 +136,6 @@ final class SimpleHydrator implements HydratorInterface
         }
 
         return $hydrateData;
-    }
-
-    private function resolve(string $name, Data $data): Result
-    {
-        $map = $data->getMap();
-
-        if ($data->isStrict() && !array_key_exists($name, $map)) {
-            return Result::fail();
-        }
-
-        return DataHelper::getValueByPath($data->getData(), $map[$name] ?? $name);
     }
 
     private function populate(object $object, array $values): void

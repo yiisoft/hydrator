@@ -19,11 +19,9 @@ final class ParameterAttributesHandler
 {
     /**
      * @param ContainerInterface $container Container to get attributes' resolvers from.
-     * @param TypeCasterInterface|null $typeCaster Type caster used to cast values.
      */
     public function __construct(
         private AttributeResolverInitiator $attributeResolverInitiator,
-        private ?TypeCasterInterface $typeCaster = null,
     ) {
     }
 
@@ -62,13 +60,6 @@ final class ParameterAttributesHandler
             );
 
             $hereResolveResult = $resolver->getParameterValue($attribute, $context);
-        }
-
-        if ($this->typeCaster !== null && $hereResolveResult->isResolved()) {
-            $result = $this->typeCaster->cast($hereResolveResult->getValue(), $parameter->getType());
-            if ($result->isResolved()) {
-                $hereResolveResult = $result;
-            }
         }
 
         return $hereResolveResult;

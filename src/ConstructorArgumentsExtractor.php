@@ -11,6 +11,7 @@ class ConstructorArgumentsExtractor
     public ParameterAttributesHandler $parameterAttributesHandler;
     public TypeCasterInterface $typeCaster;
     public ObjectPropertiesExtractor $objectPropertiesExtractor;
+    public DataPropertyAccessor $dataPropertyAccessor;
     private DataAttributesHandler $dataAttributesHandler;
 
     public function __construct(
@@ -18,12 +19,14 @@ class ConstructorArgumentsExtractor
         ParameterAttributesHandler $parameterAttributesHandler,
         TypeCasterInterface $typeCaster,
         ObjectPropertiesExtractor $objectPropertiesExtractor,
+        DataPropertyAccessor $dataPropertyAccessor
     )
     {
         $this->dataAttributesHandler = $dataAttributesHandler;
         $this->parameterAttributesHandler = $parameterAttributesHandler;
         $this->typeCaster = $typeCaster;
         $this->objectPropertiesExtractor = $objectPropertiesExtractor;
+        $this->dataPropertyAccessor = $dataPropertyAccessor;
     }
 
     /**
@@ -51,7 +54,7 @@ class ConstructorArgumentsExtractor
 
             if ($parameter->isPromoted()) {
                 $excludeParameterNames[] = $parameterName;
-                $resolveResult = $this->resolve($parameterName, $data);
+                $resolveResult = $this->dataPropertyAccessor->resolve($parameterName, $data);
             }
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle(
