@@ -51,9 +51,10 @@ final class Hydrator implements HydratorInterface
 
     public function create(string $class, array $data = [], array $map = [], bool $strict = false): object
     {
-        [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->getConstructorArguments(
-            $class,
-            $this->createData($class, $data, $map, $strict),
+        $reflectionClass = new ReflectionClass($class);
+        $constructorArguments = $this->constructorArgumentsExtractor->getConstructorArguments(
+            $reflectionClass,
+            $this->createData($reflectionClass, $data, $map, $strict),
         );
 
         $object = $this->injector->make($class, $constructorArguments);
@@ -73,12 +74,14 @@ final class Hydrator implements HydratorInterface
      * @psalm-param object|class-string $object
      * @psalm-param MapType $map
      */
-    private function createData(object|string $object, array $sourceData, array $map, bool $strict): Data
+    private function createData(ReflectionClass $reflectionClass, array $sourceData, array $map, bool $strict): Data
     {
         $data = new Data($sourceData, $map, $strict);
 
-        $attributes = (new ReflectionClass($object))
-            ->getAttributes(DataAttributeInterface::class, \ReflectionAttribute::IS_INSTANCEOF);
+        $attributes = $reflectionClass->getAttributes(
+            DataAttributeInterface::class,
+            \ReflectionAttribute::IS_INSTANCEOF
+        );
 
         $this->dataAttributesHandler->handle($attributes, $data);
 

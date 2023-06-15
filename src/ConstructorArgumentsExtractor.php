@@ -18,8 +18,7 @@ class ConstructorArgumentsExtractor
         TypeCasterInterface $typeCaster,
         ObjectPropertiesExtractor $objectPropertiesExtractor,
         DataPropertyAccessor $dataPropertyAccessor
-    )
-    {
+    ) {
         $this->parameterAttributesHandler = $parameterAttributesHandler;
         $this->typeCaster = $typeCaster;
         $this->objectPropertiesExtractor = $objectPropertiesExtractor;
@@ -31,27 +30,23 @@ class ConstructorArgumentsExtractor
      * @psalm-param MapType $map
      * @psalm-return array{0:list<string>,1:array<string,mixed>}
      */
-    public function getConstructorArguments(string $class, Data $data): array
+    public function getConstructorArguments(ReflectionClass $reflectionClass, Data $data): array
     {
-        $excludeParameterNames = [];
         $constructorArguments = [];
 
-        $constructor = (new ReflectionClass($class))->getConstructor();
+        $constructor = $reflectionClass->getConstructor();
         if ($constructor === null) {
-            return [$excludeParameterNames, $constructorArguments];
+            return $constructorArguments;
         }
 
-
-        $reflectionParameters = $this->objectPropertiesExtractor->filterReflectionParameters($constructor->getParameters());
+        $reflectionParameters = $this->objectPropertiesExtractor->filterReflectionParameters(
+            $constructor->getParameters()
+        );
 
         foreach ($reflectionParameters as $parameter) {
             $parameterName = $parameter->getName();
-            $resolveResult = Result::fail();
 
-            if ($parameter->isPromoted()) {
-                $excludeParameterNames[] = $parameterName;
-                $resolveResult = $this->dataPropertyAccessor->resolve($parameterName, $data);
-            }
+            $resolveResult = $this->dataPropertyAccessor->resolve($parameterName, $data);
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle(
                 $parameter,
@@ -73,6 +68,6 @@ class ConstructorArgumentsExtractor
             }
         }
 
-        return [$excludeParameterNames, $constructorArguments];
+        return $constructorArguments;
     }
 }

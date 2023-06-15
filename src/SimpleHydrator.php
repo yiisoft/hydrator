@@ -58,8 +58,10 @@ final class SimpleHydrator implements HydratorInterface
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
-        $data = $this->createData($object, $data, $map, $strict);
-        $values = $this->getHydrateData($object, $data, []);
+        $reflectionClass = new ReflectionClass($object);
+
+        $data = $this->createData($reflectionClass, $data, $map, $strict);
+        $values = $this->getHydrateData($reflectionClass, $data, $object);
         $this->populate(
             $object,
             $values,
@@ -71,22 +73,23 @@ final class SimpleHydrator implements HydratorInterface
         if (!class_exists($class)) {
             throw new NonInitiableException();
         }
-        $data = $this->createData($class, $data, $map, $strict);
-        [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->getConstructorArguments(
-            $class,
+        $reflectionClass = new ReflectionClass($class);
+
+        $data = $this->createData($reflectionClass, $data, $map, $strict);
+        $constructorArguments = $this->constructorArgumentsExtractor->getConstructorArguments(
+            $reflectionClass,
             $data,
         );
 
-        $reflection = new \ReflectionClass($class);
-        $constructorReflection = $reflection->getConstructor();
+        $constructorReflection = $reflectionClass->getConstructor();
         if ($constructorReflection && $constructorReflection->getNumberOfRequiredParameters() > count(
                 $constructorArguments
             )) {
             throw new NonInitiableException();
         }
-        $object = new $class(...$constructorArguments);
 
-        $values = $this->getHydrateData($object, $data, $excludeProperties);
+        $object = new $class(...$constructorArguments);
+        $values = $this->getHydrateData($reflectionClass, $data, $object);
 
         $this->populate(
             $object,
@@ -100,22 +103,28 @@ final class SimpleHydrator implements HydratorInterface
      * @psalm-param MapType $map
      */
     private function getHydrateData(
-        object $object,
+        ReflectionClass $reflectionClass,
         Data $data,
-        array $excludeProperties,
+        object $object,
     ): array {
         $hydrateData = [];
 
-        $properties = (new ReflectionClass($object))->getProperties();
+        $properties = $reflectionClass->getProperties();
         $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties($properties);
         foreach ($reflectionProperties as $property) {
             $propertyName = $property->getName();
-            if (in_array($propertyName, $excludeProperties, true)) {
+            //if ($property->isPromoted()) {
+            //    continue;
+            //}
+            if ($property->isPromoted()
+                && (
+                    !$property->isInitialized($object)
+                    || $property->getDefaultValue() === $property->getValue($object))
+            ) {
                 continue;
             }
 
             $resolveResult = $this->dataPropertyAccessor->resolve($propertyName, $data);
-
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle($property, $resolveResult, $data);
             if ($attributesHandleResult->isResolved()) {
@@ -153,12 +162,14 @@ final class SimpleHydrator implements HydratorInterface
      * @psalm-param object|class-string $object
      * @psalm-param MapType $map
      */
-    private function createData(object|string $object, array $sourceData, array $map, bool $strict): Data
+    private function createData(ReflectionClass $reflectionClass, array $sourceData, array $map, bool $strict): Data
     {
         $data = new Data($sourceData, $map, $strict);
 
-        $attributes = (new ReflectionClass($object))
-            ->getAttributes(DataAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+        $attributes = $reflectionClass->getAttributes(
+            DataAttributeInterface::class,
+            ReflectionAttribute::IS_INSTANCEOF
+        );
 
         $this->dataAttributesHandler->handle($attributes, $data);
 

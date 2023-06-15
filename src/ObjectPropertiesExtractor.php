@@ -10,6 +10,7 @@ class ObjectPropertiesExtractor
 {
     /**
      * @param \ReflectionProperty[] $properties
+     * @return \ReflectionProperty[]
      */
     public function filterReflectionProperties(array $properties): array
     {
@@ -36,6 +37,7 @@ class ObjectPropertiesExtractor
 
     /**
      * @param \ReflectionParameter[] $parameters
+     * @return \ReflectionParameter[]
      */
     public function filterReflectionParameters(array $parameters): array
     {
