@@ -22,6 +22,7 @@ use function array_key_exists;
  */
 final class SimpleHydrator implements HydratorInterface
 {
+    public ConstructorArgumentsExtractor $constructorArgumentsExtractor;
     /**
      * @var TypeCasterInterface Type caster used to cast raw values.
      */
@@ -47,6 +48,11 @@ final class SimpleHydrator implements HydratorInterface
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
         $this->dataAttributesHandler = new DataAttributesHandler($initiator);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($initiator);
+        $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
+            $this->dataAttributesHandler,
+            $this->parameterAttributesHandler,
+            $this->typeCaster,
+        );
     }
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
@@ -63,11 +69,18 @@ final class SimpleHydrator implements HydratorInterface
         if (!class_exists($class)) {
             throw new NonInitiableException();
         }
-        [$excludeProperties, $constructorArguments] = $this->getConstructorArguments($class, $data, $map, $strict);
+        [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->getConstructorArguments(
+            $class,
+            $data,
+            $map,
+            $strict
+        );
 
         $reflection = new \ReflectionClass($class);
         $constructorReflection = $reflection->getConstructor();
-        if ($constructorReflection && $constructorReflection->getNumberOfRequiredParameters() > count($constructorArguments)) {
+        if ($constructorReflection && $constructorReflection->getNumberOfRequiredParameters() > count(
+                $constructorArguments
+            )) {
             throw new NonInitiableException();
         }
         $object = new $class(...$constructorArguments);
@@ -189,51 +202,5 @@ final class SimpleHydrator implements HydratorInterface
         $this->dataAttributesHandler->handle($attributes, $data);
 
         return $data;
-    }
-
-    /**
-     * @psalm-param class-string $class
-     * @psalm-param MapType $map
-     * @psalm-return array{0:list<string>,1:array<string,mixed>}
-     */
-    private function getConstructorArguments(string $class, array $sourceData, array $map, bool $strict): array
-    {
-        $excludeParameterNames = [];
-        $constructorArguments = [];
-
-        $constructor = (new ReflectionClass($class))->getConstructor();
-        if ($constructor === null) {
-            return [$excludeParameterNames, $constructorArguments];
-        }
-
-        $data = $this->createData($class, $sourceData, $map, $strict);
-
-        foreach ($constructor->getParameters() as $parameter) {
-            if (!empty($parameter->getAttributes(SkipHydration::class))) {
-                continue;
-            }
-
-            $parameterName = $parameter->getName();
-            $resolveResult = Result::fail();
-
-            if ($parameter->isPromoted()) {
-                $excludeParameterNames[] = $parameterName;
-                $resolveResult = $this->resolve($parameterName, $data);
-            }
-
-            $attributesHandleResult = $this->parameterAttributesHandler->handle($parameter, $resolveResult, $data);
-            if ($attributesHandleResult->isResolved()) {
-                $resolveResult = $attributesHandleResult;
-            }
-
-            if ($resolveResult->isResolved()) {
-                $typeCastedValue = $this->typeCaster->cast($resolveResult->getValue(), $parameter->getType());
-                if ($typeCastedValue->isResolved()) {
-                    $constructorArguments[$parameterName] = $typeCastedValue->getValue();
-                }
-            }
-        }
-
-        return [$excludeParameterNames, $constructorArguments];
     }
 }
