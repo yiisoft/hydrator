@@ -137,8 +137,6 @@ final class Hydrator implements HydratorInterface
     }
 
     /**
-     * @param object $object
-     * @param array $values
      * @param \ReflectionProperty[] $reflectionProperties
      */
     private function populate(object $object, array $values, array $reflectionProperties): void
