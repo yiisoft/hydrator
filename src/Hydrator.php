@@ -140,7 +140,6 @@ final class Hydrator implements HydratorInterface
      * @param object $object
      * @param array $values
      * @param \ReflectionProperty[] $reflectionProperties
-     * @return void
      */
     private function populate(object $object, array $values, array $reflectionProperties): void
     {
@@ -173,10 +172,9 @@ final class Hydrator implements HydratorInterface
     protected function getFilterReflectionProperties(ReflectionClass $reflectionClass, array $excludeProperties): array
     {
         $properties = $reflectionClass->getProperties();
-        $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties(
+        return $this->objectPropertiesExtractor->filterReflectionProperties(
             $properties,
             $excludeProperties
         );
-        return $reflectionProperties;
     }
 }
