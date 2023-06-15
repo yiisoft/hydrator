@@ -39,6 +39,7 @@ final class Hydrator implements HydratorInterface
             $dataAttributesHandler,
             $parameterAttributesHandler,
             $typeCaster,
+            new ObjectPropertiesExtractor(),
         );
     }
 

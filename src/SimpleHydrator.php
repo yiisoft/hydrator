@@ -7,8 +7,6 @@ namespace Yiisoft\Hydrator;
 use Closure;
 use ReflectionAttribute;
 use ReflectionClass;
-use ReflectionProperty;
-use Yiisoft\Hydrator\Attribute\SkipHydration;
 use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
 use Yiisoft\Hydrator\ResolverInitiator\NonInitiableException;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
@@ -37,6 +35,7 @@ final class SimpleHydrator implements HydratorInterface
      * @var ParameterAttributesHandler Parameter attributes handler.
      */
     private ParameterAttributesHandler $parameterAttributesHandler;
+    private ObjectPropertiesExtractor $objectPropertiesExtractor;
 
     /**
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
@@ -48,16 +47,18 @@ final class SimpleHydrator implements HydratorInterface
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
         $this->dataAttributesHandler = new DataAttributesHandler($initiator);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($initiator);
+        $this->objectPropertiesExtractor = new ObjectPropertiesExtractor();
         $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
             $this->dataAttributesHandler,
             $this->parameterAttributesHandler,
             $this->typeCaster,
+            $this->objectPropertiesExtractor,
         );
     }
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
-        $values = $this->getHydrateData($object, $data, $map, $strict);
+        $values = $this->getHydrateData($object, $data, $map, $strict, []);
         $this->populate(
             $object,
             $values,
@@ -103,17 +104,15 @@ final class SimpleHydrator implements HydratorInterface
         array $sourceData,
         array $map,
         bool $strict,
-        array $excludeProperties = [],
+        array $excludeProperties,
     ): array {
         $hydrateData = [];
 
         $data = $this->createData($object, $sourceData, $map, $strict);
 
-        foreach ($this->getObjectProperties($object) as $property) {
-            if (!empty($property->getAttributes(SkipHydration::class))) {
-                continue;
-            }
-
+        $properties = (new ReflectionClass($object))->getProperties();
+        $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties($properties);
+        foreach ($reflectionProperties as $property) {
             $propertyName = $property->getName();
             if (in_array($propertyName, $excludeProperties, true)) {
                 continue;
@@ -163,29 +162,6 @@ final class SimpleHydrator implements HydratorInterface
         foreach ($values as $propertyName => $value) {
             $setter($object, $propertyName, $value);
         }
-    }
-
-    /**
-     * @psalm-return array<string, ReflectionProperty>
-     */
-    private function getObjectProperties(object $object): array
-    {
-        $result = [];
-
-        $properties = (new ReflectionClass($object))->getProperties();
-        foreach ($properties as $property) {
-            if ($property->isStatic()) {
-                continue;
-            }
-
-            /** @psalm-suppress UndefinedMethod Need for PHP 8.0 only */
-            if (PHP_VERSION_ID >= 80100 && $property->isReadOnly()) {
-                continue;
-            }
-
-            $result[$property->getName()] = $property;
-        }
-        return $result;
     }
 
     /**

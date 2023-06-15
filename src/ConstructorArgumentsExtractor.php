@@ -5,23 +5,25 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 use ReflectionClass;
-use Yiisoft\Hydrator\Attribute\SkipHydration;
 
 class ConstructorArgumentsExtractor
 {
     public ParameterAttributesHandler $parameterAttributesHandler;
     public TypeCasterInterface $typeCaster;
+    public ObjectPropertiesExtractor $objectPropertiesExtractor;
     private DataAttributesHandler $dataAttributesHandler;
 
     public function __construct(
         DataAttributesHandler $dataAttributesHandler,
         ParameterAttributesHandler $parameterAttributesHandler,
         TypeCasterInterface $typeCaster,
+        ObjectPropertiesExtractor $objectPropertiesExtractor,
     )
     {
         $this->dataAttributesHandler = $dataAttributesHandler;
         $this->parameterAttributesHandler = $parameterAttributesHandler;
         $this->typeCaster = $typeCaster;
+        $this->objectPropertiesExtractor = $objectPropertiesExtractor;
     }
 
     /**
@@ -41,11 +43,9 @@ class ConstructorArgumentsExtractor
 
         $data = $this->createData($class, $sourceData, $map, $strict);
 
-        foreach ($constructor->getParameters() as $parameter) {
-            if (!empty($parameter->getAttributes(SkipHydration::class))) {
-                continue;
-            }
+        $reflectionParameters = $this->objectPropertiesExtractor->filterReflectionParameters($constructor->getParameters());
 
+        foreach ($reflectionParameters as $parameter) {
             $parameterName = $parameter->getName();
             $resolveResult = Result::fail();
 
