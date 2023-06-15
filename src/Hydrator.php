@@ -52,7 +52,7 @@ final class Hydrator implements HydratorInterface
     public function create(string $class, array $data = [], array $map = [], bool $strict = false): object
     {
         $reflectionClass = new ReflectionClass($class);
-        $constructorArguments = $this->constructorArgumentsExtractor->getConstructorArguments(
+        [$exclude, $constructorArguments] = $this->constructorArgumentsExtractor->getConstructorArguments(
             $reflectionClass,
             $this->createData($reflectionClass, $data, $map, $strict),
         );

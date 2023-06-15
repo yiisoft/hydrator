@@ -18,7 +18,8 @@ class ConstructorArgumentsExtractor
         TypeCasterInterface $typeCaster,
         ObjectPropertiesExtractor $objectPropertiesExtractor,
         DataPropertyAccessor $dataPropertyAccessor
-    ) {
+    )
+    {
         $this->parameterAttributesHandler = $parameterAttributesHandler;
         $this->typeCaster = $typeCaster;
         $this->objectPropertiesExtractor = $objectPropertiesExtractor;
@@ -32,21 +33,25 @@ class ConstructorArgumentsExtractor
      */
     public function getConstructorArguments(ReflectionClass $reflectionClass, Data $data): array
     {
+        $excludeParameterNames = [];
         $constructorArguments = [];
 
         $constructor = $reflectionClass->getConstructor();
         if ($constructor === null) {
-            return $constructorArguments;
+            return [$excludeParameterNames, $constructorArguments];
         }
 
-        $reflectionParameters = $this->objectPropertiesExtractor->filterReflectionParameters(
-            $constructor->getParameters()
-        );
+
+        $reflectionParameters = $this->objectPropertiesExtractor->filterReflectionParameters($constructor->getParameters());
 
         foreach ($reflectionParameters as $parameter) {
             $parameterName = $parameter->getName();
+            $resolveResult = Result::fail();
 
-            $resolveResult = $this->dataPropertyAccessor->resolve($parameterName, $data);
+            if ($parameter->isPromoted()) {
+                $excludeParameterNames[] = $parameterName;
+                $resolveResult = $this->dataPropertyAccessor->resolve($parameterName, $data);
+            }
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle(
                 $parameter,
@@ -68,6 +73,6 @@ class ConstructorArgumentsExtractor
             }
         }
 
-        return $constructorArguments;
+        return [$excludeParameterNames, $constructorArguments];
     }
 }

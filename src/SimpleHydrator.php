@@ -58,10 +58,9 @@ final class SimpleHydrator implements HydratorInterface
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
-        $reflectionClass = new ReflectionClass($object);
-
+        $reflectionClass = new \ReflectionClass($object);
         $data = $this->createData($reflectionClass, $data, $map, $strict);
-        $values = $this->getHydrateData($reflectionClass, $data, $object);
+        $values = $this->getHydrateData($reflectionClass, $data, []);
         $this->populate(
             $object,
             $values,
@@ -73,10 +72,9 @@ final class SimpleHydrator implements HydratorInterface
         if (!class_exists($class)) {
             throw new NonInitiableException();
         }
-        $reflectionClass = new ReflectionClass($class);
-
+        $reflectionClass = new \ReflectionClass($class);
         $data = $this->createData($reflectionClass, $data, $map, $strict);
-        $constructorArguments = $this->constructorArgumentsExtractor->getConstructorArguments(
+        [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->getConstructorArguments(
             $reflectionClass,
             $data,
         );
@@ -89,7 +87,8 @@ final class SimpleHydrator implements HydratorInterface
         }
 
         $object = new $class(...$constructorArguments);
-        $values = $this->getHydrateData($reflectionClass, $data, $object);
+
+        $values = $this->getHydrateData($reflectionClass, $data, $excludeProperties);
 
         $this->populate(
             $object,
@@ -105,7 +104,7 @@ final class SimpleHydrator implements HydratorInterface
     private function getHydrateData(
         ReflectionClass $reflectionClass,
         Data $data,
-        object $object,
+        array $excludeProperties,
     ): array {
         $hydrateData = [];
 
@@ -113,18 +112,12 @@ final class SimpleHydrator implements HydratorInterface
         $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties($properties);
         foreach ($reflectionProperties as $property) {
             $propertyName = $property->getName();
-            //if ($property->isPromoted()) {
-            //    continue;
-            //}
-            if ($property->isPromoted()
-                && (
-                    !$property->isInitialized($object)
-                    || $property->getDefaultValue() === $property->getValue($object))
-            ) {
+            if (in_array($propertyName, $excludeProperties, true)) {
                 continue;
             }
 
             $resolveResult = $this->dataPropertyAccessor->resolve($propertyName, $data);
+
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle($property, $resolveResult, $data);
             if ($attributesHandleResult->isResolved()) {
@@ -162,14 +155,11 @@ final class SimpleHydrator implements HydratorInterface
      * @psalm-param object|class-string $object
      * @psalm-param MapType $map
      */
-    private function createData(ReflectionClass $reflectionClass, array $sourceData, array $map, bool $strict): Data
+    private function createData($reflectionClass, array $sourceData, array $map, bool $strict): Data
     {
         $data = new Data($sourceData, $map, $strict);
 
-        $attributes = $reflectionClass->getAttributes(
-            DataAttributeInterface::class,
-            ReflectionAttribute::IS_INSTANCEOF
-        );
+        $attributes = $reflectionClass->getAttributes(DataAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
 
         $this->dataAttributesHandler->handle($attributes, $data);
 
