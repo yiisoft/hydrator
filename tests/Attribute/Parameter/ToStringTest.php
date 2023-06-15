@@ -6,7 +6,7 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
-use Yiisoft\Hydrator\SimpleHydrator;
+use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
@@ -32,7 +32,7 @@ final class ToStringTest extends TestCase
      */
     public function testBase(string $expected, mixed $value): void
     {
-        $hydrator = new SimpleHydrator();
+        $hydrator = new Hydrator();
 
         $object = new class () {
             #[ToString]
@@ -46,7 +46,7 @@ final class ToStringTest extends TestCase
 
     public function testNotResolved(): void
     {
-        $hydrator = new SimpleHydrator();
+        $hydrator = new Hydrator();
 
         $object = new class () {
             #[ToString]
@@ -60,7 +60,7 @@ final class ToStringTest extends TestCase
 
     public function testUnexpectedAttributeException(): void
     {
-        $hydrator = new SimpleHydrator();
+        $hydrator = new Hydrator();
 
         $object = new CounterClass();
 

@@ -13,7 +13,6 @@ use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\ObjectInitiator;
 use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
-use Yiisoft\Hydrator\SimpleHydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiSingle;
@@ -226,7 +225,7 @@ final class DiTest extends TestCase
         $hydrator->hydrate($object);
     }
 
-    private function createHydrator(array $definitions = []): SimpleHydrator
+    private function createHydrator(array $definitions = []): Hydrator
     {
         $container = new SimpleContainer([
             DiResolver::class => new DiResolver(
@@ -234,7 +233,7 @@ final class DiTest extends TestCase
             ),
         ]);
         $typeCaster = new SimpleTypeCaster();
-        return new SimpleHydrator(
+        return new Hydrator(
             $typeCaster,
             new AttributeResolverInitiator($container),
             new ObjectInitiator(new Injector($container))

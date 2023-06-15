@@ -16,7 +16,7 @@ use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
  *
  * @psalm-import-type MapType from HydratorInterface
  */
-final class SimpleHydrator implements HydratorInterface
+final class Hydrator implements HydratorInterface
 {
     public ConstructorArgumentsExtractor $constructorArgumentsExtractor;
     public ?ObjectInitiator $objectInitiator;

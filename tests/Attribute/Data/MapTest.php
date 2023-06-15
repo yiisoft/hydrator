@@ -6,7 +6,7 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Data;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Data\Map;
-use Yiisoft\Hydrator\SimpleHydrator;
+use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapClass;
@@ -18,7 +18,7 @@ final class MapTest extends TestCase
 {
     public function testBase(): void
     {
-        $hydrator = new SimpleHydrator();
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(MapClass::class, ['x' => 1, 'y' => 2]);
 
@@ -28,7 +28,7 @@ final class MapTest extends TestCase
 
     public function testStrict(): void
     {
-        $hydrator = new SimpleHydrator();
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(MapStrictClass::class, ['a' => 1, 'y' => 2, 'c' => 3]);
 
@@ -39,7 +39,7 @@ final class MapTest extends TestCase
 
     public function testNonStrict(): void
     {
-        $hydrator = new SimpleHydrator();
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(MapNonStrictClass::class, ['a' => 1, 'y' => 2, 'c' => 3], strict: true);
 
@@ -50,7 +50,7 @@ final class MapTest extends TestCase
 
     public function testUnexpectedAttributeException(): void
     {
-        $hydrator = new SimpleHydrator();
+        $hydrator = new Hydrator();
 
         $object = new FromPredefinedArrayClass();
 

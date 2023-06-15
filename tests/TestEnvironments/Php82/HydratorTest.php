@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\TestEnvironments\Php82;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Hydrator\SimpleHydrator;
+use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php82\Support\TypeObject;
 
 final class HydratorTest extends TestCase
@@ -27,7 +27,7 @@ final class HydratorTest extends TestCase
     {
         $object = new TypeObject();
 
-        $hydrator = new SimpleHydrator();
+        $hydrator = new Hydrator();
         $hydrator->hydrate($object, $data);
 
         $expectedValues = array_merge(

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\Attribute;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Hydrator\SimpleHydrator;
+use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Classes\SkipHydrationClass;
 
 final class SkipHydrationTest extends TestCase
 {
     public function testBase(): void
     {
-        $hydrator = new SimpleHydrator();
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(SkipHydrationClass::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);
 
