@@ -8,22 +8,8 @@ use ReflectionClass;
 
 class ConstructorArgumentsExtractor
 {
-    private ParameterAttributesHandler $parameterAttributesHandler;
-    private TypeCasterInterface $typeCaster;
-    private ObjectPropertiesExtractor $objectPropertiesExtractor;
-    private DataPropertyAccessor $dataPropertyAccessor;
-
-    public function __construct(
-        ParameterAttributesHandler $parameterAttributesHandler,
-        TypeCasterInterface $typeCaster,
-        ObjectPropertiesExtractor $objectPropertiesExtractor,
-        DataPropertyAccessor $dataPropertyAccessor
-    )
+    public function __construct(private ParameterAttributesHandler $parameterAttributesHandler, private TypeCasterInterface $typeCaster, private ObjectPropertiesExtractor $objectPropertiesExtractor, private DataPropertyAccessor $dataPropertyAccessor)
     {
-        $this->parameterAttributesHandler = $parameterAttributesHandler;
-        $this->typeCaster = $typeCaster;
-        $this->objectPropertiesExtractor = $objectPropertiesExtractor;
-        $this->dataPropertyAccessor = $dataPropertyAccessor;
     }
 
     /**

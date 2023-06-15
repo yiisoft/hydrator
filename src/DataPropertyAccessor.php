@@ -6,7 +6,6 @@ namespace Yiisoft\Hydrator;
 
 class DataPropertyAccessor
 {
-
     public function resolve(string $name, Data $data): Result
     {
         $map = $data->getMap();
