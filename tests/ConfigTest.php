@@ -9,6 +9,7 @@ use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\HydratorInterface;
+use Yiisoft\Hydrator\SimpleHydrator;
 
 use function dirname;
 
@@ -22,7 +23,7 @@ final class ConfigTest extends TestCase
 
         $hydrator = $container->get(HydratorInterface::class);
 
-        $this->assertInstanceOf(Hydrator::class, $hydrator);
+        $this->assertInstanceOf(SimpleHydrator::class, $hydrator);
     }
 
     private function getContainerDefinitions(): array

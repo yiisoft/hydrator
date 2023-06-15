@@ -10,10 +10,9 @@ use stdClass;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
-use Yiisoft\Hydrator\DataAttributesHandler;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ObjectInitiator;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
-use Yiisoft\Hydrator\ParameterAttributesHandler;
 use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
 use Yiisoft\Hydrator\SimpleHydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
@@ -466,17 +465,14 @@ final class HydratorTest extends TestCase
     public function testCustomTypeCast(): void
     {
         $container = new SimpleContainer();
-        $attributeResolverInitiator = new AttributeResolverInitiator($container);
         $typeCaster = new CompositeTypeCaster(
             new String42TypeCaster(),
             new SimpleTypeCaster(),
         );
-        $hydrator = new Hydrator(
-            new SimpleHydrator($typeCaster, $attributeResolverInitiator),
-            new Injector($container),
+        $hydrator = new SimpleHydrator(
             $typeCaster,
-            new DataAttributesHandler($attributeResolverInitiator),
-            new ParameterAttributesHandler($attributeResolverInitiator)
+            new AttributeResolverInitiator($container),
+            new ObjectInitiator(new Injector($container))
         );
 
         $object = new TypeClass();
@@ -489,17 +485,14 @@ final class HydratorTest extends TestCase
     public function testCompositeTypeCastWithoutCast(): void
     {
         $container = new SimpleContainer();
-        $attributeResolverInitiator = new AttributeResolverInitiator($container);
         $typeCaster = new CompositeTypeCaster(
             new String42TypeCaster(),
             new SimpleTypeCaster(),
         );
-        $hydrator = new Hydrator(
-            new SimpleHydrator($typeCaster, $attributeResolverInitiator),
-            new Injector($container),
+        $hydrator = new SimpleHydrator(
             $typeCaster,
-            new DataAttributesHandler($attributeResolverInitiator),
-            new ParameterAttributesHandler($attributeResolverInitiator)
+            new AttributeResolverInitiator($container),
+            new ObjectInitiator(new Injector($container))
         );
 
         $object = new TypeClass();

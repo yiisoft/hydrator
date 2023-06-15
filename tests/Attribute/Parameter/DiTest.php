@@ -10,9 +10,8 @@ use Throwable;
 use Yiisoft\Hydrator\Attribute\Parameter\Di;
 use Yiisoft\Hydrator\Attribute\Parameter\DiNotFoundException;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
-use Yiisoft\Hydrator\DataAttributesHandler;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\ParameterAttributesHandler;
+use Yiisoft\Hydrator\ObjectInitiator;
 use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
 use Yiisoft\Hydrator\SimpleHydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
@@ -227,21 +226,18 @@ final class DiTest extends TestCase
         $hydrator->hydrate($object);
     }
 
-    private function createHydrator(array $definitions = []): Hydrator
+    private function createHydrator(array $definitions = []): SimpleHydrator
     {
         $container = new SimpleContainer([
             DiResolver::class => new DiResolver(
                 new SimpleContainer($definitions)
             ),
         ]);
-        $attributeResolverInitiator = new AttributeResolverInitiator($container);
         $typeCaster = new SimpleTypeCaster();
-        return new Hydrator(
-            new SimpleHydrator($typeCaster, $attributeResolverInitiator),
-            new Injector($container),
+        return new SimpleHydrator(
             $typeCaster,
-            new DataAttributesHandler($attributeResolverInitiator),
-            new ParameterAttributesHandler($attributeResolverInitiator),
+            new AttributeResolverInitiator($container),
+            new ObjectInitiator(new Injector($container))
         );
     }
 }
