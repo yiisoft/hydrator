@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
+use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Hydrator;
@@ -550,8 +551,16 @@ final class HydratorTest extends TestCase
 
     public function testConstructorParameterAttributes(): void
     {
-        $this->markTestSkipped();
-        $hydrator = new Hydrator();
+        $hydrator = new Hydrator(
+            new NoTypeCaster(),
+            new AttributeResolverInitiator(
+                new SimpleContainer([
+                    DiResolver::class => new DiResolver(
+                        new SimpleContainer(['stringable42' => new StringableObject('42')])
+                    ),
+                ]),
+            ),
+        );
 
         $object = $hydrator->create(ConstructorParameterAttributesClass::class, ['a' => 7]);
 

@@ -26,6 +26,7 @@ use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefault;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefaultConstructor;
 use Yiisoft\Hydrator\Tests\Support\Classes\Engine1;
 use Yiisoft\Hydrator\Tests\Support\Classes\EngineInterface;
+use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Injector\Injector;
@@ -216,8 +217,14 @@ final class DiTest extends TestCase
 
     public function testUnexpectedAttributeException(): void
     {
-        $hydrator = $this->createHydrator();
-
+        $hydrator = new Hydrator(
+            new NoTypeCaster(),
+            new AttributeResolverInitiator(
+                new SimpleContainer([
+                    DiResolver::class => new Counter(''),
+                ]),
+            ),
+        );
         $object = new CounterClass();
 
         $this->expectException(UnexpectedAttributeException::class);

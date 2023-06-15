@@ -7,9 +7,12 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
+use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
+use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class DataTest extends TestCase
 {
@@ -107,7 +110,14 @@ final class DataTest extends TestCase
 
     public function testUnexpectedAttributeException(): void
     {
-        $hydrator = new Hydrator();
+        $hydrator = new Hydrator(
+            new NoTypeCaster(),
+            new AttributeResolverInitiator(
+                new SimpleContainer([
+                    Data::class => new Counter(''),
+                ]),
+            ),
+        );
 
         $object = new CounterClass();
 

@@ -7,12 +7,16 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Data;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Data\Map;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
+use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapNonStrictClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapStrictClass;
+use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
+use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class MapTest extends TestCase
 {
@@ -50,7 +54,14 @@ final class MapTest extends TestCase
 
     public function testUnexpectedAttributeException(): void
     {
-        $hydrator = new Hydrator();
+        $hydrator = new Hydrator(
+            new NoTypeCaster(),
+            new AttributeResolverInitiator(
+                new SimpleContainer([
+                    FromPredefinedArrayResolver::class => new Map([]),
+                ]),
+            ),
+        );
 
         $object = new FromPredefinedArrayClass();
 
