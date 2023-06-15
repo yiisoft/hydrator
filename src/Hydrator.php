@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
-use Closure;
 use ReflectionAttribute;
 use ReflectionClass;
 use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
@@ -44,8 +43,7 @@ final class Hydrator implements HydratorInterface
         ?TypeCasterInterface $typeCaster = null,
         ?AttributeResolverInitiator $initiator = null,
         ?ObjectInitiator $objectInitiator = null,
-    )
-    {
+    ) {
         $initiator ??= new AttributeResolverInitiator();
 
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
@@ -66,10 +64,12 @@ final class Hydrator implements HydratorInterface
     {
         $reflectionClass = new \ReflectionClass($object);
         $data = $this->createData($reflectionClass, $data, $map, $strict);
-        $values = $this->getHydrateData($reflectionClass, $data, []);
+        $reflectionProperties = $this->getFilterReflectionProperties($reflectionClass, []);
+        $values = $this->getHydrateData($reflectionProperties, $data);
         $this->populate(
             $object,
             $values,
+            $reflectionProperties,
         );
     }
 
@@ -87,11 +87,13 @@ final class Hydrator implements HydratorInterface
 
         $object = $this->objectInitiator->initiate($reflectionClass, $constructorArguments);
 
-        $values = $this->getHydrateData($reflectionClass, $data, $excludeProperties);
+        $reflectionProperties = $this->getFilterReflectionProperties($reflectionClass, $excludeProperties);
+        $values = $this->getHydrateData($reflectionProperties, $data);
 
         $this->populate(
             $object,
             $values,
+            $reflectionProperties,
         );
 
         return $object;
@@ -101,14 +103,11 @@ final class Hydrator implements HydratorInterface
      * @psalm-param MapType $map
      */
     private function getHydrateData(
-        ReflectionClass $reflectionClass,
+        array $reflectionProperties,
         Data $data,
-        array $excludeProperties,
     ): array {
         $hydrateData = [];
 
-        $properties = $reflectionClass->getProperties();
-        $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties($properties, $excludeProperties);
         foreach ($reflectionProperties as $property) {
             $propertyName = $property->getName();
 
@@ -137,19 +136,19 @@ final class Hydrator implements HydratorInterface
         return $hydrateData;
     }
 
-    private function populate(object $object, array $values): void
+    /**
+     * @param object $object
+     * @param array $values
+     * @param \ReflectionProperty[] $reflectionProperties
+     * @return void
+     */
+    private function populate(object $object, array $values, array $reflectionProperties): void
     {
-        /** @var Closure $setter */
-        $setter = Closure::bind(
-            static function (object $object, string $propertyName, mixed $value): void {
-                $object->$propertyName = $value;
-            },
-            null,
-            $object
-        );
-
         foreach ($values as $propertyName => $value) {
-            $setter($object, $propertyName, $value);
+            $parameter = $reflectionProperties[$propertyName];
+            if ($parameter !== null) {
+                $parameter->setValue($object, $values[$parameter->getName()]);
+            }
         }
     }
 
@@ -161,10 +160,23 @@ final class Hydrator implements HydratorInterface
     {
         $data = new Data($sourceData, $map, $strict);
 
-        $attributes = $reflectionClass->getAttributes(DataAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+        $attributes = $reflectionClass->getAttributes(
+            DataAttributeInterface::class,
+            ReflectionAttribute::IS_INSTANCEOF
+        );
 
         $this->dataAttributesHandler->handle($attributes, $data);
 
         return $data;
+    }
+
+    protected function getFilterReflectionProperties(ReflectionClass $reflectionClass, array $excludeProperties): array
+    {
+        $properties = $reflectionClass->getProperties();
+        $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties(
+            $properties,
+            $excludeProperties
+        );
+        return $reflectionProperties;
     }
 }
