@@ -12,7 +12,7 @@ class ObjectPropertiesExtractor
      * @param \ReflectionProperty[] $properties
      * @return \ReflectionProperty[]
      */
-    public function filterReflectionProperties(array $properties): array
+    public function filterReflectionProperties(array $properties, array $propertyNamesToFilter): array
     {
         $result = [];
 
@@ -25,12 +25,16 @@ class ObjectPropertiesExtractor
             if (PHP_VERSION_ID >= 80100 && $property->isReadOnly()) {
                 continue;
             }
+            $propertyName = $property->getName();
+            if (in_array($propertyName, $propertyNamesToFilter, true)) {
+                continue;
+            }
 
             if (!empty($property->getAttributes(SkipHydration::class))) {
                 continue;
             }
 
-            $result[$property->getName()] = $property;
+            $result[$propertyName] = $property;
         }
         return $result;
     }

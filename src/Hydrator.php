@@ -108,23 +108,26 @@ final class Hydrator implements HydratorInterface
         $hydrateData = [];
 
         $properties = $reflectionClass->getProperties();
-        $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties($properties);
+        $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties($properties, $excludeProperties);
         foreach ($reflectionProperties as $property) {
             $propertyName = $property->getName();
-            if (in_array($propertyName, $excludeProperties, true)) {
-                continue;
-            }
 
             $resolveResult = $this->dataPropertyAccessor->resolve($propertyName, $data);
 
-
-            $attributesHandleResult = $this->parameterAttributesHandler->handle($property, $resolveResult, $data);
+            $attributesHandleResult = $this->parameterAttributesHandler->handle(
+                $property,
+                $resolveResult,
+                $data,
+            );
             if ($attributesHandleResult->isResolved()) {
                 $resolveResult = $attributesHandleResult;
             }
 
             if ($resolveResult->isResolved()) {
-                $result = $this->typeCaster->cast($resolveResult->getValue(), $property->getType());
+                $result = $this->typeCaster->cast(
+                    $resolveResult->getValue(),
+                    $property->getType(),
+                );
                 if ($result->isResolved()) {
                     $hydrateData[$propertyName] = $result->getValue();
                 }

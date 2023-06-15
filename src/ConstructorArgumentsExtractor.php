@@ -56,7 +56,7 @@ class ConstructorArgumentsExtractor
             $attributesHandleResult = $this->parameterAttributesHandler->handle(
                 $parameter,
                 $resolveResult,
-                $data
+                $data,
             );
             if ($attributesHandleResult->isResolved()) {
                 $resolveResult = $attributesHandleResult;
@@ -65,7 +65,7 @@ class ConstructorArgumentsExtractor
             if ($resolveResult->isResolved()) {
                 $typeCastedValue = $this->typeCaster->cast(
                     $resolveResult->getValue(),
-                    $parameter->getType()
+                    $parameter->getType(),
                 );
                 if ($typeCastedValue->isResolved()) {
                     $constructorArguments[$parameterName] = $typeCastedValue->getValue();
