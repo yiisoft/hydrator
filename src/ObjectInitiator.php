@@ -36,8 +36,15 @@ final class ObjectInitiator
         if ($constructorReflection === null ||
             $constructorReflection->getNumberOfRequiredParameters() <= count($constructorArguments)
         ) {
-            return new $class(...$constructorArguments);
+            return $reflectionClass->newInstanceArgs($constructorArguments);
         }
-        throw new NonInitiableException();
+        throw new NonInitiableException(
+            sprintf(
+                'Class "%s" cannot be initiated because it has required %d parameters in constructor, but passed %d.',
+                $class,
+                $constructorReflection->getNumberOfRequiredParameters(),
+                count($constructorArguments)
+            )
+        );
     }
 }

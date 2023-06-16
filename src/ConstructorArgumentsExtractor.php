@@ -13,8 +13,6 @@ class ConstructorArgumentsExtractor
     }
 
     /**
-     * @psalm-param class-string $class
-     * @psalm-param MapType $map
      * @psalm-return array{0:list<string>,1:array<string,mixed>}
      */
     public function getConstructorArguments(ReflectionClass $reflectionClass, Data $data): array
@@ -26,7 +24,6 @@ class ConstructorArgumentsExtractor
         if ($constructor === null) {
             return [$excludeParameterNames, $constructorArguments];
         }
-
 
         $reflectionParameters = $this->objectPropertiesExtractor->filterReflectionParameters($constructor->getParameters());
 

@@ -51,6 +51,15 @@ final class ParameterAttributesHandler
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
             $resolver = $this->attributeResolverInitiator->initiate($attribute->getResolver());
+            if (!$resolver instanceof ParameterAttributeResolverInterface) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Parameter attribute resolver "%s" must implement "%s".',
+                        get_debug_type($resolver),
+                        ParameterAttributeResolverInterface::class,
+                    ),
+                );
+            }
 
             $context = new Context(
                 $parameter,

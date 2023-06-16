@@ -105,9 +105,16 @@ final class SimpleTypeCaster implements TypeCasterInterface
             if (!$t->isBuiltin()) {
                 $class = $t->getName();
                 if (is_object($value)) {
-                    if (is_a($value, $class)) {
+                    if ($value instanceof $class) {
                         return Result::success($value);
                     }
+                    throw new \RuntimeException(
+                        sprintf(
+                            'Value of type "%s" is not an instance of %s',
+                            $class,
+                            get_debug_type($class),
+                        )
+                    );
                 } elseif (is_array($value) && $this->hydrator !== null) {
                     $reflection = new ReflectionClass($class);
                     if ($reflection->isInstantiable()) {

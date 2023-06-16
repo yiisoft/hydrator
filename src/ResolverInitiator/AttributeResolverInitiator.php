@@ -8,7 +8,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
-use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 
 use function is_string;
 
@@ -38,23 +37,27 @@ final class AttributeResolverInitiator
         }
 
         if (!class_exists($resolver)) {
-            throw new NonInitiableException();
+            throw new NonInitiableException(
+                sprintf(
+                    'Class "%s" does not exist.',
+                    $resolver,
+                ),
+            );
         }
 
         $reflection = new \ReflectionClass($resolver);
         $constructorReflection = $reflection->getConstructor();
         if ($constructorReflection && $constructorReflection->getNumberOfRequiredParameters() > 0) {
-            throw new NonInitiableException();
+            throw new NonInitiableException(
+                sprintf(
+                    'Class "%s" has constructor with %d required parameters.',
+                    $resolver,
+                    $constructorReflection->getNumberOfRequiredParameters(),
+                ),
+            );
         }
 
 
-        $resolver1 = new $resolver();
-        if (!$resolver1 instanceof ParameterAttributeResolverInterface) {
-            throw new \RuntimeException('Parameter attribute resolver "' .
-                $resolver .
-                '" must implement "' .
-                ParameterAttributeResolverInterface::class . '".');
-        }
-        return $resolver1;
+        return $reflection->newInstance();
     }
 }

@@ -63,7 +63,8 @@ final class Hydrator implements HydratorInterface
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
         $reflectionClass = new \ReflectionClass($object);
-        $data = $this->createData($reflectionClass, $data, $map, $strict);
+        $data = $this->createData($data, $map, $strict);
+        $this->handleDataAttributes($reflectionClass, $data);
         $reflectionProperties = $this->getFilterReflectionProperties($reflectionClass, []);
         $values = $this->getHydrateData($reflectionProperties, $data);
         $this->populate(
@@ -79,17 +80,18 @@ final class Hydrator implements HydratorInterface
             throw new NonInitiableException();
         }
         $reflectionClass = new \ReflectionClass($class);
-        $data = $this->createData($reflectionClass, $data, $map, $strict);
+        $data = $this->createData($data, $map, $strict);
+        $this->handleDataAttributes($reflectionClass, $data);
+
         [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->getConstructorArguments(
             $reflectionClass,
             $data,
         );
 
-        $object = $this->objectInitiator->initiate($reflectionClass, $constructorArguments);
-
         $reflectionProperties = $this->getFilterReflectionProperties($reflectionClass, $excludeProperties);
         $values = $this->getHydrateData($reflectionProperties, $data);
 
+        $object = $this->objectInitiator->initiate($reflectionClass, $constructorArguments);
         $this->populate(
             $object,
             $values,
@@ -156,27 +158,26 @@ final class Hydrator implements HydratorInterface
      * @psalm-param object|class-string $object
      * @psalm-param MapType $map
      */
-    private function createData($reflectionClass, array $sourceData, array $map, bool $strict): Data
+    private function createData(array $sourceData, array $map, bool $strict): Data
     {
-        $data = new Data($sourceData, $map, $strict);
+        return new Data($sourceData, $map, $strict);
+    }
 
+    private function getFilterReflectionProperties(ReflectionClass $reflectionClass, array $excludeProperties): array
+    {
+        return $this->objectPropertiesExtractor->filterReflectionProperties(
+            $reflectionClass->getProperties(),
+            $excludeProperties
+        );
+    }
+
+    protected function handleDataAttributes(ReflectionClass $reflectionClass, Data $data): void
+    {
         $attributes = $reflectionClass->getAttributes(
             DataAttributeInterface::class,
             ReflectionAttribute::IS_INSTANCEOF
         );
 
         $this->dataAttributesHandler->handle($attributes, $data);
-
-        return $data;
-    }
-
-    protected function getFilterReflectionProperties(ReflectionClass $reflectionClass, array $excludeProperties): array
-    {
-        $properties = $reflectionClass->getProperties();
-        $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties(
-            $properties,
-            $excludeProperties
-        );
-        return $reflectionProperties;
     }
 }
