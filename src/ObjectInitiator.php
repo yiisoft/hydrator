@@ -12,9 +12,6 @@ use Yiisoft\Injector\Injector;
 
 final class ObjectInitiator
 {
-    /**
-     * @param Injector|null $injector
-     */
     public function __construct(
         private ?Injector $injector = null,
     ) {
