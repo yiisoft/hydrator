@@ -17,8 +17,8 @@ use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
  */
 final class Hydrator implements HydratorInterface
 {
-    public ConstructorArgumentsExtractor $constructorArgumentsExtractor;
-    public ?ObjectInitiator $objectInitiator;
+    private ConstructorArgumentsExtractor $constructorArgumentsExtractor;
+    private ObjectInitiator $objectInitiator;
     /**
      * @var TypeCasterInterface Type caster used to cast raw values.
      */
@@ -66,12 +66,7 @@ final class Hydrator implements HydratorInterface
         $data = $this->createData($data, $map, $strict);
         $this->handleDataAttributes($reflectionClass, $data);
         $reflectionProperties = $this->getFilterReflectionProperties($reflectionClass, []);
-        $values = $this->getHydrateData($reflectionProperties, $data);
-        $this->populate(
-            $object,
-            $values,
-            $reflectionProperties,
-        );
+        $this->hydrateInternal($object, $reflectionProperties, $data);
     }
 
     public function create(string $class, array $data = [], array $map = [], bool $strict = false): object
@@ -89,27 +84,22 @@ final class Hydrator implements HydratorInterface
         );
 
         $reflectionProperties = $this->getFilterReflectionProperties($reflectionClass, $excludeProperties);
-        $values = $this->getHydrateData($reflectionProperties, $data);
 
         $object = $this->objectInitiator->initiate($reflectionClass, $constructorArguments);
-        $this->populate(
-            $object,
-            $values,
-            $reflectionProperties,
-        );
+        $this->hydrateInternal($object, $reflectionProperties, $data);
 
         return $object;
     }
 
     /**
+     * @param \ReflectionProperty[] $reflectionProperties
      * @psalm-param MapType $map
      */
-    private function getHydrateData(
+    private function hydrateInternal(
+        object $object,
         array $reflectionProperties,
         Data $data,
-    ): array {
-        $hydrateData = [];
-
+    ): void {
         foreach ($reflectionProperties as $property) {
             $propertyName = $property->getName();
 
@@ -130,32 +120,13 @@ final class Hydrator implements HydratorInterface
                     $property->getType(),
                 );
                 if ($result->isResolved()) {
-                    $hydrateData[$propertyName] = $result->getValue();
+                    $property->setValue($object, $result->getValue());
                 }
             }
         }
-
-        return $hydrateData;
     }
 
     /**
-     * @param object $object
-     * @param array $values
-     * @param \ReflectionProperty[] $reflectionProperties
-     * @return void
-     */
-    private function populate(object $object, array $values, array $reflectionProperties): void
-    {
-        foreach ($values as $propertyName => $value) {
-            $parameter = $reflectionProperties[$propertyName];
-            if ($parameter !== null) {
-                $parameter->setValue($object, $values[$parameter->getName()]);
-            }
-        }
-    }
-
-    /**
-     * @psalm-param object|class-string $object
      * @psalm-param MapType $map
      */
     private function createData(array $sourceData, array $map, bool $strict): Data
@@ -163,6 +134,9 @@ final class Hydrator implements HydratorInterface
         return new Data($sourceData, $map, $strict);
     }
 
+    /**
+     * @return \ReflectionProperty[]
+     */
     private function getFilterReflectionProperties(ReflectionClass $reflectionClass, array $excludeProperties): array
     {
         return $this->objectPropertiesExtractor->filterReflectionProperties(

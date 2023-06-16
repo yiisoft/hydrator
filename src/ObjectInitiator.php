@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use ReflectionClass;
 use Yiisoft\Hydrator\ResolverInitiator\NonInitiableException;
 use Yiisoft\Injector\Injector;
 
 final class ObjectInitiator
 {
     /**
-     * @param ContainerInterface $container Container to get attributes' resolvers from.
+     * @param Injector|null $injector
      */
     public function __construct(
         private ?Injector $injector = null,
@@ -21,11 +21,13 @@ final class ObjectInitiator
     }
 
     /**
-     * @throws ContainerExceptionInterface
+     * @psalm-template T
+     * @psalm-param ReflectionClass<T> $reflectionClass
+     * @psalm-return T
      * @throws NotFoundExceptionInterface
-     * @return object
+     * @throws ContainerExceptionInterface
      */
-    public function initiate(\ReflectionClass $reflectionClass, array $constructorArguments): object
+    public function initiate(ReflectionClass $reflectionClass, array $constructorArguments): object
     {
         $class = $reflectionClass->getName();
         if ($this->injector !== null) {
