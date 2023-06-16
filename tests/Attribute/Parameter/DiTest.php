@@ -14,6 +14,7 @@ use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\ObjectInitiator;
 use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
+use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiSingle;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiSingleConstructor;
@@ -221,7 +222,7 @@ final class DiTest extends TestCase
             new NoTypeCaster(),
             new AttributeResolverInitiator(
                 new SimpleContainer([
-                    DiResolver::class => new Counter(''),
+                    CounterResolver::class => new DiResolver(new SimpleContainer()),
                 ]),
             ),
         );
