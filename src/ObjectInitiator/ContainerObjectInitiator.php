@@ -17,7 +17,7 @@ final class ContainerObjectInitiator implements ObjectInitiatorInterface
     }
 
     /**
-     * @psalm-template T
+     * @psalm-template T of object
      * @psalm-param ReflectionClass<T> $reflectionClass
      * @psalm-return T
      * @throws NotFoundExceptionInterface
