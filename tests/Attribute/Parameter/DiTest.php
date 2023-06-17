@@ -11,7 +11,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\Di;
 use Yiisoft\Hydrator\Attribute\Parameter\DiNotFoundException;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\ObjectInitiator;
+use Yiisoft\Hydrator\ObjectInitiator\ContainerObjectInitiator;
 use Yiisoft\Hydrator\ResolverInitiator\ContainerAttributeResolverInitiator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
@@ -244,7 +244,7 @@ final class DiTest extends TestCase
         return new Hydrator(
             $typeCaster,
             new ContainerAttributeResolverInitiator($container),
-            new ObjectInitiator(new Injector($container))
+            new ContainerObjectInitiator(new Injector($container))
         );
     }
 }

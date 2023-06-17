@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\ResolverInitiator;
 
 use Yiisoft\Hydrator\DataAttributeInterface;
+use Yiisoft\Hydrator\ObjectInitiator\ObjectInitiatorInterface;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 
 use function is_string;
 
 final class ReflectionAttributeResolverInitiator implements AttributeResolverInitiatorInterface
 {
+    public function __construct(
+        private ObjectInitiatorInterface $objectInitiator,
+    ) {
+    }
+
     /**
      * @throws NonInitiableException
      */
@@ -29,20 +35,8 @@ final class ReflectionAttributeResolverInitiator implements AttributeResolverIni
                 ),
             );
         }
+        $reflectionClass = new \ReflectionClass($resolver);
 
-        $reflection = new \ReflectionClass($resolver);
-        $constructorReflection = $reflection->getConstructor();
-        if ($constructorReflection && $constructorReflection->getNumberOfRequiredParameters() > 0) {
-            throw new NonInitiableException(
-                sprintf(
-                    'Class "%s" has constructor with %d required parameters.',
-                    $resolver,
-                    $constructorReflection->getNumberOfRequiredParameters(),
-                ),
-            );
-        }
-
-
-        return $reflection->newInstance();
+        return $this->objectInitiator->initiate($reflectionClass, []);
     }
 }

@@ -6,6 +6,8 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionAttribute;
 use ReflectionClass;
+use Yiisoft\Hydrator\ObjectInitiator\ObjectInitiatorInterface;
+use Yiisoft\Hydrator\ObjectInitiator\ReflectionObjectInitiator;
 use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiatorInterface;
 use Yiisoft\Hydrator\ResolverInitiator\NonInitiableException;
 use Yiisoft\Hydrator\ResolverInitiator\ReflectionAttributeResolverInitiator;
@@ -19,7 +21,7 @@ use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 final class Hydrator implements HydratorInterface
 {
     private ConstructorArgumentsExtractor $constructorArgumentsExtractor;
-    private ObjectInitiator $objectInitiator;
+    private ObjectInitiatorInterface $objectInitiator;
     /**
      * @var TypeCasterInterface Type caster used to cast raw values.
      */
@@ -43,10 +45,11 @@ final class Hydrator implements HydratorInterface
     public function __construct(
         ?TypeCasterInterface $typeCaster = null,
         ?AttributeResolverInitiatorInterface $initiator = null,
-        ?ObjectInitiator $objectInitiator = null,
+        ?ObjectInitiatorInterface $objectInitiator = null,
     ) {
-        $initiator ??= new ReflectionAttributeResolverInitiator();
 
+        $this->objectInitiator = $objectInitiator ?? new ReflectionObjectInitiator();
+        $initiator ??= new ReflectionAttributeResolverInitiator($this->objectInitiator);
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
         $this->dataAttributesHandler = new DataAttributesHandler($initiator);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($initiator);
@@ -58,7 +61,6 @@ final class Hydrator implements HydratorInterface
             $this->objectPropertiesExtractor,
             $this->dataPropertyAccessor,
         );
-        $this->objectInitiator = $objectInitiator ?? new ObjectInitiator();
     }
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void

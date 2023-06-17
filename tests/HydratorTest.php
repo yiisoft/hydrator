@@ -12,7 +12,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\ObjectInitiator;
+use Yiisoft\Hydrator\ObjectInitiator\ContainerObjectInitiator;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\ResolverInitiator\ContainerAttributeResolverInitiator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
@@ -472,7 +472,7 @@ final class HydratorTest extends TestCase
         $hydrator = new Hydrator(
             $typeCaster,
             new ContainerAttributeResolverInitiator($container),
-            new ObjectInitiator(new Injector($container))
+            new ContainerObjectInitiator(new Injector($container))
         );
 
         $object = new TypeClass();
@@ -492,7 +492,7 @@ final class HydratorTest extends TestCase
         $hydrator = new Hydrator(
             $typeCaster,
             new ContainerAttributeResolverInitiator($container),
-            new ObjectInitiator(new Injector($container))
+            new ContainerObjectInitiator(new Injector($container))
         );
 
         $object = new TypeClass();

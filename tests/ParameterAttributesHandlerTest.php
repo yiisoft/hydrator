@@ -6,6 +6,7 @@ namespace Yiisoft\Hydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Context;
+use Yiisoft\Hydrator\ObjectInitiator\ReflectionObjectInitiator;
 use Yiisoft\Hydrator\ParameterAttributesHandler;
 use Yiisoft\Hydrator\ResolverInitiator\ContainerAttributeResolverInitiator;
 use Yiisoft\Hydrator\ResolverInitiator\ReflectionAttributeResolverInitiator;
@@ -38,7 +39,7 @@ final class ParameterAttributesHandlerTest extends TestCase
 
     public function testNonTypeCasted(): void
     {
-        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverInitiator());
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverInitiator(new ReflectionObjectInitiator()));
 
         $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
 
