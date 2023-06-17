@@ -6,8 +6,9 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionAttribute;
 use ReflectionClass;
-use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiatorInterface;
 use Yiisoft\Hydrator\ResolverInitiator\NonInitiableException;
+use Yiisoft\Hydrator\ResolverInitiator\ReflectionAttributeResolverInitiator;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 
 /**
@@ -41,10 +42,10 @@ final class Hydrator implements HydratorInterface
      */
     public function __construct(
         ?TypeCasterInterface $typeCaster = null,
-        ?AttributeResolverInitiator $initiator = null,
+        ?AttributeResolverInitiatorInterface $initiator = null,
         ?ObjectInitiator $objectInitiator = null,
     ) {
-        $initiator ??= new AttributeResolverInitiator();
+        $initiator ??= new ReflectionAttributeResolverInitiator();
 
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
         $this->dataAttributesHandler = new DataAttributesHandler($initiator);

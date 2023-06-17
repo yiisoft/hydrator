@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\ContainerAttributeResolverInitiator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
@@ -66,7 +66,7 @@ final class ToStringTest extends TestCase
     {
         $hydrator = new Hydrator(
             new NoTypeCaster(),
-            new AttributeResolverInitiator(
+            new ContainerAttributeResolverInitiator(
                 new SimpleContainer([
                     CounterResolver::class => new ToString(),
                 ]),

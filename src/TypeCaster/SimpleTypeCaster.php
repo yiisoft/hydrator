@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\TypeCaster;
 
-use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionType;
 use ReflectionUnionType;
@@ -116,12 +115,9 @@ final class SimpleTypeCaster implements TypeCasterInterface
                         )
                     );
                 } elseif (is_array($value) && $this->hydrator !== null) {
-                    $reflection = new ReflectionClass($class);
-                    if ($reflection->isInstantiable()) {
-                        return Result::success(
-                            $this->hydrator->create($class, $value)
-                        );
-                    }
+                    return Result::success(
+                        $this->hydrator->create($class, $value)
+                    );
                 }
                 continue;
             }

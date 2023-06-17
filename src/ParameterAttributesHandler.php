@@ -5,23 +5,19 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
-use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiatorInterface;
 
 /**
  * Handles parameters attributes that implement {@see ParameterAttributeInterface}.
  */
 final class ParameterAttributesHandler
 {
-    /**
-     * @param ContainerInterface $container Container to get attributes' resolvers from.
-     */
     public function __construct(
-        private AttributeResolverInitiator $attributeResolverInitiator,
+        private AttributeResolverInitiatorInterface $attributeResolverInitiator,
     ) {
     }
 
@@ -50,7 +46,7 @@ final class ParameterAttributesHandler
         $hereResolveResult = Result::fail();
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
-            $resolver = $this->attributeResolverInitiator->initiate($attribute->getResolver());
+            $resolver = $this->attributeResolverInitiator->initiate($attribute);
             if (!$resolver instanceof ParameterAttributeResolverInterface) {
                 throw new \RuntimeException(
                     sprintf(

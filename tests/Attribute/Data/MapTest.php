@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Data;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Data\Map;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\ContainerAttributeResolverInitiator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
@@ -56,7 +56,7 @@ final class MapTest extends TestCase
     {
         $hydrator = new Hydrator(
             new NoTypeCaster(),
-            new AttributeResolverInitiator(
+            new ContainerAttributeResolverInitiator(
                 new SimpleContainer([
                     FromPredefinedArrayResolver::class => new Map([]),
                 ]),

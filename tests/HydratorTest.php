@@ -14,7 +14,7 @@ use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\ObjectInitiator;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
-use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\ContainerAttributeResolverInitiator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
@@ -471,7 +471,7 @@ final class HydratorTest extends TestCase
         );
         $hydrator = new Hydrator(
             $typeCaster,
-            new AttributeResolverInitiator($container),
+            new ContainerAttributeResolverInitiator($container),
             new ObjectInitiator(new Injector($container))
         );
 
@@ -491,7 +491,7 @@ final class HydratorTest extends TestCase
         );
         $hydrator = new Hydrator(
             $typeCaster,
-            new AttributeResolverInitiator($container),
+            new ContainerAttributeResolverInitiator($container),
             new ObjectInitiator(new Injector($container))
         );
 
@@ -507,7 +507,7 @@ final class HydratorTest extends TestCase
 
         $hydrator = new Hydrator(
             new NoTypeCaster(),
-            new AttributeResolverInitiator(
+            new ContainerAttributeResolverInitiator(
                 new SimpleContainer([
                     FromPredefinedArrayResolver::class => $resolver,
                 ]),
@@ -533,7 +533,7 @@ final class HydratorTest extends TestCase
 
         $hydrator = new Hydrator(
             null,
-            new AttributeResolverInitiator(
+            new ContainerAttributeResolverInitiator(
                 new SimpleContainer([
                     FromPredefinedArrayResolver::class => $resolver,
                 ]),
@@ -553,7 +553,7 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator(
             new NoTypeCaster(),
-            new AttributeResolverInitiator(
+            new ContainerAttributeResolverInitiator(
                 new SimpleContainer([
                     DiResolver::class => new DiResolver(
                         new SimpleContainer(['stringable42' => new StringableObject('42')])

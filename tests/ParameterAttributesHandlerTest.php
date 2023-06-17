@@ -7,7 +7,8 @@ namespace Yiisoft\Hydrator\Tests;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Context;
 use Yiisoft\Hydrator\ParameterAttributesHandler;
-use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\ContainerAttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverInitiator\ReflectionAttributeResolverInitiator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewer;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewerResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CustomValue;
@@ -19,7 +20,7 @@ final class ParameterAttributesHandlerTest extends TestCase
     public function testDefaultsHandleParameters(): void
     {
         $contextViewerResolver = new ContextViewerResolver();
-        $handler = new ParameterAttributesHandler(new AttributeResolverInitiator(
+        $handler = new ParameterAttributesHandler(new ContainerAttributeResolverInitiator(
             new SimpleContainer([
                 ContextViewerResolver::class => $contextViewerResolver,
             ])
@@ -37,7 +38,7 @@ final class ParameterAttributesHandlerTest extends TestCase
 
     public function testNonTypeCasted(): void
     {
-        $handler = new ParameterAttributesHandler(new AttributeResolverInitiator());
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverInitiator());
 
         $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
 
