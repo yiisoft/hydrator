@@ -18,11 +18,12 @@ final class ObjectInitiator
     }
 
     /**
-     * @psalm-template T
-     * @psalm-param ReflectionClass<T> $reflectionClass
-     * @psalm-return T
      * @throws NotFoundExceptionInterface
      * @throws ContainerExceptionInterface
+     *
+     * @psalm-template T of object
+     * @psalm-param ReflectionClass<T> $reflectionClass
+     * @psalm-return T
      */
     public function initiate(ReflectionClass $reflectionClass, array $constructorArguments): object
     {

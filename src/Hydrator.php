@@ -120,6 +120,9 @@ final class Hydrator implements HydratorInterface
                     $property->getType(),
                 );
                 if ($result->isResolved()) {
+                    if (PHP_VERSION_ID < 80100) {
+                        $property->setAccessible(true);
+                    }
                     $property->setValue($object, $result->getValue());
                 }
             }
