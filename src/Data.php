@@ -89,4 +89,15 @@ final class Data
     {
         $this->strict = $strict;
     }
+
+    public function resolveValue(string $name): Result
+    {
+        $map = $this->getMap();
+
+        if ($this->isStrict() && !array_key_exists($name, $map)) {
+            return Result::fail();
+        }
+
+        return DataHelper::getValueByPath($this->getData(), $map[$name] ?? $name);
+    }
 }

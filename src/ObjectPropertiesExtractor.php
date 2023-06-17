@@ -48,10 +48,6 @@ class ObjectPropertiesExtractor
         $result = [];
 
         foreach ($parameters as $parameter) {
-            //if ($parameter->isPromoted()) {
-            //    continue;
-            //}
-
             if (!empty($parameter->getAttributes(SkipHydration::class))) {
                 continue;
             }

@@ -8,7 +8,7 @@ use ReflectionClass;
 
 class ConstructorArgumentsExtractor
 {
-    public function __construct(private ParameterAttributesHandler $parameterAttributesHandler, private TypeCasterInterface $typeCaster, private ObjectPropertiesExtractor $objectPropertiesExtractor, private DataPropertyAccessor $dataPropertyAccessor)
+    public function __construct(private ParameterAttributesHandler $parameterAttributesHandler, private TypeCasterInterface $typeCaster, private ObjectPropertiesExtractor $objectPropertiesExtractor)
     {
     }
 
@@ -33,7 +33,7 @@ class ConstructorArgumentsExtractor
 
             if ($parameter->isPromoted()) {
                 $excludeParameterNames[] = $parameterName;
-                $resolveResult = $this->dataPropertyAccessor->resolve($parameterName, $data);
+                $resolveResult = $data->resolveValue($parameterName);
             }
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle(
