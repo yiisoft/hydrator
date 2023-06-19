@@ -10,7 +10,6 @@ use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
 use RuntimeException;
-
 use Yiisoft\Hydrator\AttributeResolverInitiator\AttributeResolverInitiatorInterface;
 
 /**
