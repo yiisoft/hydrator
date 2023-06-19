@@ -10,6 +10,8 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
 use Yiisoft\Hydrator\Attribute\SkipHydration;
+use Yiisoft\Hydrator\AttributeResolverInitiator\AttributeResolverInitiatorInterface;
+use Yiisoft\Hydrator\AttributeResolverInitiator\SimpleAttributeResolverInitiator;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 use Yiisoft\Injector\Injector;
 
@@ -48,12 +50,17 @@ final class Hydrator implements HydratorInterface
      * resolvers.
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
      */
-    public function __construct(ContainerInterface $container, ?TypeCasterInterface $typeCaster = null)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        ?TypeCasterInterface $typeCaster = null,
+        ?AttributeResolverInitiatorInterface $attributeResolverInitiator = null,
+    ) {
+        $attributeResolverInitiator ??= new SimpleAttributeResolverInitiator();
+
         $this->injector = new Injector($container);
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
-        $this->dataAttributesHandler = new DataAttributesHandler($container);
-        $this->parameterAttributesHandler = new ParameterAttributesHandler($container);
+        $this->dataAttributesHandler = new DataAttributesHandler($attributeResolverInitiator);
+        $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverInitiator);
     }
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void

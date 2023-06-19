@@ -6,6 +6,7 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
+use Yiisoft\Hydrator\AttributeResolverInitiator\ContainerAttributeResolverInitiator;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
@@ -64,7 +65,10 @@ final class ToStringTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new ToString()])
+            container: new SimpleContainer(),
+            attributeResolverInitiator: new ContainerAttributeResolverInitiator(
+                new SimpleContainer([CounterResolver::class => new ToString()])
+            ),
         );
 
         $object = new CounterClass();

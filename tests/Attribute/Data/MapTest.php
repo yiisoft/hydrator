@@ -6,6 +6,7 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Data;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Data\Map;
+use Yiisoft\Hydrator\AttributeResolverInitiator\ContainerAttributeResolverInitiator;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
@@ -53,7 +54,10 @@ final class MapTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([FromPredefinedArrayResolver::class => new Map([])])
+            container: new SimpleContainer(),
+            attributeResolverInitiator: new ContainerAttributeResolverInitiator(
+                new SimpleContainer([FromPredefinedArrayResolver::class => new Map([])])
+            ),
         );
 
         $object = new FromPredefinedArrayClass();

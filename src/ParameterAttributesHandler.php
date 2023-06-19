@@ -12,6 +12,8 @@ use ReflectionParameter;
 use ReflectionProperty;
 use RuntimeException;
 
+use Yiisoft\Hydrator\AttributeResolverInitiator\AttributeResolverInitiatorInterface;
+
 use function is_string;
 
 /**
@@ -20,11 +22,10 @@ use function is_string;
 final class ParameterAttributesHandler
 {
     /**
-     * @param ContainerInterface $container Container to get attributes' resolvers from.
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast values.
      */
     public function __construct(
-        private ContainerInterface $container,
+        private AttributeResolverInitiatorInterface $attributeResolverInitiator,
         private ?TypeCasterInterface $typeCaster = null,
     ) {
     }
@@ -54,7 +55,17 @@ final class ParameterAttributesHandler
         $hereResolveResult = Result::fail();
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
-            $resolver = $this->getParameterResolver($attribute);
+
+            $resolver = $this->attributeResolverInitiator->initiate($attribute);
+            if (!$resolver instanceof ParameterAttributeResolverInterface) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Parameter attribute resolver "%1$s" must implement "%2$s".',
+                        get_debug_type($resolver),
+                        ParameterAttributeResolverInterface::class,
+                    )
+                );
+            }
 
             $context = new Context(
                 $parameter,
@@ -74,33 +85,5 @@ final class ParameterAttributesHandler
         }
 
         return $hereResolveResult;
-    }
-
-    /**
-     * Get parameter attribute resolver.
-     *
-     * @param ParameterAttributeInterface $attribute The parameter attribute to be resolved.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @return ParameterAttributeResolverInterface Resolver for the specified attribute.
-     */
-    private function getParameterResolver(ParameterAttributeInterface $attribute): ParameterAttributeResolverInterface
-    {
-        $resolver = $attribute->getResolver();
-        if (is_string($resolver)) {
-            $resolver = $this->container->get($resolver);
-            if (!$resolver instanceof ParameterAttributeResolverInterface) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Parameter attribute resolver "%1$s" must implement "%2$s".',
-                        $resolver::class,
-                        ParameterAttributeResolverInterface::class,
-                    )
-                );
-            }
-        }
-
-        return $resolver;
     }
 }

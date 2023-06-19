@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Hydrator\AttributeResolverInitiator\ContainerAttributeResolverInitiator;
+use Yiisoft\Hydrator\AttributeResolverInitiator\SimpleAttributeResolverInitiator;
 use Yiisoft\Hydrator\Context;
 use Yiisoft\Hydrator\ParameterAttributesHandler;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewer;
@@ -21,9 +23,11 @@ final class ParameterAttributesHandlerTest extends TestCase
     {
         $contextViewerResolver = new ContextViewerResolver();
         $handler = new ParameterAttributesHandler(
-            new SimpleContainer([
-                ContextViewerResolver::class => $contextViewerResolver,
-            ])
+            new ContainerAttributeResolverInitiator(
+                new SimpleContainer([
+                    ContextViewerResolver::class => $contextViewerResolver,
+                ]),
+            ),
         );
 
         $parameter = TestHelper::getFirstParameter(static fn(#[ContextViewer] int $a) => null);
@@ -39,7 +43,7 @@ final class ParameterAttributesHandlerTest extends TestCase
     public function testTypeCasted(): void
     {
         $handler = new ParameterAttributesHandler(
-            new SimpleContainer(),
+            new SimpleAttributeResolverInitiator(),
             new SimpleTypeCaster(),
         );
 
@@ -53,7 +57,7 @@ final class ParameterAttributesHandlerTest extends TestCase
     public function testNonTypeCasted(): void
     {
         $handler = new ParameterAttributesHandler(
-            new SimpleContainer(),
+            new SimpleAttributeResolverInitiator(),
             new SkipTypeCaster(),
         );
 

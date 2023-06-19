@@ -10,6 +10,7 @@ use stdClass;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
+use Yiisoft\Hydrator\AttributeResolverInitiator\ContainerAttributeResolverInitiator;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
@@ -497,10 +498,13 @@ final class HydratorTest extends TestCase
         $resolver = new FromPredefinedArrayResolver();
 
         $hydrator = new Hydrator(
-            new SimpleContainer([
-                FromPredefinedArrayResolver::class => $resolver,
-            ]),
-            new NoTypeCaster()
+            container: new SimpleContainer(),
+            typeCaster: new NoTypeCaster(),
+            attributeResolverInitiator: new ContainerAttributeResolverInitiator(
+                new SimpleContainer([
+                    FromPredefinedArrayResolver::class => $resolver,
+                ]),
+            ),
         );
 
         $object = new class () {
@@ -521,9 +525,12 @@ final class HydratorTest extends TestCase
         $resolver = new FromPredefinedArrayResolver();
 
         $hydrator = new Hydrator(
-            new SimpleContainer([
-                FromPredefinedArrayResolver::class => $resolver,
-            ]),
+            container: new SimpleContainer(),
+            attributeResolverInitiator: new ContainerAttributeResolverInitiator(
+                new SimpleContainer([
+                    FromPredefinedArrayResolver::class => $resolver,
+                ])
+            ),
         );
 
         $object = new FromPredefinedArrayClass();
@@ -538,12 +545,15 @@ final class HydratorTest extends TestCase
     public function testConstructorParameterAttributes(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([
-                DiResolver::class => new DiResolver(
-                    new SimpleContainer(['stringable42' => new StringableObject('42')])
-                ),
-            ]),
+            container: new SimpleContainer(),
             typeCaster: new NoTypeCaster(),
+            attributeResolverInitiator: new ContainerAttributeResolverInitiator(
+                new SimpleContainer([
+                    DiResolver::class => new DiResolver(
+                        new SimpleContainer(['stringable42' => new StringableObject('42')])
+                    ),
+                ]),
+            ),
         );
 
         $object = $hydrator->create(ConstructorParameterAttributesClass::class, ['a' => 7]);
@@ -583,7 +593,10 @@ final class HydratorTest extends TestCase
     {
         $counterResolver = new CounterResolver();
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => $counterResolver])
+            container: new SimpleContainer(),
+            attributeResolverInitiator: new ContainerAttributeResolverInitiator(
+                new SimpleContainer([CounterResolver::class => $counterResolver])
+            ),
         );
 
         $hydrator->create(CounterClass::class);

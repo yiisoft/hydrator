@@ -10,6 +10,7 @@ use Throwable;
 use Yiisoft\Hydrator\Attribute\Parameter\Di;
 use Yiisoft\Hydrator\Attribute\Parameter\DiNotFoundException;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
+use Yiisoft\Hydrator\AttributeResolverInitiator\ContainerAttributeResolverInitiator;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
@@ -214,7 +215,10 @@ final class DiTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new DiResolver(new SimpleContainer())])
+            container: new SimpleContainer(),
+            attributeResolverInitiator: new ContainerAttributeResolverInitiator(
+                new SimpleContainer([CounterResolver::class => new DiResolver(new SimpleContainer())])
+            ),
         );
 
         $object = new CounterClass();
@@ -227,11 +231,14 @@ final class DiTest extends TestCase
     private function createHydrator(array $definitions = []): Hydrator
     {
         return new Hydrator(
-            new SimpleContainer([
-                DiResolver::class => new DiResolver(
-                    new SimpleContainer($definitions)
-                ),
-            ]),
+            container: new SimpleContainer(),
+            attributeResolverInitiator: new ContainerAttributeResolverInitiator(
+                new SimpleContainer([
+                    DiResolver::class => new DiResolver(
+                        new SimpleContainer($definitions)
+                    ),
+                ])
+            ),
         );
     }
 }
