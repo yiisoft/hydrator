@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
 use ReflectionParameter;
@@ -13,8 +12,6 @@ use ReflectionProperty;
 use RuntimeException;
 
 use Yiisoft\Hydrator\AttributeResolverInitiator\AttributeResolverInitiatorInterface;
-
-use function is_string;
 
 /**
  * Handles parameters attributes that implement {@see ParameterAttributeInterface}.

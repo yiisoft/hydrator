@@ -15,7 +15,7 @@ final class SimpleAttributeResolverInitiatorTest extends TestCase
     {
         $initiator = new SimpleAttributeResolverInitiator();
 
-        $attribute = new class() implements DataAttributeInterface {
+        $attribute = new class () implements DataAttributeInterface {
             public function getResolver(): string
             {
                 return 'non-exist';

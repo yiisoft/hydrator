@@ -18,7 +18,7 @@ final class ContainerAttributeResolverInitiatorTest extends TestCase
             new SimpleContainer(),
         );
 
-        $attribute = new class() implements DataAttributeInterface {
+        $attribute = new class () implements DataAttributeInterface {
             public function getResolver(): string
             {
                 return 'non-exist';
