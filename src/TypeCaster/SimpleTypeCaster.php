@@ -60,10 +60,53 @@ final class SimpleTypeCaster implements TypeCasterInterface
             );
         }
 
+        /**
+         * Find the best type name and value type match.
+         * Example:
+         * - When pass `42` to `int|string` type, `int` will be used.
+         * - When pass `"42"` to `int|string` type, `string` will be used.
+         */
         foreach ($types as $t) {
             if (null === $value && $t->allowsNull()) {
                 return Result::success(null);
             }
+            if (!$t->isBuiltin()) {
+                continue;
+            }
+            switch ($t->getName()) {
+                case 'string':
+                    if (is_string($value)) {
+                        return Result::success($value);
+                    }
+                    break;
+
+                case 'int':
+                    if (is_int($value)) {
+                        return Result::success($value);
+                    }
+                    break;
+
+                case 'float':
+                    if (is_float($value)) {
+                        return Result::success($value);
+                    }
+                    break;
+
+                case 'bool':
+                    if (is_bool($value)) {
+                        return Result::success($value);
+                    }
+                    break;
+
+                case 'array':
+                    if (is_array($value)) {
+                        return Result::success($value);
+                    }
+                    break;
+            }
+        }
+
+        foreach ($types as $t) {
             if (!$t->isBuiltin()) {
                 $class = $t->getName();
                 if (is_object($value)) {
@@ -85,16 +128,13 @@ final class SimpleTypeCaster implements TypeCasterInterface
                 continue;
             }
             switch ($t->getName()) {
-                case 'array':
-                    if (is_array($value)) {
-                        return Result::success($value);
+                case 'string':
+                    if (is_scalar($value) || null === $value || $value instanceof Stringable) {
+                        return Result::success((string) $value);
                     }
                     break;
 
                 case 'int':
-                    if (is_int($value)) {
-                        return Result::success($value);
-                    }
                     if (is_bool($value) || is_float($value) || null === $value) {
                         return Result::success((int) $value);
                     }
@@ -103,20 +143,7 @@ final class SimpleTypeCaster implements TypeCasterInterface
                     }
                     break;
 
-                case 'string':
-                    if (is_string($value)) {
-                        return Result::success($value);
-                    }
-                    if (is_scalar($value) || null === $value || $value instanceof Stringable) {
-                        return Result::success((string) $value);
-                    }
-
-                    break;
-
                 case 'float':
-                    if (is_float($value)) {
-                        return Result::success($value);
-                    }
                     if (is_int($value) || is_bool($value) || null === $value) {
                         return Result::success((float) $value);
                     }
@@ -126,9 +153,6 @@ final class SimpleTypeCaster implements TypeCasterInterface
                     break;
 
                 case 'bool':
-                    if (is_bool($value)) {
-                        return Result::success($value);
-                    }
                     if (is_scalar($value) || null === $value || is_array($value) || is_object($value)) {
                         return Result::success((bool) $value);
                     }
