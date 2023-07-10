@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\ResolverInitiator;
+namespace Yiisoft\Hydrator\ResolverFactory;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -13,7 +13,7 @@ use Yiisoft\Hydrator\ParameterAttributeInterface;
 
 use function is_string;
 
-final class ContainerAttributeResolverInitiator implements AttributeResolverInitiatorInterface
+final class ContainerAttributeResolverFactory implements AttributeResolverFactoryInterface
 {
     /**
      * @param ContainerInterface $container Container to get attributes' resolvers from.
@@ -28,7 +28,7 @@ final class ContainerAttributeResolverInitiator implements AttributeResolverInit
      * @throws NotFoundExceptionInterface
      * @return DataAttributeResolverInterface|mixed|object|string
      */
-    public function initiate(DataAttributeInterface|ParameterAttributeInterface $attribute): object
+    public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object
     {
         $resolver = $attribute->getResolver();
         if (!is_string($resolver)) {
@@ -36,7 +36,7 @@ final class ContainerAttributeResolverInitiator implements AttributeResolverInit
         }
 
         if (!$this->container->has($resolver)) {
-            throw new NonInitiableException(
+            throw new NonInstantiableException(
                 sprintf(
                     'Class "%s" does not exist.',
                     $resolver,

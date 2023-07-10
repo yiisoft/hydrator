@@ -6,7 +6,10 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionClass;
 
-class ConstructorArgumentsExtractor
+/**
+ * @internal
+ */
+final class ConstructorArgumentsExtractor
 {
     public function __construct(private ParameterAttributesHandler $parameterAttributesHandler, private TypeCasterInterface $typeCaster, private ObjectPropertiesExtractor $objectPropertiesExtractor)
     {

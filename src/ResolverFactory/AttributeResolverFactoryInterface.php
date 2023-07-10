@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\ResolverInitiator;
+namespace Yiisoft\Hydrator\ResolverFactory;
 
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 
-interface AttributeResolverInitiatorInterface
+interface AttributeResolverFactoryInterface
 {
     /**
      * @psalm-template T
@@ -15,5 +15,5 @@ interface AttributeResolverInitiatorInterface
      * @psalm-return T
      * @return object
      */
-    public function initiate(DataAttributeInterface|ParameterAttributeInterface $attribute): object;
+    public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object;
 }

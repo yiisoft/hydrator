@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\ObjectInitiator;
+namespace Yiisoft\Hydrator\ObjectFactory;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
-use Yiisoft\Hydrator\ResolverInitiator\NonInitiableException;
+use Yiisoft\Hydrator\ResolverFactory\NonInstantiableException;
 
-final class ReflectionObjectInitiator implements ObjectInitiatorInterface
+final class ReflectionObjectFactory implements ObjectFactoryInterface
 {
     /**
      * @psalm-template T of object
@@ -18,15 +18,15 @@ final class ReflectionObjectInitiator implements ObjectInitiatorInterface
      * @throws NotFoundExceptionInterface
      * @throws ContainerExceptionInterface
      */
-    public function initiate(ReflectionClass $reflectionClass, array $constructorArguments): object
+    public function create(ReflectionClass $reflectionClass, array $constructorArguments): object
     {
         $constructorReflection = $reflectionClass->getConstructor();
         if ($constructorReflection !== null &&
             $constructorReflection->getNumberOfRequiredParameters() > count($constructorArguments)
         ) {
-            throw new NonInitiableException(
+            throw new NonInstantiableException(
                 sprintf(
-                    'Class "%s" cannot be initiated because it has %d required parameters in constructor, but passed only %d.',
+                    'Class "%s" cannot be instantiated because it has %d required parameters in constructor, but passed only %d.',
                     $reflectionClass->getName(),
                     $constructorReflection->getNumberOfRequiredParameters(),
                     count($constructorArguments),

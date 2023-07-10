@@ -11,8 +11,8 @@ use Yiisoft\Hydrator\Attribute\Parameter\Di;
 use Yiisoft\Hydrator\Attribute\Parameter\DiNotFoundException;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\ObjectInitiator\ContainerObjectInitiator;
-use Yiisoft\Hydrator\ResolverInitiator\ContainerAttributeResolverInitiator;
+use Yiisoft\Hydrator\ObjectFactory\ContainerObjectFactory;
+use Yiisoft\Hydrator\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
@@ -220,7 +220,7 @@ final class DiTest extends TestCase
     {
         $hydrator = new Hydrator(
             new NoTypeCaster(),
-            new ContainerAttributeResolverInitiator(
+            new ContainerAttributeResolverFactory(
                 new SimpleContainer([
                     CounterResolver::class => new DiResolver(new SimpleContainer()),
                 ]),
@@ -243,8 +243,8 @@ final class DiTest extends TestCase
         $typeCaster = new SimpleTypeCaster();
         return new Hydrator(
             $typeCaster,
-            new ContainerAttributeResolverInitiator($container),
-            new ContainerObjectInitiator(new Injector($container))
+            new ContainerAttributeResolverFactory($container),
+            new ContainerObjectFactory(new Injector($container))
         );
     }
 }

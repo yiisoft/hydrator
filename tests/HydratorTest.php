@@ -12,9 +12,9 @@ use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\ObjectInitiator\ContainerObjectInitiator;
+use Yiisoft\Hydrator\ObjectFactory\ContainerObjectFactory;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
-use Yiisoft\Hydrator\ResolverInitiator\ContainerAttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
@@ -471,8 +471,8 @@ final class HydratorTest extends TestCase
         );
         $hydrator = new Hydrator(
             $typeCaster,
-            new ContainerAttributeResolverInitiator($container),
-            new ContainerObjectInitiator(new Injector($container))
+            new ContainerAttributeResolverFactory($container),
+            new ContainerObjectFactory(new Injector($container))
         );
 
         $object = new TypeClass();
@@ -491,8 +491,8 @@ final class HydratorTest extends TestCase
         );
         $hydrator = new Hydrator(
             $typeCaster,
-            new ContainerAttributeResolverInitiator($container),
-            new ContainerObjectInitiator(new Injector($container))
+            new ContainerAttributeResolverFactory($container),
+            new ContainerObjectFactory(new Injector($container))
         );
 
         $object = new TypeClass();
@@ -507,7 +507,7 @@ final class HydratorTest extends TestCase
 
         $hydrator = new Hydrator(
             new NoTypeCaster(),
-            new ContainerAttributeResolverInitiator(
+            new ContainerAttributeResolverFactory(
                 new SimpleContainer([
                     FromPredefinedArrayResolver::class => $resolver,
                 ]),
@@ -533,7 +533,7 @@ final class HydratorTest extends TestCase
 
         $hydrator = new Hydrator(
             null,
-            new ContainerAttributeResolverInitiator(
+            new ContainerAttributeResolverFactory(
                 new SimpleContainer([
                     FromPredefinedArrayResolver::class => $resolver,
                 ]),
@@ -553,7 +553,7 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator(
             new NoTypeCaster(),
-            new ContainerAttributeResolverInitiator(
+            new ContainerAttributeResolverFactory(
                 new SimpleContainer([
                     DiResolver::class => new DiResolver(
                         new SimpleContainer(['stringable42' => new StringableObject('42')])

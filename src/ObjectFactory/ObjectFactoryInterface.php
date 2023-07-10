@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\ObjectInitiator;
+namespace Yiisoft\Hydrator\ObjectFactory;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 
-interface ObjectInitiatorInterface
+interface ObjectFactoryInterface
 {
     /**
      * @psalm-template T of object
@@ -17,5 +17,5 @@ interface ObjectInitiatorInterface
      * @throws NotFoundExceptionInterface
      * @throws ContainerExceptionInterface
      */
-    public function initiate(ReflectionClass $reflectionClass, array $constructorArguments): object;
+    public function create(ReflectionClass $reflectionClass, array $constructorArguments): object;
 }

@@ -9,7 +9,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
-use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiatorInterface;
+use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
 
 /**
  * Handles parameters attributes that implement {@see ParameterAttributeInterface}.
@@ -17,7 +17,7 @@ use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiatorInterface;
 final class ParameterAttributesHandler
 {
     public function __construct(
-        private AttributeResolverInitiatorInterface $attributeResolverInitiator,
+        private AttributeResolverFactoryInterface $attributeResolverFactory,
     ) {
     }
 
@@ -46,7 +46,7 @@ final class ParameterAttributesHandler
         $hereResolveResult = Result::fail();
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
-            $resolver = $this->attributeResolverInitiator->initiate($attribute);
+            $resolver = $this->attributeResolverFactory->create($attribute);
             if (!$resolver instanceof ParameterAttributeResolverInterface) {
                 throw new \RuntimeException(
                     sprintf(

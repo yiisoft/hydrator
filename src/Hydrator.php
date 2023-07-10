@@ -6,11 +6,11 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionAttribute;
 use ReflectionClass;
-use Yiisoft\Hydrator\ObjectInitiator\ObjectInitiatorInterface;
-use Yiisoft\Hydrator\ObjectInitiator\ReflectionObjectInitiator;
-use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiatorInterface;
-use Yiisoft\Hydrator\ResolverInitiator\NonInitiableException;
-use Yiisoft\Hydrator\ResolverInitiator\ReflectionAttributeResolverInitiator;
+use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
+use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
+use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\ResolverFactory\NonInstantiableException;
+use Yiisoft\Hydrator\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 
 /**
@@ -21,7 +21,7 @@ use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 final class Hydrator implements HydratorInterface
 {
     private ConstructorArgumentsExtractor $constructorArgumentsExtractor;
-    private ObjectInitiatorInterface $objectInitiator;
+    private ObjectFactoryInterface $objectFactory;
     /**
      * @var TypeCasterInterface Type caster used to cast raw values.
      */
@@ -43,14 +43,14 @@ final class Hydrator implements HydratorInterface
      */
     public function __construct(
         ?TypeCasterInterface $typeCaster = null,
-        ?AttributeResolverInitiatorInterface $initiator = null,
-        ?ObjectInitiatorInterface $objectInitiator = null,
+        ?AttributeResolverFactoryInterface $attributeResolverFactory = null,
+        ?ObjectFactoryInterface $objectFactory = null,
     ) {
-        $this->objectInitiator = $objectInitiator ?? new ReflectionObjectInitiator();
-        $initiator ??= new ReflectionAttributeResolverInitiator($this->objectInitiator);
+        $this->objectFactory = $objectFactory ?? new ReflectionObjectFactory();
+        $attributeResolverFactory ??= new ReflectionAttributeResolverFactory($this->objectFactory);
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
-        $this->dataAttributesHandler = new DataAttributesHandler($initiator);
-        $this->parameterAttributesHandler = new ParameterAttributesHandler($initiator);
+        $this->dataAttributesHandler = new DataAttributesHandler($attributeResolverFactory);
+        $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory);
         $this->objectPropertiesExtractor = new ObjectPropertiesExtractor();
         $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
             $this->parameterAttributesHandler,
@@ -75,7 +75,7 @@ final class Hydrator implements HydratorInterface
     public function create(string $class, array $data = [], array $map = [], bool $strict = false): object
     {
         if (!class_exists($class)) {
-            throw new NonInitiableException();
+            throw new NonInstantiableException();
         }
         $reflectionClass = new \ReflectionClass($class);
         $data = $this->createData($data, $map, $strict);
@@ -91,7 +91,7 @@ final class Hydrator implements HydratorInterface
             $excludeProperties
         );
 
-        $object = $this->objectInitiator->initiate($reflectionClass, $constructorArguments);
+        $object = $this->objectFactory->create($reflectionClass, $constructorArguments);
         $this->hydrateInternal($object, $reflectionProperties, $data);
 
         return $object;

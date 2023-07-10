@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\ResolverInitiator;
+namespace Yiisoft\Hydrator\ResolverFactory;
 
 use Yiisoft\Hydrator\DataAttributeInterface;
-use Yiisoft\Hydrator\ObjectInitiator\ObjectInitiatorInterface;
+use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 
 use function is_string;
 
-final class ReflectionAttributeResolverInitiator implements AttributeResolverInitiatorInterface
+final class ReflectionAttributeResolverFactory implements AttributeResolverFactoryInterface
 {
     public function __construct(
-        private ObjectInitiatorInterface $objectInitiator,
+        private ObjectFactoryInterface $objectFactory,
     ) {
     }
 
     /**
-     * @throws NonInitiableException
+     * @throws NonInstantiableException
      */
-    public function initiate(DataAttributeInterface|ParameterAttributeInterface $attribute): object
+    public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object
     {
         $resolver = $attribute->getResolver();
         if (!is_string($resolver)) {
@@ -28,7 +28,7 @@ final class ReflectionAttributeResolverInitiator implements AttributeResolverIni
         }
 
         if (!class_exists($resolver)) {
-            throw new NonInitiableException(
+            throw new NonInstantiableException(
                 sprintf(
                     'Class "%s" does not exist.',
                     $resolver,
@@ -37,6 +37,6 @@ final class ReflectionAttributeResolverInitiator implements AttributeResolverIni
         }
         $reflectionClass = new \ReflectionClass($resolver);
 
-        return $this->objectInitiator->initiate($reflectionClass, []);
+        return $this->objectFactory->create($reflectionClass, []);
     }
 }

@@ -6,7 +6,7 @@ namespace Yiisoft\Hydrator;
 
 use Yiisoft\Hydrator\Attribute\SkipHydration;
 
-class ObjectPropertiesExtractor
+final class ObjectPropertiesExtractor
 {
     /**
      * @param \ReflectionProperty[] $properties

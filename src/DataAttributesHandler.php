@@ -8,7 +8,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
-use Yiisoft\Hydrator\ResolverInitiator\AttributeResolverInitiatorInterface;
+use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
 
 /**
  * Handles data attributes that implement {@see DataAttributeInterface}.
@@ -21,7 +21,7 @@ final class DataAttributesHandler
      * @param ContainerInterface $container Container to get attributes' resolvers from.
      */
     public function __construct(
-        private AttributeResolverInitiatorInterface $attributeResolverInitiator,
+        private AttributeResolverFactoryInterface $attributeResolverFactory,
     ) {
     }
 
@@ -40,7 +40,7 @@ final class DataAttributesHandler
     {
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
-            $resolver = $this->attributeResolverInitiator->initiate($attribute);
+            $resolver = $this->attributeResolverFactory->create($attribute);
             if (!$resolver instanceof DataAttributeResolverInterface) {
                 throw new \RuntimeException(
                     sprintf(

@@ -6,10 +6,10 @@ namespace Yiisoft\Hydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Context;
-use Yiisoft\Hydrator\ObjectInitiator\ReflectionObjectInitiator;
+use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
 use Yiisoft\Hydrator\ParameterAttributesHandler;
-use Yiisoft\Hydrator\ResolverInitiator\ContainerAttributeResolverInitiator;
-use Yiisoft\Hydrator\ResolverInitiator\ReflectionAttributeResolverInitiator;
+use Yiisoft\Hydrator\ResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewer;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewerResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CustomValue;
@@ -21,7 +21,7 @@ final class ParameterAttributesHandlerTest extends TestCase
     public function testDefaultsHandleParameters(): void
     {
         $contextViewerResolver = new ContextViewerResolver();
-        $handler = new ParameterAttributesHandler(new ContainerAttributeResolverInitiator(
+        $handler = new ParameterAttributesHandler(new ContainerAttributeResolverFactory(
             new SimpleContainer([
                 ContextViewerResolver::class => $contextViewerResolver,
             ])
@@ -39,7 +39,7 @@ final class ParameterAttributesHandlerTest extends TestCase
 
     public function testNonTypeCasted(): void
     {
-        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverInitiator(new ReflectionObjectInitiator()));
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory(new ReflectionObjectFactory()));
 
         $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
 
