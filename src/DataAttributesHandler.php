@@ -8,9 +8,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
-use RuntimeException;
-
-use function is_string;
+use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
 
 /**
  * Handles data attributes that implement {@see DataAttributeInterface}.
@@ -23,7 +21,7 @@ final class DataAttributesHandler
      * @param ContainerInterface $container Container to get attributes' resolvers from.
      */
     public function __construct(
-        private ContainerInterface $container,
+        private AttributeResolverFactoryInterface $attributeResolverFactory,
     ) {
     }
 
@@ -42,35 +40,17 @@ final class DataAttributesHandler
     {
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
-            $this->getDataResolver($attribute)->prepareData($attribute, $data);
-        }
-    }
-
-    /**
-     * Get data attribute resolver.
-     *
-     * @param DataAttributeInterface $attribute The data attribute to be resolved.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @return DataAttributeResolverInterface Resolver for the specified attribute.
-     */
-    private function getDataResolver(DataAttributeInterface $attribute): DataAttributeResolverInterface
-    {
-        $resolver = $attribute->getResolver();
-        if (is_string($resolver)) {
-            $resolver = $this->container->get($resolver);
+            $resolver = $this->attributeResolverFactory->create($attribute);
             if (!$resolver instanceof DataAttributeResolverInterface) {
-                throw new RuntimeException(
+                throw new \RuntimeException(
                     sprintf(
                         'Data attribute resolver "%s" must implement "%s".',
-                        $resolver::class,
+                        get_debug_type($resolver),
                         DataAttributeResolverInterface::class,
-                    )
+                    ),
                 );
             }
+            $resolver->prepareData($attribute, $data);
         }
-
-        return $resolver;
     }
 }

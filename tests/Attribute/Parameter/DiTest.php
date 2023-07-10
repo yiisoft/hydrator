@@ -11,6 +11,8 @@ use Yiisoft\Hydrator\Attribute\Parameter\Di;
 use Yiisoft\Hydrator\Attribute\Parameter\DiNotFoundException;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ObjectFactory\ContainerObjectFactory;
+use Yiisoft\Hydrator\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
@@ -25,7 +27,10 @@ use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefault;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefaultConstructor;
 use Yiisoft\Hydrator\Tests\Support\Classes\Engine1;
 use Yiisoft\Hydrator\Tests\Support\Classes\EngineInterface;
+use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
+use Yiisoft\Injector\Injector;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class DiTest extends TestCase
@@ -67,7 +72,7 @@ final class DiTest extends TestCase
 
         $exception = null;
         try {
-            $hydrator->create(DiSingle::class);
+            $r = $hydrator->create(DiSingle::class);
         } catch (Throwable $e) {
             $exception = $e;
         }
@@ -214,9 +219,13 @@ final class DiTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new DiResolver(new SimpleContainer())])
+            new NoTypeCaster(),
+            new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    CounterResolver::class => new DiResolver(new SimpleContainer()),
+                ]),
+            ),
         );
-
         $object = new CounterClass();
 
         $this->expectException(UnexpectedAttributeException::class);
@@ -226,12 +235,16 @@ final class DiTest extends TestCase
 
     private function createHydrator(array $definitions = []): Hydrator
     {
+        $container = new SimpleContainer([
+            DiResolver::class => new DiResolver(
+                new SimpleContainer($definitions)
+            ),
+        ]);
+        $typeCaster = new SimpleTypeCaster();
         return new Hydrator(
-            new SimpleContainer([
-                DiResolver::class => new DiResolver(
-                    new SimpleContainer($definitions)
-                ),
-            ]),
+            $typeCaster,
+            new ContainerAttributeResolverFactory($container),
+            new ContainerObjectFactory(new Injector($container))
         );
     }
 }

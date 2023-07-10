@@ -7,12 +7,14 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Data;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Data\Map;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapNonStrictClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapStrictClass;
+use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -20,7 +22,7 @@ final class MapTest extends TestCase
 {
     public function testBase(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(MapClass::class, ['x' => 1, 'y' => 2]);
 
@@ -30,7 +32,7 @@ final class MapTest extends TestCase
 
     public function testStrict(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(MapStrictClass::class, ['a' => 1, 'y' => 2, 'c' => 3]);
 
@@ -41,7 +43,7 @@ final class MapTest extends TestCase
 
     public function testNonStrict(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = $hydrator->create(MapNonStrictClass::class, ['a' => 1, 'y' => 2, 'c' => 3], strict: true);
 
@@ -53,7 +55,12 @@ final class MapTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([FromPredefinedArrayResolver::class => new Map([])])
+            new NoTypeCaster(),
+            new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    FromPredefinedArrayResolver::class => new Map([]),
+                ]),
+            ),
         );
 
         $object = new FromPredefinedArrayClass();

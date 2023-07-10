@@ -5,27 +5,19 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
-use RuntimeException;
-
-use function is_string;
+use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
 
 /**
  * Handles parameters attributes that implement {@see ParameterAttributeInterface}.
  */
 final class ParameterAttributesHandler
 {
-    /**
-     * @param ContainerInterface $container Container to get attributes' resolvers from.
-     * @param TypeCasterInterface|null $typeCaster Type caster used to cast values.
-     */
     public function __construct(
-        private ContainerInterface $container,
-        private ?TypeCasterInterface $typeCaster = null,
+        private AttributeResolverFactoryInterface $attributeResolverFactory,
     ) {
     }
 
@@ -54,7 +46,16 @@ final class ParameterAttributesHandler
         $hereResolveResult = Result::fail();
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
-            $resolver = $this->getParameterResolver($attribute);
+            $resolver = $this->attributeResolverFactory->create($attribute);
+            if (!$resolver instanceof ParameterAttributeResolverInterface) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Parameter attribute resolver "%s" must implement "%s".',
+                        get_debug_type($resolver),
+                        ParameterAttributeResolverInterface::class,
+                    ),
+                );
+            }
 
             $context = new Context(
                 $parameter,
@@ -66,41 +67,6 @@ final class ParameterAttributesHandler
             $hereResolveResult = $resolver->getParameterValue($attribute, $context);
         }
 
-        if ($this->typeCaster !== null && $hereResolveResult->isResolved()) {
-            $result = $this->typeCaster->cast($hereResolveResult->getValue(), $parameter->getType());
-            if ($result->isResolved()) {
-                $hereResolveResult = $result;
-            }
-        }
-
         return $hereResolveResult;
-    }
-
-    /**
-     * Get parameter attribute resolver.
-     *
-     * @param ParameterAttributeInterface $attribute The parameter attribute to be resolved.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @return ParameterAttributeResolverInterface Resolver for the specified attribute.
-     */
-    private function getParameterResolver(ParameterAttributeInterface $attribute): ParameterAttributeResolverInterface
-    {
-        $resolver = $attribute->getResolver();
-        if (is_string($resolver)) {
-            $resolver = $this->container->get($resolver);
-            if (!$resolver instanceof ParameterAttributeResolverInterface) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Parameter attribute resolver "%1$s" must implement "%2$s".',
-                        $resolver::class,
-                        ParameterAttributeResolverInterface::class,
-                    )
-                );
-            }
-        }
-
-        return $resolver;
     }
 }
