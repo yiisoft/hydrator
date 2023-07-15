@@ -33,6 +33,6 @@ final class ReflectionObjectFactory implements ObjectFactoryInterface
                 )
             );
         }
-        return $reflectionClass->newInstanceArgs($constructorArguments);
+        return $reflectionClass->newInstance(...$constructorArguments);
     }
 }
