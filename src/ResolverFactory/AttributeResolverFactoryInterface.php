@@ -12,7 +12,7 @@ interface AttributeResolverFactoryInterface
     /**
      * @psalm-template T
      * @psalm-param class-string<T>|T $resolver
-     * @psalm-return T
+     * @psalm-return T|object
      * @return object
      */
     public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object;

@@ -26,7 +26,7 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @return DataAttributeResolverInterface|mixed|object|string
+     * @return DataAttributeResolverInterface|object
      */
     public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object
     {
@@ -43,6 +43,16 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
                 ),
             );
         }
-        return $this->container->get($resolver);
+        $result = $this->container->get($resolver);
+        if (!is_object($result)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Resolver "%s" must be an object, "%s" given.',
+                    $resolver,
+                    get_debug_type($result),
+                ),
+            );
+        }
+        return $result;
     }
 }
