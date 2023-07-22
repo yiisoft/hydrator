@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
+use Yiisoft\Hydrator\Exception\NonInstantiableException;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 
 use function is_string;

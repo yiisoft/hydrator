@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator\ObjectFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
-use Yiisoft\Hydrator\ResolverFactory\NonInstantiableException;
+use Yiisoft\Hydrator\Exception\NonInstantiableException;
 
 final class ReflectionObjectFactory implements ObjectFactoryInterface
 {

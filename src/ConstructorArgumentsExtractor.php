@@ -11,7 +11,7 @@ use ReflectionClass;
  */
 final class ConstructorArgumentsExtractor
 {
-    public function __construct(private ParameterAttributesHandler $parameterAttributesHandler, private TypeCasterInterface $typeCaster, private ObjectPropertiesExtractor $objectPropertiesExtractor)
+    public function __construct(private ParameterAttributesHandler $parameterAttributesHandler, private TypeCasterInterface $typeCaster, private ObjectPropertiesFilter $objectPropertiesFilter)
     {
     }
 
@@ -28,10 +28,9 @@ final class ConstructorArgumentsExtractor
             return [$excludeParameterNames, $constructorArguments];
         }
 
-        $reflectionParameters = $this->objectPropertiesExtractor->filterReflectionParameters($constructor->getParameters());
+        $reflectionParameters = $this->objectPropertiesFilter->filterReflectionParameters($constructor->getParameters());
 
-        foreach ($reflectionParameters as $parameter) {
-            $parameterName = $parameter->getName();
+        foreach ($reflectionParameters as $parameterName => $parameter) {
             $resolveResult = Result::fail();
 
             if ($parameter->isPromoted()) {

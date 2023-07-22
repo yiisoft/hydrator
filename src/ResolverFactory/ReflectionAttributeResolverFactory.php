@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\ResolverFactory;
 
 use Yiisoft\Hydrator\DataAttributeInterface;
+use Yiisoft\Hydrator\Exception\NonInstantiableException;
 use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 

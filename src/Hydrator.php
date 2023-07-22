@@ -6,10 +6,10 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionAttribute;
 use ReflectionClass;
+use Yiisoft\Hydrator\Exception\NonInstantiableException;
 use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
 use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
-use Yiisoft\Hydrator\ResolverFactory\NonInstantiableException;
 use Yiisoft\Hydrator\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 
@@ -36,7 +36,7 @@ final class Hydrator implements HydratorInterface
      * @var ParameterAttributesHandler Parameter attributes handler.
      */
     private ParameterAttributesHandler $parameterAttributesHandler;
-    private ObjectPropertiesExtractor $objectPropertiesExtractor;
+    private ObjectPropertiesFilter $objectPropertiesFilter;
 
     /**
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
@@ -51,11 +51,11 @@ final class Hydrator implements HydratorInterface
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
         $this->dataAttributesHandler = new DataAttributesHandler($attributeResolverFactory);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory);
-        $this->objectPropertiesExtractor = new ObjectPropertiesExtractor();
+        $this->objectPropertiesFilter = new ObjectPropertiesFilter();
         $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
             $this->parameterAttributesHandler,
             $this->typeCaster,
-            $this->objectPropertiesExtractor,
+            $this->objectPropertiesFilter,
         );
     }
 
@@ -65,7 +65,7 @@ final class Hydrator implements HydratorInterface
         $data = $this->createData($data, $map, $strict);
         $this->handleDataAttributes($reflectionClass, $data);
 
-        $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties(
+        $reflectionProperties = $this->objectPropertiesFilter->filterReflectionProperties(
             $reflectionClass->getProperties(),
             []
         );
@@ -86,7 +86,7 @@ final class Hydrator implements HydratorInterface
             $data,
         );
 
-        $reflectionProperties = $this->objectPropertiesExtractor->filterReflectionProperties(
+        $reflectionProperties = $this->objectPropertiesFilter->filterReflectionProperties(
             $reflectionClass->getProperties(),
             $excludeProperties
         );
@@ -98,7 +98,7 @@ final class Hydrator implements HydratorInterface
     }
 
     /**
-     * @param \ReflectionProperty[] $reflectionProperties
+     * @param array<string, \ReflectionProperty> $reflectionProperties
      * @psalm-param MapType $map
      */
     private function hydrateInternal(
@@ -106,9 +106,7 @@ final class Hydrator implements HydratorInterface
         array $reflectionProperties,
         Data $data,
     ): void {
-        foreach ($reflectionProperties as $property) {
-            $propertyName = $property->getName();
-
+        foreach ($reflectionProperties as $propertyName => $property) {
             $resolveResult = $data->resolveValue($propertyName);
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle(

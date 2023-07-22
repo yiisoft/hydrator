@@ -6,11 +6,11 @@ namespace Yiisoft\Hydrator;
 
 use Yiisoft\Hydrator\Attribute\SkipHydration;
 
-final class ObjectPropertiesExtractor
+final class ObjectPropertiesFilter
 {
     /**
      * @param \ReflectionProperty[] $properties
-     * @return \ReflectionProperty[]
+     * @return array<string, \ReflectionProperty>
      */
     public function filterReflectionProperties(array $properties, array $propertyNamesToFilter): array
     {
@@ -41,7 +41,7 @@ final class ObjectPropertiesExtractor
 
     /**
      * @param \ReflectionParameter[] $parameters
-     * @return \ReflectionParameter[]
+     * @return array<string, \ReflectionParameter>
      */
     public function filterReflectionParameters(array $parameters): array
     {

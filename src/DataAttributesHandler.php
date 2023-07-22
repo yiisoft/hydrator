@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator;
 
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
 use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
@@ -17,9 +16,6 @@ use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
  */
 final class DataAttributesHandler
 {
-    /**
-     * @param ContainerInterface $container Container to get attributes' resolvers from.
-     */
     public function __construct(
         private AttributeResolverFactoryInterface $attributeResolverFactory,
     ) {

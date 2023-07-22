@@ -113,13 +113,7 @@ final class SimpleTypeCaster implements TypeCasterInterface
                     if ($value instanceof $class) {
                         return Result::success($value);
                     }
-                    throw new \RuntimeException(
-                        sprintf(
-                            'Value of type "%s" is not an instance of %s',
-                            $class,
-                            get_debug_type($class),
-                        )
-                    );
+                    break;
                 } elseif (is_array($value) && $this->hydrator !== null) {
                     return Result::success(
                         $this->hydrator->create($class, $value)

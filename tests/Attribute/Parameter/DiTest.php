@@ -72,7 +72,7 @@ final class DiTest extends TestCase
 
         $exception = null;
         try {
-            $r = $hydrator->create(DiSingle::class);
+            $hydrator->create(DiSingle::class);
         } catch (Throwable $e) {
             $exception = $e;
         }
