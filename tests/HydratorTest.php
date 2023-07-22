@@ -598,13 +598,23 @@ final class HydratorTest extends TestCase
     public function testCountParameterAttributeHandle(): void
     {
         $counterResolver = new CounterResolver();
-        $hydrator = new Hydrator();
-
+        $container = new SimpleContainer([
+            CounterResolver::class => $counterResolver,
+        ]);
+        $typeCaster = new CompositeTypeCaster(
+            new String42TypeCaster(),
+            new SimpleTypeCaster(),
+        );
+        $hydrator = new Hydrator(
+            $typeCaster,
+            new ContainerAttributeResolverFactory($container),
+            new ContainerObjectFactory(new Injector($container))
+        );
         $hydrator->create(CounterClass::class);
 
-        $this->assertSame(0, $counterResolver->getCount('a'));
-        $this->assertSame(0, $counterResolver->getCount('b'));
-        $this->assertSame(0, $counterResolver->getCount('c'));
+        $this->assertSame(1, $counterResolver->getCount('a'));
+        $this->assertSame(1, $counterResolver->getCount('b'));
+        $this->assertSame(1, $counterResolver->getCount('c'));
     }
 
     public function testObjectProperty(): void
