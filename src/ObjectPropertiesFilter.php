@@ -6,6 +6,9 @@ namespace Yiisoft\Hydrator;
 
 use Yiisoft\Hydrator\Attribute\SkipHydration;
 
+/**
+ * @internal
+ */
 final class ObjectPropertiesFilter
 {
     /**
