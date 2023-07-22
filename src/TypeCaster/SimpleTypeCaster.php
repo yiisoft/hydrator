@@ -114,7 +114,8 @@ final class SimpleTypeCaster implements TypeCasterInterface
                         return Result::success($value);
                     }
                     break;
-                } elseif (is_array($value) && $this->hydrator !== null) {
+                }
+                if (is_array($value) && $this->hydrator !== null) {
                     return Result::success(
                         $this->hydrator->create($class, $value)
                     );
