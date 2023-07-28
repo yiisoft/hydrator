@@ -114,7 +114,7 @@ final class SimpleTypeCaster implements TypeCasterInterface
                     if ($value instanceof $class) {
                         return Result::success($value);
                     }
-                    break;
+                    continue;
                 }
                 if (is_array($value) && $this->hydrator !== null) {
                     $reflection = new ReflectionClass($class);
