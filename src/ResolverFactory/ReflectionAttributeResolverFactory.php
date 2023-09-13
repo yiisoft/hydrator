@@ -25,22 +25,7 @@ final class ReflectionAttributeResolverFactory implements AttributeResolverFacto
      */
     public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object
     {
-        $resolver = $attribute->getResolver();
-        if (!is_string($resolver)) {
-            return $resolver;
-        }
-
-        if (!class_exists($resolver)) {
-            throw new NonInstantiableException(
-                sprintf(
-                    'Class "%s" does not exist.',
-                    $resolver,
-                ),
-            );
-        }
-        $reflectionClass = new \ReflectionClass($resolver);
-
-        $resolver = $this->objectFactory->create($reflectionClass, []);
+        $resolver = $this->getResolver($attribute);
 
         if ($attribute instanceof DataAttributeInterface) {
             if (!$resolver instanceof DataAttributeResolverInterface) {
@@ -63,6 +48,28 @@ final class ReflectionAttributeResolverFactory implements AttributeResolverFacto
                 );
             }
         }
+
+        return $resolver;
+    }
+
+    private function getResolver(DataAttributeInterface|ParameterAttributeInterface $attribute): object
+    {
+        $resolver = $attribute->getResolver();
+        if (!is_string($resolver)) {
+            return $resolver;
+        }
+
+        if (!class_exists($resolver)) {
+            throw new NonInstantiableException(
+                sprintf(
+                    'Class "%s" does not exist.',
+                    $resolver,
+                ),
+            );
+        }
+        $reflectionClass = new \ReflectionClass($resolver);
+
+        $resolver = $this->objectFactory->create($reflectionClass, []);
 
         return $resolver;
     }

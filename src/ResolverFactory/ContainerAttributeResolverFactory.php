@@ -28,9 +28,36 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @return DataAttributeResolverInterface|object
      */
     public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object
+    {
+        $resolver = $this->getResolver($attribute);
+
+        if ($attribute instanceof DataAttributeInterface) {
+            if (!$resolver instanceof DataAttributeResolverInterface) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Data attribute resolver "%s" must implement "%s".',
+                        get_debug_type($resolver),
+                        DataAttributeResolverInterface::class,
+                    ),
+                );
+            }
+        } else {
+            if (!$resolver instanceof ParameterAttributeResolverInterface) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Parameter attribute resolver "%s" must implement "%s".',
+                        get_debug_type($resolver),
+                        ParameterAttributeResolverInterface::class,
+                    ),
+                );
+            }
+        }
+        return $resolver;
+    }
+
+    private function getResolver(DataAttributeInterface|ParameterAttributeInterface $attribute): mixed
     {
         $resolver = $attribute->getResolver();
         if (!is_string($resolver)) {
@@ -46,6 +73,7 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
             );
         }
         $result = $this->container->get($resolver);
+
         if (!is_object($result)) {
             throw new \RuntimeException(
                 sprintf(
@@ -55,27 +83,7 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
                 ),
             );
         }
-        if ($attribute instanceof DataAttributeInterface) {
-            if (!$result instanceof DataAttributeResolverInterface) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Data attribute resolver "%s" must implement "%s".',
-                        get_debug_type($result),
-                        DataAttributeResolverInterface::class,
-                    ),
-                );
-            }
-        } else {
-            if (!$result instanceof ParameterAttributeResolverInterface) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Parameter attribute resolver "%s" must implement "%s".',
-                        get_debug_type($result),
-                        ParameterAttributeResolverInterface::class,
-                    ),
-                );
-            }
-        }
+
         return $result;
     }
 }
