@@ -69,8 +69,6 @@ final class ReflectionAttributeResolverFactory implements AttributeResolverFacto
         }
         $reflectionClass = new \ReflectionClass($resolver);
 
-        $resolver = $this->objectFactory->create($reflectionClass, []);
-
-        return $resolver;
+        return $this->objectFactory->create($reflectionClass, []);
     }
 }
