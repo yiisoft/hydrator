@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\ObjectFactory;
 
 use ReflectionClass;
+
 interface ObjectFactoryInterface
 {
     /**
