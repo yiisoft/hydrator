@@ -37,15 +37,7 @@ final class DataAttributesHandler
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
             $resolver = $this->attributeResolverFactory->create($attribute);
-            if (!$resolver instanceof DataAttributeResolverInterface) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Data attribute resolver "%s" must implement "%s".',
-                        get_debug_type($resolver),
-                        DataAttributeResolverInterface::class,
-                    ),
-                );
-            }
+
             $resolver->prepareData($attribute, $data);
         }
     }

@@ -11,6 +11,7 @@ use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
+use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 
 use function is_string;
 
@@ -53,6 +54,27 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
                     get_debug_type($result),
                 ),
             );
+        }
+        if ($attribute instanceof DataAttributeInterface) {
+            if (!$result instanceof DataAttributeResolverInterface) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Data attribute resolver "%s" must implement "%s".',
+                        get_debug_type($result),
+                        DataAttributeResolverInterface::class,
+                    ),
+                );
+            }
+        } else {
+            if (!$result instanceof ParameterAttributeResolverInterface) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Parameter attribute resolver "%s" must implement "%s".',
+                        get_debug_type($result),
+                        ParameterAttributeResolverInterface::class,
+                    ),
+                );
+            }
         }
         return $result;
     }
