@@ -34,7 +34,7 @@ To hydrate existing object:
 ```php
 use Yiisoft\Hydrator\Hydrator;
 
-$hydrator = new Hydrator($container);
+$hydrator = new Hydrator();
 $hydrator->hydrate($object, $data);
 ```
 
@@ -43,7 +43,7 @@ To create a new object and fill it with the data:
 ```php
 use Yiisoft\Hydrator\Hydrator;
 
-$hydrator = new Hydrator($container);
+$hydrator = new Hydrator();
 $object = $hydrator->create(MyClass::class, $data);
 ```
 

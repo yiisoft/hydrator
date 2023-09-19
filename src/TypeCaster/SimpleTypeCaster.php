@@ -64,8 +64,8 @@ final class SimpleTypeCaster implements TypeCasterInterface
         /**
          * Find the best type name and value type match.
          * Example:
-         * - When pass `42` to `int|string` type, `int` will be used.
-         * - When pass `"42"` to `int|string` type, `string` will be used.
+         * - when pass `42` to `int|string` type, `int` will be used;
+         * - when pass `"42"` to `int|string` type, `string` will be used.
          */
         foreach ($types as $t) {
             if (null === $value && $t->allowsNull()) {

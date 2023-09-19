@@ -20,11 +20,13 @@ final class ParameterAttributesHandlerTest extends TestCase
     public function testDefaultsHandleParameters(): void
     {
         $contextViewerResolver = new ContextViewerResolver();
-        $handler = new ParameterAttributesHandler(new ContainerAttributeResolverFactory(
-            new SimpleContainer([
-                ContextViewerResolver::class => $contextViewerResolver,
-            ])
-        ));
+        $handler = new ParameterAttributesHandler(
+            new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    ContextViewerResolver::class => $contextViewerResolver,
+                ])
+            )
+        );
 
         $parameter = TestHelper::getFirstParameter(static fn(#[ContextViewer] int $a) => null);
 
@@ -36,7 +38,7 @@ final class ParameterAttributesHandlerTest extends TestCase
         $this->assertNull($context->getResolvedValue());
     }
 
-    public function testNonTypeCasted(): void
+    public function testBase(): void
     {
         $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());
 

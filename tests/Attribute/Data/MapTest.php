@@ -14,7 +14,6 @@ use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapNonStrictClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapStrictClass;
-use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -55,8 +54,7 @@ final class MapTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new NoTypeCaster(),
-            new ContainerAttributeResolverFactory(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
                 new SimpleContainer([
                     FromPredefinedArrayResolver::class => new Map([]),
                 ]),

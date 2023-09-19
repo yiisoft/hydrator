@@ -601,14 +601,9 @@ final class HydratorTest extends TestCase
         $container = new SimpleContainer([
             CounterResolver::class => $counterResolver,
         ]);
-        $typeCaster = new CompositeTypeCaster(
-            new String42TypeCaster(),
-            new SimpleTypeCaster(),
-        );
         $hydrator = new Hydrator(
-            $typeCaster,
-            new ContainerAttributeResolverFactory($container),
-            new ContainerObjectFactory(new Injector($container))
+            attributeResolverFactory: new ContainerAttributeResolverFactory($container),
+            objectFactory: new ContainerObjectFactory(new Injector($container))
         );
         $hydrator->create(CounterClass::class);
 

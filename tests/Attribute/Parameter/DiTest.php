@@ -27,8 +27,6 @@ use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefault;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefaultConstructor;
 use Yiisoft\Hydrator\Tests\Support\Classes\Engine1;
 use Yiisoft\Hydrator\Tests\Support\Classes\EngineInterface;
-use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
-use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
 use Yiisoft\Hydrator\UnexpectedAttributeException;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Test\Support\Container\SimpleContainer;
@@ -219,8 +217,7 @@ final class DiTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new NoTypeCaster(),
-            new ContainerAttributeResolverFactory(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
                 new SimpleContainer([
                     CounterResolver::class => new DiResolver(new SimpleContainer()),
                 ]),
@@ -240,11 +237,9 @@ final class DiTest extends TestCase
                 new SimpleContainer($definitions)
             ),
         ]);
-        $typeCaster = new SimpleTypeCaster();
         return new Hydrator(
-            $typeCaster,
-            new ContainerAttributeResolverFactory($container),
-            new ContainerObjectFactory(new Injector($container))
+            attributeResolverFactory: new ContainerAttributeResolverFactory($container),
+            objectFactory: new ContainerObjectFactory(new Injector($container))
         );
     }
 }
