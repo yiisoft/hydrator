@@ -61,7 +61,7 @@ final class Hydrator implements HydratorInterface
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
-        $reflectionClass = new \ReflectionClass($object);
+        $reflectionClass = new ReflectionClass($object);
         $data = $this->createData($data, $map, $strict);
         $this->handleDataAttributes($reflectionClass, $data);
 
@@ -77,11 +77,11 @@ final class Hydrator implements HydratorInterface
         if (!class_exists($class)) {
             throw new NonInstantiableException();
         }
-        $reflectionClass = new \ReflectionClass($class);
+        $reflectionClass = new ReflectionClass($class);
         $data = $this->createData($data, $map, $strict);
         $this->handleDataAttributes($reflectionClass, $data);
 
-        [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->getConstructorArguments(
+        [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->extract(
             $reflectionClass,
             $data,
         );

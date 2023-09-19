@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
+use RuntimeException;
+use Yiisoft\Hydrator\Exception\NonInstantiableException;
 use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
 
 /**
@@ -29,9 +29,9 @@ final class ParameterAttributesHandler
      * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see Context}.
      * @param Data|null $data Raw data and map to pass to attribute resolver via {@see Context}.
      *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @return Result The resolved from attributes value object.
+     *
+     * @throws NonInstantiableException
      */
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,
@@ -46,9 +46,10 @@ final class ParameterAttributesHandler
         $hereResolveResult = Result::fail();
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
+
             $resolver = $this->attributeResolverFactory->create($attribute);
             if (!$resolver instanceof ParameterAttributeResolverInterface) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     sprintf(
                         'Parameter attribute resolver "%s" must implement "%s".',
                         get_debug_type($resolver),

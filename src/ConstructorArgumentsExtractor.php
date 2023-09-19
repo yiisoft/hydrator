@@ -11,14 +11,17 @@ use ReflectionClass;
  */
 final class ConstructorArgumentsExtractor
 {
-    public function __construct(private ParameterAttributesHandler $parameterAttributesHandler, private TypeCasterInterface $typeCaster, private ObjectPropertiesFilter $objectPropertiesFilter)
-    {
+    public function __construct(
+        private ParameterAttributesHandler $parameterAttributesHandler,
+        private TypeCasterInterface $typeCaster,
+        private ObjectPropertiesFilter $objectPropertiesFilter
+    ) {
     }
 
     /**
      * @psalm-return array{0:list<string>,1:array<string,mixed>}
      */
-    public function getConstructorArguments(ReflectionClass $reflectionClass, Data $data): array
+    public function extract(ReflectionClass $reflectionClass, Data $data): array
     {
         $excludeParameterNames = [];
         $constructorArguments = [];

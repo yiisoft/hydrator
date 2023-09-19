@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use function array_key_exists;
+
 /**
  * Holds data to hydrate an object from and a map to use when populating an object.
  *
