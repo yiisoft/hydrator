@@ -7,6 +7,7 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
@@ -17,7 +18,7 @@ final class DataTest extends TestCase
 {
     public function testBase(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new class () {
             #[Data('a')]
@@ -43,7 +44,7 @@ final class DataTest extends TestCase
 
     public function testPath(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new class () {
             #[Data('nested.n')]
@@ -71,7 +72,7 @@ final class DataTest extends TestCase
 
     public function testMapping(): void
     {
-        $hydrator = new Hydrator(new SimpleContainer());
+        $hydrator = new Hydrator();
 
         $object = new class () {
             #[Data('a')]
@@ -110,7 +111,11 @@ final class DataTest extends TestCase
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
-            new SimpleContainer([CounterResolver::class => new Data([])])
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    CounterResolver::class => new Data(''),
+                ]),
+            ),
         );
 
         $object = new CounterClass();

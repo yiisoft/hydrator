@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
-use Closure;
-use Psr\Container\ContainerInterface;
 use ReflectionAttribute;
 use ReflectionClass;
-use ReflectionProperty;
-use Yiisoft\Hydrator\Attribute\SkipHydration;
+use Yiisoft\Hydrator\Exception\NonInstantiableException;
+use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
+use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
+use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
-use Yiisoft\Injector\Injector;
-
-use function array_key_exists;
-use function in_array;
 
 /**
  * Creates or hydrate objects from a set of raw data.
@@ -23,11 +20,8 @@ use function in_array;
  */
 final class Hydrator implements HydratorInterface
 {
-    /**
-     * @var Injector Injector used to create objects.
-     */
-    private Injector $injector;
-
+    private ConstructorArgumentsExtractor $constructorArgumentsExtractor;
+    private ObjectFactoryInterface $objectFactory;
     /**
      * @var TypeCasterInterface Type caster used to cast raw values.
      */
@@ -42,194 +36,118 @@ final class Hydrator implements HydratorInterface
      * @var ParameterAttributesHandler Parameter attributes handler.
      */
     private ParameterAttributesHandler $parameterAttributesHandler;
+    private ObjectPropertiesFilter $objectPropertiesFilter;
 
     /**
-     * @param ContainerInterface $container Container used to resolve created object dependencies and get attributes'
-     * resolvers.
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
      */
-    public function __construct(ContainerInterface $container, ?TypeCasterInterface $typeCaster = null)
-    {
-        $this->injector = new Injector($container);
+    public function __construct(
+        ?TypeCasterInterface $typeCaster = null,
+        ?AttributeResolverFactoryInterface $attributeResolverFactory = null,
+        ?ObjectFactoryInterface $objectFactory = null,
+    ) {
+        $this->objectFactory = $objectFactory ?? new ReflectionObjectFactory();
+        $attributeResolverFactory ??= new ReflectionAttributeResolverFactory();
         $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
-        $this->dataAttributesHandler = new DataAttributesHandler($container);
-        $this->parameterAttributesHandler = new ParameterAttributesHandler($container);
+        $this->dataAttributesHandler = new DataAttributesHandler($attributeResolverFactory);
+        $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory);
+        $this->objectPropertiesFilter = new ObjectPropertiesFilter();
+        $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
+            $this->parameterAttributesHandler,
+            $this->typeCaster,
+            $this->objectPropertiesFilter,
+        );
     }
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
-        $this->populate(
-            $object,
-            $this->getHydrateData($object, $data, $map, $strict),
+        $reflectionClass = new ReflectionClass($object);
+        $data = $this->createData($data, $map, $strict);
+        $this->handleDataAttributes($reflectionClass, $data);
+
+        $reflectionProperties = $this->objectPropertiesFilter->filterReflectionProperties(
+            $reflectionClass->getProperties(),
+            []
         );
+        $this->hydrateInternal($object, $reflectionProperties, $data);
     }
 
     public function create(string $class, array $data = [], array $map = [], bool $strict = false): object
     {
-        [$excludeProperties, $constructorArguments] = $this->getConstructorArguments($class, $data, $map, $strict);
+        if (!class_exists($class)) {
+            throw new NonInstantiableException();
+        }
+        $reflectionClass = new ReflectionClass($class);
+        $data = $this->createData($data, $map, $strict);
+        $this->handleDataAttributes($reflectionClass, $data);
 
-        $object = $this->injector->make($class, $constructorArguments);
-
-        $this->populate(
-            $object,
-            $this->getHydrateData($object, $data, $map, $strict, $excludeProperties),
+        [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->extract(
+            $reflectionClass,
+            $data,
         );
+
+        $reflectionProperties = $this->objectPropertiesFilter->filterReflectionProperties(
+            $reflectionClass->getProperties(),
+            $excludeProperties
+        );
+
+        $object = $this->objectFactory->create($reflectionClass, $constructorArguments);
+        $this->hydrateInternal($object, $reflectionProperties, $data);
 
         return $object;
     }
 
     /**
-     * @psalm-param class-string $class
+     * @param array<string, \ReflectionProperty> $reflectionProperties
      * @psalm-param MapType $map
-     * @psalm-return array{0:list<string>,1:array<string,mixed>}
      */
-    private function getConstructorArguments(string $class, array $sourceData, array $map, bool $strict): array
-    {
-        $excludeParameterNames = [];
-        $constructorArguments = [];
+    private function hydrateInternal(
+        object $object,
+        array $reflectionProperties,
+        Data $data,
+    ): void {
+        foreach ($reflectionProperties as $propertyName => $property) {
+            $resolveResult = $data->resolveValue($propertyName);
 
-        $constructor = (new ReflectionClass($class))->getConstructor();
-        if ($constructor === null) {
-            return [$excludeParameterNames, $constructorArguments];
-        }
-
-        $data = $this->createData($class, $sourceData, $map, $strict);
-
-        foreach ($constructor->getParameters() as $parameter) {
-            if (!empty($parameter->getAttributes(SkipHydration::class))) {
-                continue;
-            }
-
-            $parameterName = $parameter->getName();
-            $resolveResult = Result::fail();
-
-            if ($parameter->isPromoted()) {
-                $excludeParameterNames[] = $parameterName;
-                $resolveResult = $this->resolve($parameterName, $data);
-            }
-
-            $attributesHandleResult = $this->parameterAttributesHandler->handle($parameter, $resolveResult, $data);
+            $attributesHandleResult = $this->parameterAttributesHandler->handle(
+                $property,
+                $resolveResult,
+                $data,
+            );
             if ($attributesHandleResult->isResolved()) {
                 $resolveResult = $attributesHandleResult;
             }
 
             if ($resolveResult->isResolved()) {
-                $typeCastedValue = $this->typeCaster->cast($resolveResult->getValue(), $parameter->getType());
-                if ($typeCastedValue->isResolved()) {
-                    $constructorArguments[$parameterName] = $typeCastedValue->getValue();
+                $result = $this->typeCaster->cast(
+                    $resolveResult->getValue(),
+                    $property->getType(),
+                );
+                if ($result->isResolved()) {
+                    if (PHP_VERSION_ID < 80100) {
+                        $property->setAccessible(true);
+                    }
+                    $property->setValue($object, $result->getValue());
                 }
             }
         }
-
-        return [$excludeParameterNames, $constructorArguments];
     }
 
     /**
      * @psalm-param MapType $map
      */
-    private function getHydrateData(
-        object $object,
-        array $sourceData,
-        array $map,
-        bool $strict,
-        array $excludeProperties = []
-    ): array {
-        $hydrateData = [];
-
-        $data = $this->createData($object, $sourceData, $map, $strict);
-
-        foreach ($this->getObjectProperties($object) as $property) {
-            if (!empty($property->getAttributes(SkipHydration::class))) {
-                continue;
-            }
-
-            $propertyName = $property->getName();
-            if (in_array($propertyName, $excludeProperties, true)) {
-                continue;
-            }
-
-            $resolveResult = $this->resolve($propertyName, $data);
-
-            $attributesHandleResult = $this->parameterAttributesHandler->handle($property, $resolveResult, $data);
-            if ($attributesHandleResult->isResolved()) {
-                $resolveResult = $attributesHandleResult;
-            }
-
-            if ($resolveResult->isResolved()) {
-                $result = $this->typeCaster->cast($resolveResult->getValue(), $property->getType());
-                if ($result->isResolved()) {
-                    $hydrateData[$propertyName] = $result->getValue();
-                }
-            }
-        }
-
-        return $hydrateData;
+    private function createData(array $sourceData, array $map, bool $strict): Data
+    {
+        return new Data($sourceData, $map, $strict);
     }
 
-    private function resolve(string $name, Data $data): Result
+    private function handleDataAttributes(ReflectionClass $reflectionClass, Data $data): void
     {
-        $map = $data->getMap();
-
-        if ($data->isStrict() && !array_key_exists($name, $map)) {
-            return Result::fail();
-        }
-
-        return DataHelper::getValueByPath($data->getData(), $map[$name] ?? $name);
-    }
-
-    private function populate(object $object, array $values): void
-    {
-        /** @var Closure $setter */
-        $setter = Closure::bind(
-            static function (object $object, string $propertyName, mixed $value): void {
-                $object->$propertyName = $value;
-            },
-            null,
-            $object
+        $attributes = $reflectionClass->getAttributes(
+            DataAttributeInterface::class,
+            ReflectionAttribute::IS_INSTANCEOF
         );
 
-        foreach ($values as $propertyName => $value) {
-            $setter($object, $propertyName, $value);
-        }
-    }
-
-    /**
-     * @psalm-return array<string, ReflectionProperty>
-     */
-    private function getObjectProperties(object $object): array
-    {
-        $result = [];
-
-        $properties = (new ReflectionClass($object))->getProperties();
-        foreach ($properties as $property) {
-            if ($property->isStatic()) {
-                continue;
-            }
-
-            /** @psalm-suppress UndefinedMethod Need for PHP 8.0 only */
-            if (PHP_VERSION_ID >= 80100 && $property->isReadOnly()) {
-                continue;
-            }
-
-            $result[$property->getName()] = $property;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @psalm-param object|class-string $object
-     * @psalm-param MapType $map
-     */
-    private function createData(object|string $object, array $sourceData, array $map, bool $strict): Data
-    {
-        $data = new Data($sourceData, $map, $strict);
-
-        $attributes = (new ReflectionClass($object))
-            ->getAttributes(DataAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
-
         $this->dataAttributesHandler->handle($attributes, $data);
-
-        return $data;
     }
 }
