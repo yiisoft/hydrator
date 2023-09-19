@@ -39,7 +39,7 @@ final class ParameterAttributesHandlerTest extends TestCase
 
     public function testNonTypeCasted(): void
     {
-        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory(new ReflectionObjectFactory()));
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());
 
         $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
 

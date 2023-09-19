@@ -5,22 +5,26 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\ResolverFactory;
 
 use ReflectionClass;
+use ReflectionException;
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
-use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
+use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 
 use function is_string;
 
 final class ReflectionAttributeResolverFactory implements AttributeResolverFactoryInterface
 {
-    public function __construct(
-        private ObjectFactoryInterface $objectFactory,
-    ) {
+    private ReflectionObjectFactory $objectFactory;
+
+    public function __construct()
+    {
+        $this->objectFactory = new ReflectionObjectFactory();
     }
 
     /**
      * @throws NonInstantiableException
+     * @throws ReflectionException
      */
     public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object
     {
