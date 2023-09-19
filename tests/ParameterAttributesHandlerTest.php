@@ -6,7 +6,6 @@ namespace Yiisoft\Hydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Context;
-use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
 use Yiisoft\Hydrator\ParameterAttributesHandler;
 use Yiisoft\Hydrator\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\ResolverFactory\ReflectionAttributeResolverFactory;
