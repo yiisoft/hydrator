@@ -36,7 +36,7 @@ use Yiisoft\Hydrator\Tests\Support\String42TypeCaster;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
-use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -467,7 +467,7 @@ final class HydratorTest extends TestCase
         $container = new SimpleContainer();
         $typeCaster = new CompositeTypeCaster(
             new String42TypeCaster(),
-            new SimpleTypeCaster(),
+            new PhpNativeTypeCaster(),
         );
         $hydrator = new Hydrator(
             $typeCaster,
@@ -487,7 +487,7 @@ final class HydratorTest extends TestCase
         $container = new SimpleContainer();
         $typeCaster = new CompositeTypeCaster(
             new String42TypeCaster(),
-            new SimpleTypeCaster(),
+            new PhpNativeTypeCaster(),
         );
         $hydrator = new Hydrator(
             $typeCaster,

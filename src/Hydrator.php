@@ -11,7 +11,9 @@ use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
 use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\ResolverFactory\ReflectionAttributeResolverFactory;
-use Yiisoft\Hydrator\TypeCaster\SimpleTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
 
 /**
  * Creates or hydrate objects from a set of raw data.
@@ -48,7 +50,12 @@ final class Hydrator implements HydratorInterface
     ) {
         $this->objectFactory = $objectFactory ?? new ReflectionObjectFactory();
         $attributeResolverFactory ??= new ReflectionAttributeResolverFactory();
-        $this->typeCaster = $typeCaster ?? (new SimpleTypeCaster())->withHydrator($this);
+
+        $this->typeCaster = $typeCaster ?? new CompositeTypeCaster(
+            new PhpNativeTypeCaster(),
+            new HydratorTypeCaster($this),
+        );
+
         $this->dataAttributesHandler = new DataAttributesHandler($attributeResolverFactory);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory);
         $this->objectPropertiesFilter = new ObjectPropertiesFilter();
