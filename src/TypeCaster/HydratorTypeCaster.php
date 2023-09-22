@@ -15,7 +15,7 @@ use Yiisoft\Hydrator\TypeCasterInterface;
 use function is_array;
 
 /**
- * Cast arrays to objects.
+ * Casts arrays to objects.
  */
 final class HydratorTypeCaster implements TypeCasterInterface
 {
