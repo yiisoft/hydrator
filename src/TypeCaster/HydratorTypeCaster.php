@@ -41,12 +41,11 @@ final class HydratorTypeCaster implements TypeCasterInterface
             return Result::fail();
         }
 
-        $types = array_filter(
-            $type->getTypes(),
-            static fn(mixed $type) => $type instanceof ReflectionNamedType,
-        );
+        foreach ($type->getTypes() as $t) {
+            if (!$t instanceof ReflectionNamedType) {
+                continue;
+            }
 
-        foreach ($types as $t) {
             $result = $this->castInternal($value, $t);
             if ($result->isResolved()) {
                 return $result;
