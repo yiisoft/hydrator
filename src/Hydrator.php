@@ -155,7 +155,7 @@ final class Hydrator implements HydratorInterface
 
     private function setTypeCaster(?TypeCasterInterface $typeCaster): void
     {
-        $typeCaster = $typeCaster ?? new CompositeTypeCaster(
+        $typeCaster ??= new CompositeTypeCaster(
             new PhpNativeTypeCaster(),
             new HydratorTypeCaster(),
         );
