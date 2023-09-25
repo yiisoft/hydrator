@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\TypeCaster;
 
-use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\TypeCastContext;
 use Yiisoft\Hydrator\TypeCasterInterface;
 use Yiisoft\Hydrator\Result;
