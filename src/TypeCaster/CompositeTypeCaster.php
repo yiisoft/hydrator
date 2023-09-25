@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\TypeCaster;
 
-use ReflectionType;
 use Yiisoft\Hydrator\HydratorInterface;
+use Yiisoft\Hydrator\TypeCastContext;
 use Yiisoft\Hydrator\TypeCasterInterface;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\TypeCasterWithHydratorInterface;
 
 /**
  * Allows using many type casters one by one before the value cast successfully.
  */
-final class CompositeTypeCaster implements TypeCasterWithHydratorInterface
+final class CompositeTypeCaster implements TypeCasterInterface
 {
     /**
      * @var TypeCasterInterface[] Type casters to use.
@@ -29,19 +28,10 @@ final class CompositeTypeCaster implements TypeCasterWithHydratorInterface
         $this->typeCasters = $typeCasters;
     }
 
-    public function setHydrator(HydratorInterface $hydrator): void
+    public function cast(mixed $value, TypeCastContext $context): Result
     {
         foreach ($this->typeCasters as $typeCaster) {
-            if ($typeCaster instanceof TypeCasterWithHydratorInterface) {
-                $typeCaster->setHydrator($hydrator);
-            }
-        }
-    }
-
-    public function cast(mixed $value, ?ReflectionType $type): Result
-    {
-        foreach ($this->typeCasters as $typeCaster) {
-            $result = $typeCaster->cast($value, $type);
+            $result = $typeCaster->cast($value, $context);
             if ($result->isResolved()) {
                 return $result;
             }

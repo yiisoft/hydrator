@@ -21,7 +21,7 @@ final class ConstructorArgumentsExtractor
     /**
      * @psalm-return array{0:list<string>,1:array<string,mixed>}
      */
-    public function extract(ReflectionClass $reflectionClass, Data $data): array
+    public function extract(ReflectionClass $reflectionClass, Data $data, TypeCastContext $typeCastContext): array
     {
         $excludeParameterNames = [];
         $constructorArguments = [];
@@ -53,7 +53,7 @@ final class ConstructorArgumentsExtractor
             if ($resolveResult->isResolved()) {
                 $typeCastedValue = $this->typeCaster->cast(
                     $resolveResult->getValue(),
-                    $parameter->getType(),
+                    $typeCastContext->withItem($parameter),
                 );
                 if ($typeCastedValue->isResolved()) {
                     $constructorArguments[$parameterName] = $typeCastedValue->getValue();

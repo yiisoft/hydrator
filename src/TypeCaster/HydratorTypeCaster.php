@@ -4,45 +4,32 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\TypeCaster;
 
-use LogicException;
 use ReflectionClass;
 use ReflectionNamedType;
-use ReflectionType;
 use ReflectionUnionType;
 use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\Result;
-
-use Yiisoft\Hydrator\TypeCasterWithHydratorInterface;
+use Yiisoft\Hydrator\TypeCastContext;
+use Yiisoft\Hydrator\TypeCasterInterface;
 
 use function is_array;
 
 /**
  * Casts arrays to objects.
  */
-final class HydratorTypeCaster implements TypeCasterWithHydratorInterface
+final class HydratorTypeCaster implements TypeCasterInterface
 {
-    /**
-     * @param HydratorInterface $hydrator Hydrator to use for casting arrays to objects.
-     */
-    private ?HydratorInterface $hydrator = null;
-
-    public function setHydrator(HydratorInterface $hydrator): void
+    public function cast(mixed $value, TypeCastContext $context): Result
     {
-        $this->hydrator = $hydrator;
-    }
-
-    public function cast(mixed $value, ?ReflectionType $type): Result
-    {
-        if ($this->hydrator === null) {
-            throw new LogicException('Hydrator don\'t set.');
-        }
+        $type = $context->getReflectionType();
+        $hydrator = $context->getHydrator();
 
         if (!is_array($value)) {
             return Result::fail();
         }
 
         if ($type instanceof ReflectionNamedType) {
-            return $this->castInternal($value, $type);
+            return $this->castInternal($value, $type, $hydrator);
         }
 
         if (!$type instanceof ReflectionUnionType) {
@@ -54,7 +41,7 @@ final class HydratorTypeCaster implements TypeCasterWithHydratorInterface
                 continue;
             }
 
-            $result = $this->castInternal($value, $t);
+            $result = $this->castInternal($value, $t, $hydrator);
             if ($result->isResolved()) {
                 return $result;
             }
@@ -63,7 +50,7 @@ final class HydratorTypeCaster implements TypeCasterWithHydratorInterface
         return Result::fail();
     }
 
-    private function castInternal(array $value, ReflectionNamedType $type): Result
+    private function castInternal(array $value, ReflectionNamedType $type, HydratorInterface $hydrator): Result
     {
         if ($type->isBuiltin()) {
             return Result::fail();
@@ -73,11 +60,8 @@ final class HydratorTypeCaster implements TypeCasterWithHydratorInterface
 
         $reflection = new ReflectionClass($class);
         if ($reflection->isInstantiable()) {
-            /**
-             * @psalm-suppress PossiblyNullReference `$this->hydrator` check on null in `cast()` method.
-             */
             return Result::success(
-                $this->hydrator->create($class, $value)
+                $hydrator->create($class, $value)
             );
         }
 

@@ -9,6 +9,7 @@ use ReflectionType;
 use ReflectionUnionType;
 use Stringable;
 use Yiisoft\Hydrator\Result;
+use Yiisoft\Hydrator\TypeCastContext;
 use Yiisoft\Hydrator\TypeCasterInterface;
 use Yiisoft\Strings\NumericHelper;
 
@@ -24,8 +25,10 @@ use function is_string;
  */
 final class PhpNativeTypeCaster implements TypeCasterInterface
 {
-    public function cast(mixed $value, ?ReflectionType $type): Result
+    public function cast(mixed $value, TypeCastContext $context): Result
     {
+        $type = $context->getReflectionType();
+
         if ($type === null) {
             return Result::success($value);
         }
