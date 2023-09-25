@@ -50,12 +50,7 @@ final class Hydrator implements HydratorInterface
     ) {
         $this->objectFactory = $objectFactory ?? new ReflectionObjectFactory();
         $attributeResolverFactory ??= new ReflectionAttributeResolverFactory();
-
-        $this->typeCaster = $typeCaster ?? new CompositeTypeCaster(
-            new PhpNativeTypeCaster(),
-            new HydratorTypeCaster($this),
-        );
-
+        $this->setTypeCaster($typeCaster);
         $this->dataAttributesHandler = new DataAttributesHandler($attributeResolverFactory);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory);
         $this->objectPropertiesFilter = new ObjectPropertiesFilter();
@@ -156,5 +151,19 @@ final class Hydrator implements HydratorInterface
         );
 
         $this->dataAttributesHandler->handle($attributes, $data);
+    }
+
+    private function setTypeCaster(?TypeCasterInterface $typeCaster): void
+    {
+        $typeCaster = $typeCaster ?? new CompositeTypeCaster(
+            new PhpNativeTypeCaster(),
+            new HydratorTypeCaster(),
+        );
+
+        if ($typeCaster instanceof TypeCasterWithHydratorInterface) {
+            $typeCaster->setHydrator($this);
+        }
+
+        $this->typeCaster = $typeCaster;
     }
 }
