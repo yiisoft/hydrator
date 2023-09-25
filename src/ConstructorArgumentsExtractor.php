@@ -12,6 +12,7 @@ use ReflectionClass;
 final class ConstructorArgumentsExtractor
 {
     public function __construct(
+        private Hydrator $hydrator,
         private ParameterAttributesHandler $parameterAttributesHandler,
         private TypeCasterInterface $typeCaster,
         private ObjectPropertiesFilter $objectPropertiesFilter
@@ -21,7 +22,7 @@ final class ConstructorArgumentsExtractor
     /**
      * @psalm-return array{0:list<string>,1:array<string,mixed>}
      */
-    public function extract(ReflectionClass $reflectionClass, Data $data, TypeCastContext $typeCastContext): array
+    public function extract(ReflectionClass $reflectionClass, Data $data): array
     {
         $excludeParameterNames = [];
         $constructorArguments = [];
@@ -53,7 +54,7 @@ final class ConstructorArgumentsExtractor
             if ($resolveResult->isResolved()) {
                 $typeCastedValue = $this->typeCaster->cast(
                     $resolveResult->getValue(),
-                    $typeCastContext->withItem($parameter),
+                    new TypeCastContext($this->hydrator, $parameter),
                 );
                 if ($typeCastedValue->isResolved()) {
                     $constructorArguments[$parameterName] = $typeCastedValue->getValue();

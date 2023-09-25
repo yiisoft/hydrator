@@ -40,8 +40,6 @@ final class Hydrator implements HydratorInterface
     private ParameterAttributesHandler $parameterAttributesHandler;
     private ObjectPropertiesFilter $objectPropertiesFilter;
 
-    private TypeCastContext $typeCastContext;
-
     /**
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
      */
@@ -62,12 +60,11 @@ final class Hydrator implements HydratorInterface
         $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory);
         $this->objectPropertiesFilter = new ObjectPropertiesFilter();
         $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
+            $this,
             $this->parameterAttributesHandler,
             $this->typeCaster,
             $this->objectPropertiesFilter,
         );
-
-        $this->typeCastContext = new TypeCastContext($this);
     }
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
@@ -95,7 +92,6 @@ final class Hydrator implements HydratorInterface
         [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->extract(
             $reflectionClass,
             $data,
-            $this->typeCastContext,
         );
 
         $reflectionProperties = $this->objectPropertiesFilter->filterReflectionProperties(
@@ -133,7 +129,7 @@ final class Hydrator implements HydratorInterface
             if ($resolveResult->isResolved()) {
                 $result = $this->typeCaster->cast(
                     $resolveResult->getValue(),
-                    $this->typeCastContext->withItem($property),
+                    new TypeCastContext($this, $property),
                 );
                 if ($result->isResolved()) {
                     if (PHP_VERSION_ID < 80100) {
