@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
-use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
 use Yiisoft\Hydrator\Internal\ConstructorArgumentsExtractor;
-use Yiisoft\Hydrator\DataAttributesHandler;
 use Yiisoft\Hydrator\Internal\ObjectPropertiesFilter;
-use Yiisoft\Hydrator\ParameterAttributesHandler;
 use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
 use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
