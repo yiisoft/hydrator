@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Hydrator\Context;
+use Yiisoft\Hydrator\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\ParameterAttributesHandler;
 use Yiisoft\Hydrator\AttributeResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\AttributeResolverFactory\ReflectionAttributeResolverFactory;
@@ -33,7 +33,7 @@ final class ParameterAttributesHandlerTest extends TestCase
         $handler->handle($parameter);
 
         $context = $contextViewerResolver->getContext();
-        $this->assertInstanceOf(Context::class, $context);
+        $this->assertInstanceOf(ParameterAttributeResolveContext::class, $context);
         $this->assertFalse($context->isResolved());
         $this->assertNull($context->getResolvedValue());
     }

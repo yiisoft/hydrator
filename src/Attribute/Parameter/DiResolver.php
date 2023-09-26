@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionNamedType;
 use ReflectionUnionType;
-use Yiisoft\Hydrator\Context;
+use Yiisoft\Hydrator\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
@@ -32,7 +32,7 @@ final class DiResolver implements ParameterAttributeResolverInterface
      * @throws ContainerExceptionInterface
      * @throws DiNotFoundException When object not found in container or object ID autoresolving is fail.
      */
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Result
+    public function getParameterValue(ParameterAttributeInterface $attribute, ParameterAttributeResolveContext $context): Result
     {
         if (!$attribute instanceof Di) {
             throw new UnexpectedAttributeException(Di::class, $attribute);

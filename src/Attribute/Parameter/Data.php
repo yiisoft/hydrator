@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
 use Attribute;
-use Yiisoft\Hydrator\Context;
+use Yiisoft\Hydrator\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
@@ -25,7 +25,7 @@ final class Data implements ParameterAttributeInterface, ParameterAttributeResol
     ) {
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Result
+    public function getParameterValue(ParameterAttributeInterface $attribute, ParameterAttributeResolveContext $context): Result
     {
         if (!$attribute instanceof self) {
             throw new UnexpectedAttributeException(self::class, $attribute);

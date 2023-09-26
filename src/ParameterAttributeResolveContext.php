@@ -6,7 +6,6 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionParameter;
 use ReflectionProperty;
-
 use Yiisoft\Hydrator\Internal\DataExtractor;
 
 use function is_string;
@@ -16,7 +15,7 @@ use function is_string;
  *
  * @psalm-import-type MapType from HydratorInterface
  */
-final class Context
+final class ParameterAttributeResolveContext
 {
     /**
      * @param ReflectionParameter|ReflectionProperty $parameter Resolved parameter or property reflection.

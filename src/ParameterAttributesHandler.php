@@ -25,11 +25,11 @@ final class ParameterAttributesHandler
      *
      * @param ReflectionParameter|ReflectionProperty $parameter Parameter or property reflection to handle attributes
      * from.
-     * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see Context}.
-     * @param Data|null $data Raw data and map to pass to attribute resolver via {@see Context}.
+     * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
+     * @param Data|null $data Raw data and map to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
      *
-     * @throws NonInstantiableException
      * @return Result The resolved from attributes value object.
+     *@throws NonInstantiableException
      */
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,
@@ -56,7 +56,7 @@ final class ParameterAttributesHandler
                 );
             }
 
-            $context = new Context(
+            $context = new ParameterAttributeResolveContext(
                 $parameter,
                 $hereResolveResult->isResolved() ? $hereResolveResult : $resolveResult,
                 $data?->getData() ?? [],

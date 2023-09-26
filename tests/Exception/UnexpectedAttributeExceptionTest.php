@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests;
+namespace Yiisoft\Hydrator\Tests\Exception;
 
 use LogicException;
 use PHPUnit\Framework\TestCase;

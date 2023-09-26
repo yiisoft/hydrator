@@ -6,7 +6,7 @@ namespace Yiisoft\Hydrator\Attribute\Parameter;
 
 use Attribute;
 use Stringable;
-use Yiisoft\Hydrator\Context;
+use Yiisoft\Hydrator\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
@@ -23,7 +23,7 @@ final class ToString implements ParameterAttributeInterface, ParameterAttributeR
         return $this;
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Result
+    public function getParameterValue(ParameterAttributeInterface $attribute, ParameterAttributeResolveContext $context): Result
     {
         if (!$attribute instanceof self) {
             throw new UnexpectedAttributeException(self::class, $attribute);
