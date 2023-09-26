@@ -35,9 +35,8 @@ interface HydratorInterface
      * an object.
      * @param bool $strict Whether to hydrate properties from the map only.
      *
-     * @return object Created and hydrated object.
-     *
      * @throws NonInstantiableException
+     * @return object Created and hydrated object.
      *
      * @psalm-template T
      * @psalm-param class-string<T> $class
