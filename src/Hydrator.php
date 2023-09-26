@@ -6,6 +6,7 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionProperty;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
 use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
@@ -69,15 +70,15 @@ final class Hydrator implements HydratorInterface
 
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
     {
+        $dataObject = new Data($data, $map, $strict);
         $reflectionClass = new ReflectionClass($object);
-        $data = $this->createData($data, $map, $strict);
-        $this->handleDataAttributes($reflectionClass, $data);
+        $this->handleDataAttributes($reflectionClass, $dataObject);
 
         $reflectionProperties = $this->objectPropertiesFilter->filterReflectionProperties(
             $reflectionClass->getProperties(),
             []
         );
-        $this->hydrateInternal($object, $reflectionProperties, $data);
+        $this->hydrateInternal($object, $reflectionProperties, $dataObject);
     }
 
     public function create(string $class, array $data = [], array $map = [], bool $strict = false): object
@@ -85,13 +86,14 @@ final class Hydrator implements HydratorInterface
         if (!class_exists($class)) {
             throw new NonInstantiableException();
         }
+
+        $dataObject = new Data($data, $map, $strict);
         $reflectionClass = new ReflectionClass($class);
-        $data = $this->createData($data, $map, $strict);
-        $this->handleDataAttributes($reflectionClass, $data);
+        $this->handleDataAttributes($reflectionClass, $dataObject);
 
         [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->extract(
             $reflectionClass,
-            $data,
+            $dataObject,
         );
 
         $reflectionProperties = $this->objectPropertiesFilter->filterReflectionProperties(
@@ -100,13 +102,13 @@ final class Hydrator implements HydratorInterface
         );
 
         $object = $this->objectFactory->create($reflectionClass, $constructorArguments);
-        $this->hydrateInternal($object, $reflectionProperties, $data);
+        $this->hydrateInternal($object, $reflectionProperties, $dataObject);
 
         return $object;
     }
 
     /**
-     * @param array<string, \ReflectionProperty> $reflectionProperties
+     * @param array<string, ReflectionProperty> $reflectionProperties
      * @psalm-param MapType $map
      */
     private function hydrateInternal(
@@ -139,14 +141,6 @@ final class Hydrator implements HydratorInterface
                 }
             }
         }
-    }
-
-    /**
-     * @psalm-param MapType $map
-     */
-    private function createData(array $sourceData, array $map, bool $strict): Data
-    {
-        return new Data($sourceData, $map, $strict);
     }
 
     private function handleDataAttributes(ReflectionClass $reflectionClass, Data $data): void
