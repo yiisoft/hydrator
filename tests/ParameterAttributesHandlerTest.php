@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Hydrator\ParameterAttributeResolveContext;
-use Yiisoft\Hydrator\ParameterAttributesHandler;
-use Yiisoft\Hydrator\AttributeResolverFactory\ContainerAttributeResolverFactory;
-use Yiisoft\Hydrator\AttributeResolverFactory\ReflectionAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\AttributeInfrastructure\Handler\ParameterAttributesHandler;
+use Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewer;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewerResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CustomValue;

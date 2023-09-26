@@ -12,7 +12,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\DiNotFoundException;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\ObjectFactory\ContainerObjectFactory;
-use Yiisoft\Hydrator\AttributeResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
@@ -27,7 +27,7 @@ use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefault;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiUnionWithDefaultConstructor;
 use Yiisoft\Hydrator\Tests\Support\Classes\Engine1;
 use Yiisoft\Hydrator\Tests\Support\Classes\EngineInterface;
-use Yiisoft\Hydrator\Exception\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeInfrastructure\UnexpectedAttributeException;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 

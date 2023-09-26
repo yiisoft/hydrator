@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\ObjectFactory;
 
 use ReflectionClass;
-use Yiisoft\Hydrator\Exception\NonInstantiableException;
+use Yiisoft\Hydrator\NonInstantiableException;
 use Yiisoft\Hydrator\ObjectFactoryInterface;
 
 use function count;

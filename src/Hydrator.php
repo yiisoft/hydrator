@@ -6,11 +6,13 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionClass;
 use ReflectionProperty;
-use Yiisoft\Hydrator\Exception\NonInstantiableException;
+use Yiisoft\Hydrator\AttributeInfrastructure\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\AttributeInfrastructure\Handler\DataAttributesHandler;
+use Yiisoft\Hydrator\AttributeInfrastructure\Handler\ParameterAttributesHandler;
 use Yiisoft\Hydrator\Internal\ConstructorArgumentsExtractor;
 use Yiisoft\Hydrator\Internal\ReflectionFilter;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
-use Yiisoft\Hydrator\AttributeResolverFactory\ReflectionAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;

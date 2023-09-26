@@ -6,7 +6,7 @@ namespace Yiisoft\Hydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Yiisoft\Hydrator\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
 final class ParameterAttributeResolveContextTest extends TestCase

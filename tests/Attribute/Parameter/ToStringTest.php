@@ -7,12 +7,12 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\AttributeResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
-use Yiisoft\Hydrator\Exception\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeInfrastructure\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class ToStringTest extends TestCase

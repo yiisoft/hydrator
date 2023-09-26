@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\AttributeInfrastructure;
 
-use Yiisoft\Hydrator\Exception\NonInstantiableException;
+use Yiisoft\Hydrator\NonInstantiableException;
 
 interface AttributeResolverFactoryInterface
 {

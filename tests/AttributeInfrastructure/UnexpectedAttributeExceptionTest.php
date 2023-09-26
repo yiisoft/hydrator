@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Exception;
+namespace Yiisoft\Hydrator\Tests\AttributeInfrastructure;
 
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
-use Yiisoft\Hydrator\Exception\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeInfrastructure\UnexpectedAttributeException;
 
 final class UnexpectedAttributeExceptionTest extends TestCase
 {

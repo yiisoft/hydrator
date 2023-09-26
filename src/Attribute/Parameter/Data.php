@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
 use Attribute;
-use Yiisoft\Hydrator\ParameterAttributeResolveContext;
-use Yiisoft\Hydrator\ParameterAttributeInterface;
-use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeInterface;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\Exception\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeInfrastructure\UnexpectedAttributeException;
 
 /**
  * Resolve value from the data array used for object hydration by key specified.

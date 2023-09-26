@@ -9,11 +9,11 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionNamedType;
 use ReflectionUnionType;
-use Yiisoft\Hydrator\ParameterAttributeResolveContext;
-use Yiisoft\Hydrator\ParameterAttributeInterface;
-use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeInterface;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\Exception\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeInfrastructure\UnexpectedAttributeException;
 
 /**
  * Resolver for {@see Di} attribute. Obtains dependency from container by ID specified or autoresolved ID by PHP type.

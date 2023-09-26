@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\AttributeInfrastructure;
+
+use Yiisoft\Hydrator\Result;
 
 /**
  * An interface for resolvers of attributes that implement {@see ParameterAttributeInterface}.

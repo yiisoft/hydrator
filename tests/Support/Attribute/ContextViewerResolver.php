@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Support\Attribute;
 
-use Yiisoft\Hydrator\ParameterAttributeResolveContext;
-use Yiisoft\Hydrator\ParameterAttributeInterface;
-use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeInterface;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
 
 final class ContextViewerResolver implements ParameterAttributeResolverInterface

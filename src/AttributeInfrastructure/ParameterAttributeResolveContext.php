@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\AttributeInfrastructure;
 
 use ReflectionParameter;
 use ReflectionProperty;
+use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\Internal\DataExtractor;
+
+use Yiisoft\Hydrator\Result;
 
 use function is_string;
 

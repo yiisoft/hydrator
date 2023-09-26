@@ -7,14 +7,14 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Data;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Data\Map;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\AttributeResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapNonStrictClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapStrictClass;
-use Yiisoft\Hydrator\Exception\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeInfrastructure\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class MapTest extends TestCase

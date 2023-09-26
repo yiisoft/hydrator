@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\AttributeResolverFactory;
+namespace Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
-use Yiisoft\Hydrator\AttributeResolverFactoryInterface;
-use Yiisoft\Hydrator\DataAttributeInterface;
-use Yiisoft\Hydrator\Exception\NonInstantiableException;
-use Yiisoft\Hydrator\ParameterAttributeInterface;
+use Yiisoft\Hydrator\AttributeInfrastructure\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\AttributeInfrastructure\DataAttributeInterface;
+use Yiisoft\Hydrator\NonInstantiableException;
+use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeInterface;
 
 use function is_object;
 use function is_string;
