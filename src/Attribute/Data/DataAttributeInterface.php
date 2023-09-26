@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Attribute\Data;
 
-use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
-
 /**
  * An interface for data attributes (allowed only in classes). Can be used to change the way data to be assigned is
  * obtained.

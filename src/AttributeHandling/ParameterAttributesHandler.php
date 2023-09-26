@@ -10,7 +10,6 @@ use ReflectionProperty;
 use RuntimeException;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
-use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Data;
 use Yiisoft\Hydrator\NonInstantiableException;

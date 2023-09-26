@@ -6,7 +6,6 @@ namespace Yiisoft\Hydrator\ObjectFactory;
 
 use ReflectionClass;
 use Yiisoft\Hydrator\NonInstantiableException;
-use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 
 use function count;
 

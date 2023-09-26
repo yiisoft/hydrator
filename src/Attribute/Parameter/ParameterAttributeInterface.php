@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
-use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
-
 /**
  * An interface for parameters' attributes (allowed only in class properties and constructor parameters). Can be used
  * for getting value (e. g, from request) or type casting value.

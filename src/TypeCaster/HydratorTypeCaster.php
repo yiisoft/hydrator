@@ -9,8 +9,6 @@ use ReflectionNamedType;
 use ReflectionUnionType;
 use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
-use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
 
 use function is_array;
 

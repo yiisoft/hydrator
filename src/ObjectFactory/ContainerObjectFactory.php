@@ -8,7 +8,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use ReflectionException;
-use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Injector\Injector;
 
 final class ContainerObjectFactory implements ObjectFactoryInterface

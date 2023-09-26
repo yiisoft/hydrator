@@ -10,8 +10,6 @@ use Psr\Container\NotFoundExceptionInterface;
 use ReflectionNamedType;
 use ReflectionUnionType;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
-use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
-use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\AttributeHandling\UnexpectedAttributeException;
 

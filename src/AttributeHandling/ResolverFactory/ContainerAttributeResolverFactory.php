@@ -7,7 +7,6 @@ namespace Yiisoft\Hydrator\AttributeHandling\ResolverFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
-use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 use Yiisoft\Hydrator\NonInstantiableException;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;

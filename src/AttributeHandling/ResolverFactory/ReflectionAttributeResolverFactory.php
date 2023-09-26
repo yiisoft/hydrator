@@ -6,7 +6,6 @@ namespace Yiisoft\Hydrator\AttributeHandling\ResolverFactory;
 
 use ReflectionClass;
 use ReflectionException;
-use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 use Yiisoft\Hydrator\NonInstantiableException;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
