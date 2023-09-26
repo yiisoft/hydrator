@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Support\Attribute;
 
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolveContext;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\AttributeInfrastructure\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeHandling\UnexpectedAttributeException;
 
 final class CounterResolver implements ParameterAttributeResolverInterface
 {

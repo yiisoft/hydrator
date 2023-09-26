@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory;
+namespace Yiisoft\Hydrator\AttributeHandling\ResolverFactory;
 
 use ReflectionClass;
 use ReflectionException;
-use Yiisoft\Hydrator\AttributeInfrastructure\AttributeResolverFactoryInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\DataAttributeInterface;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 use Yiisoft\Hydrator\NonInstantiableException;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
 use function is_string;
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\Support\Attribute;
 
 use Attribute;
-use Yiisoft\Hydrator\AttributeInfrastructure\DataAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 final class InvalidDataResolver implements DataAttributeInterface

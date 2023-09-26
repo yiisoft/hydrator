@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Support\Attribute;
 
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Data;
-use Yiisoft\Hydrator\AttributeInfrastructure\DataAttributeInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\DataAttributeResolverInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\AttributeInfrastructure\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeHandling\UnexpectedAttributeException;
 
 use function array_key_exists;
 

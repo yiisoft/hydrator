@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\Support\Attribute;
 
 use Attribute;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolveContext;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]

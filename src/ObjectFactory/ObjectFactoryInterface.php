@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\ObjectFactory;
 
 use ReflectionClass;
 

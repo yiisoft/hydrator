@@ -7,11 +7,11 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
-use Yiisoft\Hydrator\AttributeInfrastructure\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeHandling\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class DataTest extends TestCase

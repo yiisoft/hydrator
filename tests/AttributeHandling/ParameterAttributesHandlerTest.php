@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests;
+namespace Yiisoft\Hydrator\Tests\AttributeHandling;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolveContext;
-use Yiisoft\Hydrator\AttributeInfrastructure\Handler\ParameterAttributesHandler;
-use Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory\ContainerAttributeResolverFactory;
-use Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory\ReflectionAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewer;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewerResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CustomValue;

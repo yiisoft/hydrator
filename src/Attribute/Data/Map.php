@@ -6,10 +6,10 @@ namespace Yiisoft\Hydrator\Attribute\Data;
 
 use Attribute;
 use Yiisoft\Hydrator\Data;
-use Yiisoft\Hydrator\AttributeInfrastructure\DataAttributeInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\DataAttributeResolverInterface;
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\HydratorInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeHandling\UnexpectedAttributeException;
 
 /**
  * Override mapping of object property names to keys in the data array in hydrator.

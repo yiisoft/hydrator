@@ -7,10 +7,10 @@ namespace Yiisoft\Hydrator\Internal;
 use ReflectionClass;
 use Yiisoft\Hydrator\Data;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\AttributeInfrastructure\Handler\ParameterAttributesHandler;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\TypeCastContext;
-use Yiisoft\Hydrator\TypeCasterInterface;
+use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
+use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
 
 /**
  * @internal

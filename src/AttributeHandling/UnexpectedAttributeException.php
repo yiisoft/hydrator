@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\AttributeInfrastructure;
+namespace Yiisoft\Hydrator\AttributeHandling;
 
 use InvalidArgumentException;
 use Throwable;

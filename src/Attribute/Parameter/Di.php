@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
 use Attribute;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
 /**
  * Resolve value as instance obtained from container by the specified ID or autoresolvied ID by PHP type.

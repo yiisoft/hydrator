@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\AttributeInfrastructure;
+namespace Yiisoft\Hydrator\Attribute\Data;
 
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 use Yiisoft\Hydrator\Data;
 
 /**

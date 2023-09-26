@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\AttributeInfrastructure\Handler;
+namespace Yiisoft\Hydrator\AttributeHandling;
 
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
 use RuntimeException;
-use Yiisoft\Hydrator\AttributeInfrastructure\AttributeResolverFactoryInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolveContext;
-use Yiisoft\Hydrator\AttributeInfrastructure\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Data;
 use Yiisoft\Hydrator\NonInstantiableException;
 use Yiisoft\Hydrator\Result;

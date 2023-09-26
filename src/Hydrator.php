@@ -6,16 +6,19 @@ namespace Yiisoft\Hydrator;
 
 use ReflectionClass;
 use ReflectionProperty;
-use Yiisoft\Hydrator\AttributeInfrastructure\AttributeResolverFactoryInterface;
-use Yiisoft\Hydrator\AttributeInfrastructure\Handler\DataAttributesHandler;
-use Yiisoft\Hydrator\AttributeInfrastructure\Handler\ParameterAttributesHandler;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\AttributeHandling\DataAttributesHandler;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
 use Yiisoft\Hydrator\Internal\ConstructorArgumentsExtractor;
 use Yiisoft\Hydrator\Internal\ReflectionFilter;
+use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
-use Yiisoft\Hydrator\AttributeInfrastructure\ResolverFactory\ReflectionAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
+use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
 
 /**
  * Creates or hydrate objects from a set of raw data.
