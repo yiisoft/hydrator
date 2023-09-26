@@ -34,8 +34,8 @@ final class ParameterAttributesHandler
      * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
      * @param Data|null $data Raw data and map to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
      *
-     * @return Result The resolved from attributes value object.
      *@throws NonInstantiableException
+     * @return Result The resolved from attributes value object.
      */
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,

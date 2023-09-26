@@ -22,8 +22,7 @@ final class ReflectionFilter
     public static function filterProperties(
         ReflectionClass $reflectionClass,
         array $propertyNamesToFilter = []
-    ): array
-    {
+    ): array {
         $result = [];
 
         foreach ($reflectionClass->getProperties() as $property) {
