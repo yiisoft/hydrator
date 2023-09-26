@@ -21,7 +21,6 @@ final class ConstructorArgumentsExtractor
         private Hydrator $hydrator,
         private ParameterAttributesHandler $parameterAttributesHandler,
         private TypeCasterInterface $typeCaster,
-        private ObjectPropertiesFilter $objectPropertiesFilter
     ) {
     }
 
@@ -38,7 +37,7 @@ final class ConstructorArgumentsExtractor
             return [$excludeParameterNames, $constructorArguments];
         }
 
-        $reflectionParameters = $this->objectPropertiesFilter->filterReflectionParameters($constructor->getParameters());
+        $reflectionParameters = ReflectionFilter::filterParameters($constructor->getParameters());
 
         foreach ($reflectionParameters as $parameterName => $parameter) {
             $resolveResult = Result::fail();

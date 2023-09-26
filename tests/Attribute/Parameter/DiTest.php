@@ -12,7 +12,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\DiNotFoundException;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\ObjectFactory\ContainerObjectFactory;
-use Yiisoft\Hydrator\ResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;

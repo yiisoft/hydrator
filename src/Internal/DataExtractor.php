@@ -16,7 +16,7 @@ use function strlen;
  *
  * @internal
  */
-final class DataHelper
+final class DataExtractor
 {
     /**
      * Get value from an array given a path.

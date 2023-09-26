@@ -9,7 +9,6 @@ use ReflectionParameter;
 use ReflectionProperty;
 use RuntimeException;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
-use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
 
 /**
  * Handles parameters attributes that implement {@see ParameterAttributeInterface}.

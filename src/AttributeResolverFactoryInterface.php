@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\ResolverFactory;
+namespace Yiisoft\Hydrator;
 
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;

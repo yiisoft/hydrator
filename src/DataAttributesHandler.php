@@ -8,7 +8,6 @@ use ReflectionAttribute;
 use ReflectionClass;
 use RuntimeException;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
-use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
 
 /**
  * Handles data attributes that implement {@see DataAttributeInterface}.

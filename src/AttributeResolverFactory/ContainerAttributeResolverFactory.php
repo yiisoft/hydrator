@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\ResolverFactory;
+namespace Yiisoft\Hydrator\AttributeResolverFactory;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Yiisoft\Hydrator\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
 use Yiisoft\Hydrator\ParameterAttributeInterface;

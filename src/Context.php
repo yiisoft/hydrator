@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator;
 use ReflectionParameter;
 use ReflectionProperty;
 
-use Yiisoft\Hydrator\Internal\DataHelper;
+use Yiisoft\Hydrator\Internal\DataExtractor;
 
 use function is_string;
 
@@ -88,6 +88,6 @@ final class Context
             $path = $this->map[$path] ?? $key;
         }
 
-        return DataHelper::getValueByPath($this->data, $path);
+        return DataExtractor::getValueByPath($this->data, $path);
     }
 }
