@@ -9,7 +9,7 @@ use Yiisoft\Hydrator\Data;
 use Yiisoft\Hydrator\DataAttributeInterface;
 use Yiisoft\Hydrator\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\HydratorInterface;
-use Yiisoft\Hydrator\UnexpectedAttributeException;
+use Yiisoft\Hydrator\Exception\UnexpectedAttributeException;
 
 /**
  * Override mapping of object property names to keys in the data array in hydrator.

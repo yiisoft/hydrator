@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use Yiisoft\Hydrator\Internal\DataHelper;
+
 use function array_key_exists;
 
 /**

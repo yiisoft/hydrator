@@ -8,6 +8,10 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
+use Yiisoft\Hydrator\Internal\ConstructorArgumentsExtractor;
+use Yiisoft\Hydrator\DataAttributesHandler;
+use Yiisoft\Hydrator\Internal\ObjectPropertiesFilter;
+use Yiisoft\Hydrator\ParameterAttributesHandler;
 use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
 use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
@@ -24,22 +28,15 @@ use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
 final class Hydrator implements HydratorInterface
 {
     private ConstructorArgumentsExtractor $constructorArgumentsExtractor;
+    private DataAttributesHandler $dataAttributesHandler;
+    private ParameterAttributesHandler $parameterAttributesHandler;
+    private ObjectPropertiesFilter $objectPropertiesFilter;
+
     private ObjectFactoryInterface $objectFactory;
     /**
      * @var TypeCasterInterface Type caster used to cast raw values.
      */
     private TypeCasterInterface $typeCaster;
-
-    /**
-     * @var DataAttributesHandler Data attributes handler.
-     */
-    private DataAttributesHandler $dataAttributesHandler;
-
-    /**
-     * @var ParameterAttributesHandler Parameter attributes handler.
-     */
-    private ParameterAttributesHandler $parameterAttributesHandler;
-    private ObjectPropertiesFilter $objectPropertiesFilter;
 
     /**
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
@@ -72,7 +69,7 @@ final class Hydrator implements HydratorInterface
     {
         $dataObject = new Data($data, $map, $strict);
         $reflectionClass = new ReflectionClass($object);
-        $this->handleDataAttributes($reflectionClass, $dataObject);
+        $this->dataAttributesHandler->handle($reflectionClass, $dataObject);
 
         $reflectionProperties = $this->objectPropertiesFilter->filterReflectionProperties(
             $reflectionClass->getProperties(),
@@ -89,7 +86,7 @@ final class Hydrator implements HydratorInterface
 
         $dataObject = new Data($data, $map, $strict);
         $reflectionClass = new ReflectionClass($class);
-        $this->handleDataAttributes($reflectionClass, $dataObject);
+        $this->dataAttributesHandler->handle($reflectionClass, $dataObject);
 
         [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->extract(
             $reflectionClass,
@@ -141,15 +138,5 @@ final class Hydrator implements HydratorInterface
                 }
             }
         }
-    }
-
-    private function handleDataAttributes(ReflectionClass $reflectionClass, Data $data): void
-    {
-        $attributes = $reflectionClass->getAttributes(
-            DataAttributeInterface::class,
-            ReflectionAttribute::IS_INSTANCEOF
-        );
-
-        $this->dataAttributesHandler->handle($attributes, $data);
     }
 }

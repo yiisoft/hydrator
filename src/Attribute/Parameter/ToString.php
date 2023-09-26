@@ -10,7 +10,7 @@ use Yiisoft\Hydrator\Context;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\UnexpectedAttributeException;
+use Yiisoft\Hydrator\Exception\UnexpectedAttributeException;
 
 /**
  * Converts the resolved value to string. Non-resolved values is skip.

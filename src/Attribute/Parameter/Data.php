@@ -9,7 +9,7 @@ use Yiisoft\Hydrator\Context;
 use Yiisoft\Hydrator\ParameterAttributeInterface;
 use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\UnexpectedAttributeException;
+use Yiisoft\Hydrator\Exception\UnexpectedAttributeException;
 
 /**
  * Resolve value from the data array used for object hydration by key specified.

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use Yiisoft\Hydrator\Exception\NonInstantiableException;
+
 /**
  * Creates or hydrate objects from a set of raw data.
  *
@@ -34,6 +36,8 @@ interface HydratorInterface
      * @param bool $strict Whether to hydrate properties from the map only.
      *
      * @return object Created and hydrated object.
+     *
+     * @throws NonInstantiableException
      *
      * @psalm-template T
      * @psalm-param class-string<T> $class

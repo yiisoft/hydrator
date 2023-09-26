@@ -7,6 +7,8 @@ namespace Yiisoft\Hydrator;
 use ReflectionParameter;
 use ReflectionProperty;
 
+use Yiisoft\Hydrator\Internal\DataHelper;
+
 use function is_string;
 
 /**
