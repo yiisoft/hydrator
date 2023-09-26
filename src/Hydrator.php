@@ -53,13 +53,14 @@ final class Hydrator implements HydratorInterface
 
         $this->typeCaster = $typeCaster ?? new CompositeTypeCaster(
             new PhpNativeTypeCaster(),
-            new HydratorTypeCaster($this),
+            new HydratorTypeCaster(),
         );
 
         $this->dataAttributesHandler = new DataAttributesHandler($attributeResolverFactory);
         $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory);
         $this->objectPropertiesFilter = new ObjectPropertiesFilter();
         $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
+            $this,
             $this->parameterAttributesHandler,
             $this->typeCaster,
             $this->objectPropertiesFilter,
@@ -128,7 +129,7 @@ final class Hydrator implements HydratorInterface
             if ($resolveResult->isResolved()) {
                 $result = $this->typeCaster->cast(
                     $resolveResult->getValue(),
-                    $property->getType(),
+                    new TypeCastContext($this, $property),
                 );
                 if ($result->isResolved()) {
                     if (PHP_VERSION_ID < 80100) {

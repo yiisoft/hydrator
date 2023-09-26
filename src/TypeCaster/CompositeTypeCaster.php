@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\TypeCaster;
 
-use ReflectionType;
+use Yiisoft\Hydrator\TypeCastContext;
 use Yiisoft\Hydrator\TypeCasterInterface;
 use Yiisoft\Hydrator\Result;
 
@@ -27,10 +27,10 @@ final class CompositeTypeCaster implements TypeCasterInterface
         $this->typeCasters = $typeCasters;
     }
 
-    public function cast(mixed $value, ?ReflectionType $type): Result
+    public function cast(mixed $value, TypeCastContext $context): Result
     {
         foreach ($this->typeCasters as $typeCaster) {
-            $result = $typeCaster->cast($value, $type);
+            $result = $typeCaster->cast($value, $context);
             if ($result->isResolved()) {
                 return $result;
             }

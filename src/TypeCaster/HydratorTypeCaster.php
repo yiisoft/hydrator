@@ -6,10 +6,10 @@ namespace Yiisoft\Hydrator\TypeCaster;
 
 use ReflectionClass;
 use ReflectionNamedType;
-use ReflectionType;
 use ReflectionUnionType;
 use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\Result;
+use Yiisoft\Hydrator\TypeCastContext;
 use Yiisoft\Hydrator\TypeCasterInterface;
 
 use function is_array;
@@ -19,22 +19,17 @@ use function is_array;
  */
 final class HydratorTypeCaster implements TypeCasterInterface
 {
-    /**
-     * @param HydratorInterface $hydrator Hydrator to use for casting arrays to objects.
-     */
-    public function __construct(
-        private HydratorInterface $hydrator,
-    ) {
-    }
-
-    public function cast(mixed $value, ?ReflectionType $type): Result
+    public function cast(mixed $value, TypeCastContext $context): Result
     {
+        $type = $context->getReflectionType();
+        $hydrator = $context->getHydrator();
+
         if (!is_array($value)) {
             return Result::fail();
         }
 
         if ($type instanceof ReflectionNamedType) {
-            return $this->castInternal($value, $type);
+            return $this->castInternal($value, $type, $hydrator);
         }
 
         if (!$type instanceof ReflectionUnionType) {
@@ -46,7 +41,7 @@ final class HydratorTypeCaster implements TypeCasterInterface
                 continue;
             }
 
-            $result = $this->castInternal($value, $t);
+            $result = $this->castInternal($value, $t, $hydrator);
             if ($result->isResolved()) {
                 return $result;
             }
@@ -55,7 +50,7 @@ final class HydratorTypeCaster implements TypeCasterInterface
         return Result::fail();
     }
 
-    private function castInternal(array $value, ReflectionNamedType $type): Result
+    private function castInternal(array $value, ReflectionNamedType $type, HydratorInterface $hydrator): Result
     {
         if ($type->isBuiltin()) {
             return Result::fail();
@@ -66,7 +61,7 @@ final class HydratorTypeCaster implements TypeCasterInterface
         $reflection = new ReflectionClass($class);
         if ($reflection->isInstantiable()) {
             return Result::success(
-                $this->hydrator->create($class, $value)
+                $hydrator->create($class, $value)
             );
         }
 
