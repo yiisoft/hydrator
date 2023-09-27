@@ -14,12 +14,13 @@ use function count;
 final class ReflectionObjectFactory implements ObjectFactoryInterface
 {
     /**
-     * @psalm-template T of object
-     * @psalm-param ReflectionClass<T> $reflectionClass
-
      * @throws AbstractClassException
      * @throws NonPublicConstructorException
      * @throws WrongConstructorArgumentsCountException
+     *
+     * @psalm-template T of object
+     * @psalm-param ReflectionClass<T> $reflectionClass
+     * @psalm-return T
      */
     public function create(ReflectionClass $reflectionClass, array $constructorArguments): object
     {
