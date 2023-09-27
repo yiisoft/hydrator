@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\TypeCaster;
 
 use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionType;
+use Yiisoft\Hydrator\HydratorInterface;
 
 final class TypeCastContext
 {

@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\Attribute\Data;
+
+use Yiisoft\Hydrator\Data;
 
 /**
  * An interface for resolvers of attributes that implement {@see DataAttributeInterface}.

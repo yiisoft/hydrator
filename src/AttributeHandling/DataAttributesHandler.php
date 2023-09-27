@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\AttributeHandling;
 
 use ReflectionAttribute;
+use ReflectionClass;
 use RuntimeException;
-use Yiisoft\Hydrator\Exception\NonInstantiableException;
-use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
+use Yiisoft\Hydrator\Data;
+use Yiisoft\Hydrator\NonInstantiableException;
 
 /**
  * Handles data attributes that implement {@see DataAttributeInterface}.
@@ -24,15 +28,20 @@ final class DataAttributesHandler
     /**
      * Handle data attributes.
      *
-     * @param ReflectionAttribute[] $reflectionAttributes Reflections of attributes to handle.
+     * @param ReflectionClass $reflectionClass Reflection of class to attributes handle.
      * @param Data $data Current {@see Data} object.
      *
      * @throws NonInstantiableException
      *
      * @psalm-param ReflectionAttribute<DataAttributeInterface>[] $reflectionAttributes
      */
-    public function handle(array $reflectionAttributes, Data $data): void
+    public function handle(ReflectionClass $reflectionClass, Data $data): void
     {
+        $reflectionAttributes = $reflectionClass->getAttributes(
+            DataAttributeInterface::class,
+            ReflectionAttribute::IS_INSTANCEOF
+        );
+
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
 

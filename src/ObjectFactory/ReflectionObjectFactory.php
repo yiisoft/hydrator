@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\ObjectFactory;
 
 use ReflectionClass;
-use ReflectionException;
-use Yiisoft\Hydrator\Exception\NonInstantiableException;
+use Yiisoft\Hydrator\NonInstantiableException;
 
 use function count;
 
@@ -18,7 +17,6 @@ final class ReflectionObjectFactory implements ObjectFactoryInterface
      * @psalm-return T
      *
      * @throws NonInstantiableException
-     * @throws ReflectionException
      */
     public function create(ReflectionClass $reflectionClass, array $constructorArguments): object
     {

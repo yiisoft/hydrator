@@ -9,8 +9,6 @@ use ReflectionType;
 use ReflectionUnionType;
 use Stringable;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\TypeCastContext;
-use Yiisoft\Hydrator\TypeCasterInterface;
 use Yiisoft\Strings\NumericHelper;
 
 use function is_array;

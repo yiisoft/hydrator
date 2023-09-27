@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\AttributeHandling;
 
 use ReflectionParameter;
 use ReflectionProperty;
+use Yiisoft\Hydrator\HydratorInterface;
+use Yiisoft\Hydrator\Internal\DataExtractor;
+
+use Yiisoft\Hydrator\Result;
 
 use function is_string;
 
@@ -14,7 +18,7 @@ use function is_string;
  *
  * @psalm-import-type MapType from HydratorInterface
  */
-final class Context
+final class ParameterAttributeResolveContext
 {
     /**
      * @param ReflectionParameter|ReflectionProperty $parameter Resolved parameter or property reflection.
@@ -86,6 +90,6 @@ final class Context
             $path = $this->map[$path] ?? $key;
         }
 
-        return DataHelper::getValueByPath($this->data, $path);
+        return DataExtractor::getValueByPath($this->data, $path);
     }
 }

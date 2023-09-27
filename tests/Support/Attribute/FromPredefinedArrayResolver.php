@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Support\Attribute;
 
-use Yiisoft\Hydrator\Context;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Data;
-use Yiisoft\Hydrator\DataAttributeInterface;
-use Yiisoft\Hydrator\DataAttributeResolverInterface;
-use Yiisoft\Hydrator\ParameterAttributeInterface;
-use Yiisoft\Hydrator\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeHandling\UnexpectedAttributeException;
 
 use function array_key_exists;
 
@@ -24,7 +24,7 @@ final class FromPredefinedArrayResolver implements ParameterAttributeResolverInt
         $this->array = $array;
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, Context $context): Result
+    public function getParameterValue(ParameterAttributeInterface $attribute, ParameterAttributeResolveContext $context): Result
     {
         if (!$attribute instanceof FromPredefinedArray) {
             throw new UnexpectedAttributeException(FromPredefinedArray::class, $attribute);

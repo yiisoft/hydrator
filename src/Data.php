@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use Yiisoft\Hydrator\Internal\DataExtractor;
+
 use function array_key_exists;
 
 /**
@@ -98,6 +100,6 @@ final class Data
             return Result::fail();
         }
 
-        return DataHelper::getValueByPath($this->getData(), $this->map[$name] ?? $name);
+        return DataExtractor::getValueByPath($this->getData(), $this->map[$name] ?? $name);
     }
 }

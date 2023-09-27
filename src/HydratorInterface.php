@@ -20,6 +20,8 @@ interface HydratorInterface
      * an object.
      * @param bool $strict Whether to hydrate properties from the map only.
      *
+     * @throws NonInstantiableException
+     *
      * @psalm-param MapType $map
      */
     public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void;
@@ -33,6 +35,7 @@ interface HydratorInterface
      * an object.
      * @param bool $strict Whether to hydrate properties from the map only.
      *
+     * @throws NonInstantiableException
      * @return object Created and hydrated object.
      *
      * @psalm-template T

@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\Internal;
 
+use Yiisoft\Hydrator\Result;
 use Yiisoft\Strings\StringHelper;
 
 use function is_array;
@@ -15,7 +16,7 @@ use function strlen;
  *
  * @internal
  */
-final class DataHelper
+final class DataExtractor
 {
     /**
      * Get value from an array given a path.

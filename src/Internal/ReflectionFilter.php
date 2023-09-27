@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\Internal;
 
+use ReflectionClass;
 use ReflectionParameter;
 use ReflectionProperty;
 use Yiisoft\Hydrator\Attribute\SkipHydration;
@@ -13,17 +14,18 @@ use function in_array;
 /**
  * @internal
  */
-final class ObjectPropertiesFilter
+final class ReflectionFilter
 {
     /**
-     * @param ReflectionProperty[] $properties
      * @return array<string, ReflectionProperty>
      */
-    public function filterReflectionProperties(array $properties, array $propertyNamesToFilter): array
-    {
+    public static function filterProperties(
+        ReflectionClass $reflectionClass,
+        array $propertyNamesToFilter = []
+    ): array {
         $result = [];
 
-        foreach ($properties as $property) {
+        foreach ($reflectionClass->getProperties() as $property) {
             if ($property->isStatic()) {
                 continue;
             }
@@ -50,7 +52,7 @@ final class ObjectPropertiesFilter
      * @param ReflectionParameter[] $parameters
      * @return array<string, ReflectionParameter>
      */
-    public function filterReflectionParameters(array $parameters): array
+    public static function filterParameters(array $parameters): array
     {
         $result = [];
 

@@ -2,9 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\Internal;
 
 use ReflectionClass;
+use Yiisoft\Hydrator\Data;
+use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
+use Yiisoft\Hydrator\Result;
+use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
+use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
 
 /**
  * @internal
@@ -15,7 +21,6 @@ final class ConstructorArgumentsExtractor
         private Hydrator $hydrator,
         private ParameterAttributesHandler $parameterAttributesHandler,
         private TypeCasterInterface $typeCaster,
-        private ObjectPropertiesFilter $objectPropertiesFilter
     ) {
     }
 
@@ -32,7 +37,7 @@ final class ConstructorArgumentsExtractor
             return [$excludeParameterNames, $constructorArguments];
         }
 
-        $reflectionParameters = $this->objectPropertiesFilter->filterReflectionParameters($constructor->getParameters());
+        $reflectionParameters = ReflectionFilter::filterParameters($constructor->getParameters());
 
         foreach ($reflectionParameters as $parameterName => $parameter) {
             $resolveResult = Result::fail();

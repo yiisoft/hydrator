@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests;
+namespace Yiisoft\Hydrator\Tests\AttributeHandling;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Hydrator\Context;
-use Yiisoft\Hydrator\ParameterAttributesHandler;
-use Yiisoft\Hydrator\ResolverFactory\ContainerAttributeResolverFactory;
-use Yiisoft\Hydrator\ResolverFactory\ReflectionAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewer;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewerResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CustomValue;
@@ -33,7 +33,7 @@ final class ParameterAttributesHandlerTest extends TestCase
         $handler->handle($parameter);
 
         $context = $contextViewerResolver->getContext();
-        $this->assertInstanceOf(Context::class, $context);
+        $this->assertInstanceOf(ParameterAttributeResolveContext::class, $context);
         $this->assertFalse($context->isResolved());
         $this->assertNull($context->getResolvedValue());
     }

@@ -2,14 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator;
+namespace Yiisoft\Hydrator\AttributeHandling;
 
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
 use RuntimeException;
-use Yiisoft\Hydrator\Exception\NonInstantiableException;
-use Yiisoft\Hydrator\ResolverFactory\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
+use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
+use Yiisoft\Hydrator\Data;
+use Yiisoft\Hydrator\NonInstantiableException;
+use Yiisoft\Hydrator\Result;
 
 /**
  * Handles parameters attributes that implement {@see ParameterAttributeInterface}.
@@ -26,10 +30,10 @@ final class ParameterAttributesHandler
      *
      * @param ReflectionParameter|ReflectionProperty $parameter Parameter or property reflection to handle attributes
      * from.
-     * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see Context}.
-     * @param Data|null $data Raw data and map to pass to attribute resolver via {@see Context}.
+     * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
+     * @param Data|null $data Raw data and map to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
      *
-     * @throws NonInstantiableException
+     *@throws NonInstantiableException
      * @return Result The resolved from attributes value object.
      */
     public function handle(
@@ -57,7 +61,7 @@ final class ParameterAttributesHandler
                 );
             }
 
-            $context = new Context(
+            $context = new ParameterAttributeResolveContext(
                 $parameter,
                 $hereResolveResult->isResolved() ? $hereResolveResult : $resolveResult,
                 $data?->getData() ?? [],
