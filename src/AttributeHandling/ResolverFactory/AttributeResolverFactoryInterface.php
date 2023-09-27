@@ -6,12 +6,12 @@ namespace Yiisoft\Hydrator\AttributeHandling\ResolverFactory;
 
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
-use Yiisoft\Hydrator\NonInstantiableException;
+use Yiisoft\Hydrator\AttributeHandling\Exception\AttributeResolverNonInstantiableException;
 
 interface AttributeResolverFactoryInterface
 {
     /**
-     * @throws NonInstantiableException
+     * @throws AttributeResolverNonInstantiableException
      */
     public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object;
 }

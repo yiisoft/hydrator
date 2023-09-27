@@ -11,10 +11,14 @@ use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
+use Yiisoft\Hydrator\Exception\AbstractClassException;
+use Yiisoft\Hydrator\Exception\NonExistClassException;
+use Yiisoft\Hydrator\Exception\NonPublicConstructorException;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\ObjectFactory\ContainerObjectFactory;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\Tests\Support\AbstractClass;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArray;
 use Yiisoft\Hydrator\Tests\Support\Attribute\FromPredefinedArrayResolver;
@@ -32,6 +36,8 @@ use Yiisoft\Hydrator\Tests\Support\Classes\PreparePropertyClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\SimpleClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\StaticClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\TypeClass;
+use Yiisoft\Hydrator\Tests\Support\PrivateConstructor;
+use Yiisoft\Hydrator\Tests\Support\ProtectedConstructor;
 use Yiisoft\Hydrator\Tests\Support\String42TypeCaster;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
@@ -675,5 +681,37 @@ final class HydratorTest extends TestCase
         $this->assertSame(7, $object->a);
         $this->assertSame(0, $object::$b);
         $this->assertSame(500, $object->c);
+    }
+
+    public function testCreateObjectWithPrivateConstructor(): void
+    {
+        $hydrator = new Hydrator();
+
+        $this->expectException(NonPublicConstructorException::class);
+        $hydrator->create(PrivateConstructor::class);
+    }
+
+    public function testCreateObjectWithProtectedConstructor(): void
+    {
+        $hydrator = new Hydrator();
+
+        $this->expectException(NonPublicConstructorException::class);
+        $hydrator->create(ProtectedConstructor::class);
+    }
+
+    public function testCreateInstanceOfAbstractClass(): void
+    {
+        $hydrator = new Hydrator();
+
+        $this->expectException(AbstractClassException::class);
+        $hydrator->create(AbstractClass::class);
+    }
+
+    public function testCreateNonExistClass(): void
+    {
+        $hydrator = new Hydrator();
+
+        $this->expectException(NonExistClassException::class);
+        $hydrator->create('NonExistClass');
     }
 }

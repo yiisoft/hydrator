@@ -12,7 +12,6 @@ use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryI
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Data;
-use Yiisoft\Hydrator\NonInstantiableException;
 use Yiisoft\Hydrator\Result;
 
 /**
@@ -33,7 +32,6 @@ final class ParameterAttributesHandler
      * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
      * @param Data|null $data Raw data and map to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
      *
-     *@throws NonInstantiableException
      * @return Result The resolved from attributes value object.
      */
     public function handle(

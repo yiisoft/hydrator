@@ -11,7 +11,6 @@ use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryI
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Data;
-use Yiisoft\Hydrator\NonInstantiableException;
 
 /**
  * Handles data attributes that implement {@see DataAttributeInterface}.
@@ -30,8 +29,6 @@ final class DataAttributesHandler
      *
      * @param ReflectionClass $reflectionClass Reflection of class to attributes handle.
      * @param Data $data Current {@see Data} object.
-     *
-     * @throws NonInstantiableException
      *
      * @psalm-param ReflectionAttribute<DataAttributeInterface>[] $reflectionAttributes
      */
