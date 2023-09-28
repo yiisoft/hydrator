@@ -124,7 +124,6 @@ final class Hydrator implements HydratorInterface
         DataInterface $data,
     ): void {
         foreach ($reflectionProperties as $propertyName => $property) {
-
             $resolveResult = $data->getValue($propertyName);
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle(

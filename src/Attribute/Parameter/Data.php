@@ -23,8 +23,7 @@ final class Data implements ParameterAttributeInterface, ParameterAttributeResol
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
         ParameterAttributeResolveContext $context
-    ): Result
-    {
+    ): Result {
         if (!$attribute instanceof self) {
             throw new UnexpectedAttributeException(self::class, $attribute);
         }
