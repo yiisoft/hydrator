@@ -7,6 +7,7 @@ namespace Yiisoft\Hydrator\Tests;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
+use Yiisoft\Hydrator\ArrayData;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
@@ -83,9 +84,11 @@ final class HydratorTest extends TestCase
 
         $object = $hydrator->create(
             SimpleClass::class,
-            ['a' => '1', 'b' => '2', 'c' => '3'],
-            ['b' => 'b'],
-            true,
+            new ArrayData(
+                ['a' => '1', 'b' => '2', 'c' => '3'],
+                ['b' => 'b'],
+                true,
+            ),
         );
 
         $this->assertSame('.', $object->getA());
@@ -100,9 +103,11 @@ final class HydratorTest extends TestCase
         $object = new SimpleClass();
         $hydrator->hydrate(
             $object,
-            ['a' => '1', 'b' => '2', 'c' => '3'],
-            ['b' => 'b'],
-            true,
+            new ArrayData(
+                ['a' => '1', 'b' => '2', 'c' => '3'],
+                ['b' => 'b'],
+                true,
+            ),
         );
 
         $this->assertSame('.', $object->getA());
@@ -144,7 +149,7 @@ final class HydratorTest extends TestCase
         $hydrator = new Hydrator();
 
         $object = new SimpleClass();
-        $hydrator->hydrate($object, $data, $map);
+        $hydrator->hydrate($object, new ArrayData($data, $map));
 
         $this->assertSame('1', $object->getA());
         $this->assertSame('2', $object->getB());
@@ -201,7 +206,7 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator();
 
-        $object = $hydrator->create(UserModel::class, $data, $map);
+        $object = $hydrator->create(UserModel::class, new ArrayData($data, $map));
 
         $this->assertSame('Mike Li', $object->getName());
     }
@@ -538,8 +543,7 @@ final class HydratorTest extends TestCase
         $resolver = new FromPredefinedArrayResolver();
 
         $hydrator = new Hydrator(
-            null,
-            new ContainerAttributeResolverFactory(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
                 new SimpleContainer([
                     FromPredefinedArrayResolver::class => $resolver,
                 ]),

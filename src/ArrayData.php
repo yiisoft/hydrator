@@ -2,22 +2,44 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Internal;
+namespace Yiisoft\Hydrator;
 
-use Yiisoft\Hydrator\Result;
 use Yiisoft\Strings\StringHelper;
 
+use function array_key_exists;
 use function is_array;
 use function is_string;
 use function strlen;
 
 /**
- * A set of static methods to work with data array.
- *
- * @internal
+ * Holds data to hydrate an object from and a map to use when populating an object.
  */
-final class DataExtractor
+final class ArrayData implements DataInterface
 {
+    /**
+     * @param array $data Data to hydrate object from.
+     * @param array $map Object property names mapped to keys in the data array that hydrator will use when hydrating
+     * an object.
+     * @param bool $strict Whether to hydrate properties from the map only.
+     *
+     * @psalm-param array<string,string|list<string>> $map
+     */
+    public function __construct(
+        private array $data = [],
+        private array $map = [],
+        private bool $strict = false,
+    ) {
+    }
+
+    public function getValue(string $name): Result
+    {
+        if ($this->strict && !array_key_exists($name, $this->map)) {
+            return Result::fail();
+        }
+
+        return $this->getValueByPath($this->data, $this->map[$name] ?? $name);
+    }
+
     /**
      * Get value from an array given a path.
      *
@@ -25,7 +47,7 @@ final class DataExtractor
      *
      * @see StringHelper::parsePath()
      */
-    public static function getValueByPath(array $data, string|array $path): Result
+    private function getValueByPath(array $data, string|array $path): Result
     {
         if (is_string($path)) {
             $path = StringHelper::parsePath($path);
@@ -37,7 +59,7 @@ final class DataExtractor
             if (!is_array($currentValue)) {
                 return Result::fail();
             }
-            $result = self::getValueByKey($currentValue, $pathKey);
+            $result = $this->getValueByKey($currentValue, $pathKey);
             if (!$result->isResolved()) {
                 return $result;
             }
@@ -54,7 +76,7 @@ final class DataExtractor
      *
      * @return Result The result object.
      */
-    private static function getValueByKey(array $data, string $pathKey): Result
+    private function getValueByKey(array $data, string $pathKey): Result
     {
         $found = false;
         $result = null;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Internal;
 
 use ReflectionMethod;
-use Yiisoft\Hydrator\Data;
+use Yiisoft\Hydrator\DataInterface;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
 use Yiisoft\Hydrator\Result;
@@ -27,7 +27,7 @@ final class ConstructorArgumentsExtractor
     /**
      * @psalm-return array{0:list<string>,1:array<string,mixed>}
      */
-    public function extract(?ReflectionMethod $constructor, Data $data): array
+    public function extract(?ReflectionMethod $constructor, DataInterface $data): array
     {
         $excludeParameterNames = [];
         $constructorArguments = [];
@@ -43,7 +43,7 @@ final class ConstructorArgumentsExtractor
 
             if ($parameter->isPromoted()) {
                 $excludeParameterNames[] = $parameterName;
-                $resolveResult = $data->resolveValue($parameterName);
+                $resolveResult = $data->getValue($parameterName);
             }
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle(

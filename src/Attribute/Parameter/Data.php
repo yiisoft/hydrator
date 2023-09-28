@@ -15,21 +15,21 @@ use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 final class Data implements ParameterAttributeInterface, ParameterAttributeResolverInterface
 {
-    /**
-     * @param string|string[] $key The data array key.
-     */
     public function __construct(
-        private array|string $key,
+        private string $name,
     ) {
     }
 
-    public function getParameterValue(ParameterAttributeInterface $attribute, ParameterAttributeResolveContext $context): Result
+    public function getParameterValue(
+        ParameterAttributeInterface $attribute,
+        ParameterAttributeResolveContext $context
+    ): Result
     {
         if (!$attribute instanceof self) {
             throw new UnexpectedAttributeException(self::class, $attribute);
         }
 
-        return $context->getData($this->key);
+        return $context->getData()->getValue($this->name);
     }
 
     public function getResolver(): self

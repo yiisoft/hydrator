@@ -6,33 +6,23 @@ namespace Yiisoft\Hydrator\AttributeHandling;
 
 use ReflectionParameter;
 use ReflectionProperty;
-use Yiisoft\Hydrator\HydratorInterface;
-use Yiisoft\Hydrator\Internal\DataExtractor;
-
+use Yiisoft\Hydrator\DataInterface;
 use Yiisoft\Hydrator\Result;
-
-use function is_string;
 
 /**
  * Holds attribute resolving context data.
- *
- * @psalm-import-type MapType from HydratorInterface
  */
 final class ParameterAttributeResolveContext
 {
     /**
      * @param ReflectionParameter|ReflectionProperty $parameter Resolved parameter or property reflection.
      * @param Result $resolveResult The resolved value object.
-     * @param array $data Data array to be used for resolving.
-     * @param array $map Object property names mapped to keys in the data array.
-     *
-     * @psalm-param MapType $map
+     * @param DataInterface $data Data to be used for resolving.
      */
     public function __construct(
         private ReflectionParameter|ReflectionProperty $parameter,
         private Result $resolveResult,
-        private array $data,
-        private array $map,
+        private DataInterface $data,
     ) {
     }
 
@@ -69,27 +59,8 @@ final class ParameterAttributeResolveContext
         return $this->resolveResult->getValue();
     }
 
-    /**
-     * Get data array whole or item by key.
-     *
-     * @param string|string[]|null $key The key to get the data item for. If null, the whole data array is returned.
-     * If an array, the key is treated as a path.
-     *
-     * @return Result The result object.
-     */
-    public function getData(array|string|null $key = null): Result
+    public function getData(): DataInterface
     {
-        if ($key === null) {
-            return Result::success($this->data);
-        }
-
-        if (is_string($key)) {
-            $path = $this->map[$key] ?? $key;
-        } else {
-            $path = implode('.', $key);
-            $path = $this->map[$path] ?? $key;
-        }
-
-        return DataExtractor::getValueByPath($this->data, $path);
+        return $this->data;
     }
 }
