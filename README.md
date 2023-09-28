@@ -89,33 +89,7 @@ You can configure how the hydrator creates or hydrates a specific class using at
 
 ### Mapping 
 
-To map attributes to specific data keys, use `Map` attribute:
-
-```php
-use \Yiisoft\Hydrator\Attribute\Data\Map;
-
-#[Map([
-    'firstName' => 'first_name',
-    'lastName' => 'last_name',
-])]
-final class Person
-{
-    public function __construct(
-        private string $firstName,
-        private string $lastName,
-    ) {}
-}
-
-$person = $hydrator->create(Person::class, [
-    'first_name' => 'John',
-    'last_name' => 'Doe',
-]);
-```
-
-When using the `Map`, you can set `strict` argument to `true`. That instructs the hydrator that all data should be 
-mapped explicitly.
-
-Alternatively you can map each property using `Data` attribute:
+To map attributes to specific data keys, use `Data` attribute:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\Parameter\Data;

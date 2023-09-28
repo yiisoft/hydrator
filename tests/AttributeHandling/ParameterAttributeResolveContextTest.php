@@ -6,6 +6,7 @@ namespace Yiisoft\Hydrator\Tests\AttributeHandling;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Yiisoft\Hydrator\ArrayData;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
@@ -18,13 +19,13 @@ final class ParameterAttributeResolveContextTest extends TestCase
                 private int $age = 42;
             }
         ))->getProperties()[0];
+        $data = new ArrayData(['a' => 5, 'b' => 6]);
 
-        $context = new ParameterAttributeResolveContext($parameter, Result::success(7), ['a' => 5, 'b' => 6], []);
+        $context = new ParameterAttributeResolveContext($parameter, Result::success(7), $data);
 
         $this->assertSame($parameter, $context->getParameter());
         $this->assertTrue($context->isResolved());
         $this->assertSame(7, $context->getResolvedValue());
-        $this->assertSame(5, $context->getData('a')->getValue());
-        $this->assertSame(['a' => 5, 'b' => 6], $context->getData()->getValue());
+        $this->assertSame($data, $context->getData());
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Attribute\Data;
 
-use Yiisoft\Hydrator\Data;
+use Yiisoft\Hydrator\DataInterface;
 
 /**
  * An interface for resolvers of attributes that implement {@see DataAttributeInterface}.
@@ -12,10 +12,10 @@ use Yiisoft\Hydrator\Data;
 interface DataAttributeResolverInterface
 {
     /**
-     * Prepare {@see Data} object that used for hydration.
+     * Prepare data object ({@see DataInterface}) that used for hydration.
      *
      * @param DataAttributeInterface $attribute The attribute to be resolved.
-     * @param Data $data Current {@see Data} object.
+     * @param DataInterface $data Current data object ({@see DataInterface}).
      */
-    public function prepareData(DataAttributeInterface $attribute, Data $data): void;
+    public function prepareData(DataAttributeInterface $attribute, DataInterface $data): DataInterface;
 }

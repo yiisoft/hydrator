@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Hydrator\ArrayData;
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
@@ -50,7 +51,7 @@ final class DataTest extends TestCase
             #[Data('nested.n')]
             public ?int $y = null;
 
-            #[Data(['nested', 'nested2', 'n'])]
+            #[Data('nested.nested2.n')]
             public ?int $z = null;
         };
 
@@ -87,20 +88,22 @@ final class DataTest extends TestCase
 
         $hydrator->hydrate(
             $object,
-            data: [
-                'value' => 1,
-                'nested' => [
-                    'n' => 2,
-                    'nested2' => [
-                        'n' => 3,
+            new ArrayData(
+                data: [
+                    'value' => 1,
+                    'nested' => [
+                        'n' => 2,
+                        'nested2' => [
+                            'n' => 3,
+                        ],
                     ],
                 ],
-            ],
-            map: [
-                'a' => 'value',
-                'b' => ['nested', 'n'],
-                'c' => 'nested.nested2.n',
-            ]
+                map: [
+                    'a' => 'value',
+                    'b' => ['nested', 'n'],
+                    'c' => 'nested.nested2.n',
+                ],
+            ),
         );
 
         $this->assertSame(1, $object->x);

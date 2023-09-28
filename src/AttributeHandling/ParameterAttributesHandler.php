@@ -11,7 +11,8 @@ use RuntimeException;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
-use Yiisoft\Hydrator\Data;
+use Yiisoft\Hydrator\ArrayData;
+use Yiisoft\Hydrator\DataInterface;
 use Yiisoft\Hydrator\Result;
 
 /**
@@ -30,16 +31,17 @@ final class ParameterAttributesHandler
      * @param ReflectionParameter|ReflectionProperty $parameter Parameter or property reflection to handle attributes
      * from.
      * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
-     * @param Data|null $data Raw data and map to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
+     * @param DataInterface|null $data Raw data and map to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
      *
      * @return Result The resolved from attributes value object.
      */
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,
         ?Result $resolveResult = null,
-        ?Data $data = null
+        ?DataInterface $data = null
     ): Result {
         $resolveResult ??= Result::fail();
+        $data ??= new ArrayData();
 
         $reflectionAttributes = $parameter
             ->getAttributes(ParameterAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
@@ -62,8 +64,7 @@ final class ParameterAttributesHandler
             $context = new ParameterAttributeResolveContext(
                 $parameter,
                 $hereResolveResult->isResolved() ? $hereResolveResult : $resolveResult,
-                $data?->getData() ?? [],
-                $data?->getMap() ?? [],
+                $data,
             );
 
             $hereResolveResult = $resolver->getParameterValue($attribute, $context);

@@ -21,10 +21,10 @@ use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
 use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
 
+use function is_array;
+
 /**
  * Creates or hydrate objects from a set of raw data.
- *
- * @psalm-import-type MapType from HydratorInterface
  */
 final class Hydrator implements HydratorInterface
 {
@@ -67,35 +67,41 @@ final class Hydrator implements HydratorInterface
         );
     }
 
-    public function hydrate(object $object, array $data = [], array $map = [], bool $strict = false): void
+    public function hydrate(object $object, array|DataInterface $data = []): void
     {
-        $dataObject = new Data($data, $map, $strict);
+        if (is_array($data)) {
+            $data = new ArrayData($data);
+        }
+
         $reflectionClass = new ReflectionClass($object);
 
-        $this->dataAttributesHandler->handle($reflectionClass, $dataObject);
+        $data = $this->dataAttributesHandler->handle($reflectionClass, $data);
 
         $this->hydrateInternal(
             $object,
             ReflectionFilter::filterProperties($reflectionClass),
-            $dataObject
+            $data
         );
     }
 
-    public function create(string $class, array $data = [], array $map = [], bool $strict = false): object
+    public function create(string $class, array|DataInterface $data = []): object
     {
         if (!class_exists($class)) {
             throw new NonExistClassException($class);
         }
 
+        if (is_array($data)) {
+            $data = new ArrayData($data);
+        }
+
         $reflectionClass = new ReflectionClass($class);
         $constructor = $reflectionClass->getConstructor();
 
-        $dataObject = new Data($data, $map, $strict);
-        $this->dataAttributesHandler->handle($reflectionClass, $dataObject);
+        $data = $this->dataAttributesHandler->handle($reflectionClass, $data);
 
         [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->extract(
             $constructor,
-            $dataObject,
+            $data,
         );
 
         $object = $this->objectFactory->create($reflectionClass, $constructorArguments);
@@ -103,7 +109,7 @@ final class Hydrator implements HydratorInterface
         $this->hydrateInternal(
             $object,
             ReflectionFilter::filterProperties($reflectionClass, $excludeProperties),
-            $dataObject
+            $data
         );
 
         return $object;
@@ -111,15 +117,14 @@ final class Hydrator implements HydratorInterface
 
     /**
      * @param array<string, ReflectionProperty> $reflectionProperties
-     * @psalm-param MapType $map
      */
     private function hydrateInternal(
         object $object,
         array $reflectionProperties,
-        Data $data,
+        DataInterface $data,
     ): void {
         foreach ($reflectionProperties as $propertyName => $property) {
-            $resolveResult = $data->resolveValue($propertyName);
+            $resolveResult = $data->getValue($propertyName);
 
             $attributesHandleResult = $this->parameterAttributesHandler->handle(
                 $property,

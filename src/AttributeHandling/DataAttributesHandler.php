@@ -10,7 +10,7 @@ use RuntimeException;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
-use Yiisoft\Hydrator\Data;
+use Yiisoft\Hydrator\DataInterface;
 
 /**
  * Handles data attributes that implement {@see DataAttributeInterface}.
@@ -28,11 +28,11 @@ final class DataAttributesHandler
      * Handle data attributes.
      *
      * @param ReflectionClass $reflectionClass Reflection of class to attributes handle.
-     * @param Data $data Current {@see Data} object.
+     * @param DataInterface $data Current data object ({@see DataInterface}).
      *
      * @psalm-param ReflectionAttribute<DataAttributeInterface>[] $reflectionAttributes
      */
-    public function handle(ReflectionClass $reflectionClass, Data $data): void
+    public function handle(ReflectionClass $reflectionClass, DataInterface $data): DataInterface
     {
         $reflectionAttributes = $reflectionClass->getAttributes(
             DataAttributeInterface::class,
@@ -53,7 +53,9 @@ final class DataAttributesHandler
                 );
             }
 
-            $resolver->prepareData($attribute, $data);
+            $data = $resolver->prepareData($attribute, $data);
         }
+
+        return $data;
     }
 }

@@ -37,19 +37,6 @@ final class ReadMeTest extends TestCase
         $this->assertSame('V8', $car->getEngine()->getName());
     }
 
-    public function testMapping1(): void
-    {
-        $hydrator = new Hydrator();
-
-        $person = $hydrator->create(Person1::class, [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-        ]);
-
-        $this->assertSame('John', $person->getFirstName());
-        $this->assertSame('Doe', $person->getLastName());
-    }
-
     public function testMapping2(): void
     {
         $hydrator = new Hydrator();
