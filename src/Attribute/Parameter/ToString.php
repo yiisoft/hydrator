@@ -8,7 +8,7 @@ use Attribute;
 use Stringable;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\AttributeHandling\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 
 /**
  * Converts the resolved value to string. Non-resolved values is skip.

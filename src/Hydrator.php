@@ -9,6 +9,7 @@ use ReflectionProperty;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\AttributeHandling\DataAttributesHandler;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
+use Yiisoft\Hydrator\Exception\NonExistClassException;
 use Yiisoft\Hydrator\Internal\ConstructorArgumentsExtractor;
 use Yiisoft\Hydrator\Internal\ReflectionFilter;
 use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
@@ -83,16 +84,17 @@ final class Hydrator implements HydratorInterface
     public function create(string $class, array $data = [], array $map = [], bool $strict = false): object
     {
         if (!class_exists($class)) {
-            throw new NonInstantiableException();
+            throw new NonExistClassException($class);
         }
 
-        $dataObject = new Data($data, $map, $strict);
         $reflectionClass = new ReflectionClass($class);
+        $constructor = $reflectionClass->getConstructor();
 
+        $dataObject = new Data($data, $map, $strict);
         $this->dataAttributesHandler->handle($reflectionClass, $dataObject);
 
         [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->extract(
-            $reflectionClass,
+            $constructor,
             $dataObject,
         );
 
@@ -110,8 +112,6 @@ final class Hydrator implements HydratorInterface
     /**
      * @param array<string, ReflectionProperty> $reflectionProperties
      * @psalm-param MapType $map
-     *
-     * @throws NonInstantiableException
      */
     private function hydrateInternal(
         object $object,

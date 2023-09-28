@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Internal;
 
-use ReflectionClass;
+use ReflectionMethod;
 use Yiisoft\Hydrator\Data;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
@@ -27,12 +27,11 @@ final class ConstructorArgumentsExtractor
     /**
      * @psalm-return array{0:list<string>,1:array<string,mixed>}
      */
-    public function extract(ReflectionClass $reflectionClass, Data $data): array
+    public function extract(?ReflectionMethod $constructor, Data $data): array
     {
         $excludeParameterNames = [];
         $constructorArguments = [];
 
-        $constructor = $reflectionClass->getConstructor();
         if ($constructor === null) {
             return [$excludeParameterNames, $constructorArguments];
         }

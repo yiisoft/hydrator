@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\AttributeHandling\ResolverFactory;
 
+use LogicException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use RuntimeException;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
-use Yiisoft\Hydrator\NonInstantiableException;
+use Yiisoft\Hydrator\AttributeHandling\Exception\AttributeResolverNonInstantiableException;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
 use function is_object;
@@ -26,7 +26,6 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
 
     /**
      * @throws ContainerExceptionInterface
-     * @throws NonInstantiableException
      */
     public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object
     {
@@ -36,17 +35,18 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
         }
 
         if (!$this->container->has($resolver)) {
-            throw new NonInstantiableException(
+            throw new AttributeResolverNonInstantiableException(
                 sprintf(
                     'Class "%s" does not exist.',
                     $resolver,
                 ),
             );
         }
+
         $result = $this->container->get($resolver);
 
         if (!is_object($result)) {
-            throw new RuntimeException(
+            throw new LogicException(
                 sprintf(
                     'Resolver "%s" must be an object, "%s" given.',
                     $resolver,

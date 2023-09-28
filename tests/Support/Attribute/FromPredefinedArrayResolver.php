@@ -11,7 +11,7 @@ use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\Result;
-use Yiisoft\Hydrator\AttributeHandling\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 
 use function array_key_exists;
 

@@ -5,27 +5,14 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\AttributeHandling\ResolverFactory;
 
 use ReflectionClass;
-use ReflectionException;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
-use Yiisoft\Hydrator\NonInstantiableException;
-use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
+use Yiisoft\Hydrator\AttributeHandling\Exception\AttributeResolverNonInstantiableException;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
 use function is_string;
 
 final class ReflectionAttributeResolverFactory implements AttributeResolverFactoryInterface
 {
-    private ReflectionObjectFactory $objectFactory;
-
-    public function __construct()
-    {
-        $this->objectFactory = new ReflectionObjectFactory();
-    }
-
-    /**
-     * @throws NonInstantiableException
-     * @throws ReflectionException
-     */
     public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object
     {
         $resolver = $attribute->getResolver();
@@ -34,15 +21,46 @@ final class ReflectionAttributeResolverFactory implements AttributeResolverFacto
         }
 
         if (!class_exists($resolver)) {
-            throw new NonInstantiableException(
+            throw new AttributeResolverNonInstantiableException(
                 sprintf(
                     'Class "%s" does not exist.',
                     $resolver,
                 ),
             );
         }
-        $reflectionClass = new ReflectionClass($resolver);
 
-        return $this->objectFactory->create($reflectionClass, []);
+        $reflectionClass = new ReflectionClass($resolver);
+        if ($reflectionClass->isAbstract()) {
+            throw new AttributeResolverNonInstantiableException(
+                sprintf(
+                    '%s is not instantiable because it is abstract.',
+                    $reflectionClass->getName(),
+                ),
+            );
+        }
+
+        $constructor = $reflectionClass->getConstructor();
+        if ($constructor !== null) {
+            if (!$constructor->isPublic()) {
+                throw new AttributeResolverNonInstantiableException(
+                    sprintf(
+                        'Class "%s" is not instantiable because contain non-public constructor.',
+                        $constructor->getDeclaringClass()->getName(),
+                    ),
+                );
+            }
+
+            if ($constructor->getNumberOfRequiredParameters() > 0) {
+                throw new AttributeResolverNonInstantiableException(
+                    sprintf(
+                        'Class "%s" cannot be instantiated because it has %d required parameters in constructor.',
+                        $constructor->getDeclaringClass()->getName(),
+                        $constructor->getNumberOfRequiredParameters(),
+                    )
+                );
+            }
+        }
+
+        return $reflectionClass->newInstance();
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use Yiisoft\Hydrator\Exception\NonInstantiableException;
+
 /**
  * Creates or hydrate objects from a set of raw data.
  *

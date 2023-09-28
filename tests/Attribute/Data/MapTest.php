@@ -14,7 +14,7 @@ use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapNonStrictClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\MapStrictClass;
-use Yiisoft\Hydrator\AttributeHandling\UnexpectedAttributeException;
+use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class MapTest extends TestCase
