@@ -638,7 +638,7 @@ final class HydratorTest extends TestCase
         $object = new class () {
             public ?int $value = null;
         };
-        $hydrator->hydrate($object, ['a' => ['b' => 23]], ['value' => 'a.b.c']);
+        $hydrator->hydrate($object, ['a' => ['b' => 23]]);
 
         $this->assertNull($object->value);
     }
