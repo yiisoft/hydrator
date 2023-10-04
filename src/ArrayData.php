@@ -13,6 +13,8 @@ use function strlen;
 
 /**
  * Holds data to hydrate an object from and a map to use when populating an object.
+ *
+ * @psalm-type MapType=array<string,string|list<string>>
  */
 final class ArrayData implements DataInterface
 {
@@ -22,7 +24,7 @@ final class ArrayData implements DataInterface
      * an object.
      * @param bool $strict Whether to hydrate properties from the map only.
      *
-     * @psalm-param array<string,string|list<string>> $map
+     * @psalm-param MapType $map
      */
     public function __construct(
         private array $data = [],
