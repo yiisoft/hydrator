@@ -46,7 +46,6 @@ final class ParameterAttributesHandler
         $reflectionAttributes = $parameter
             ->getAttributes(ParameterAttributeInterface::class, ReflectionAttribute::IS_INSTANCEOF);
 
-        $hereResolveResult = Result::fail();
         foreach ($reflectionAttributes as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
 
@@ -61,15 +60,14 @@ final class ParameterAttributesHandler
                 );
             }
 
-            $context = new ParameterAttributeResolveContext(
-                $parameter,
-                $hereResolveResult->isResolved() ? $hereResolveResult : $resolveResult,
-                $data,
-            );
+            $context = new ParameterAttributeResolveContext($parameter, $resolveResult, $data);
 
-            $hereResolveResult = $resolver->getParameterValue($attribute, $context);
+            $tryResolveResult = $resolver->getParameterValue($attribute, $context);
+            if ($tryResolveResult->isResolved()) {
+                $resolveResult = $tryResolveResult;
+            }
         }
 
-        return $hereResolveResult;
+        return $resolveResult;
     }
 }

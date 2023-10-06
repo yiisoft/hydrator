@@ -12,6 +12,7 @@ use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ReflectionAttributeResolv
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewer;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewerResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CustomValue;
+use Yiisoft\Hydrator\Tests\Support\Attribute\NoResolveAttr;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -43,6 +44,25 @@ final class ParameterAttributesHandlerTest extends TestCase
         $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());
 
         $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
+
+        $result = $handler->handle($parameter);
+
+        $this->assertSame('42', $result->getValue());
+    }
+
+    public function testNotResolvedAttributeAfterResolved(): void
+    {
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());
+
+        $parameter = TestHelper::getFirstParameter(
+            static function(
+                #[CustomValue('42')]
+                #[NoResolveAttr]
+                int $a
+            ) {
+                return null;
+            }
+        );
 
         $result = $handler->handle($parameter);
 
