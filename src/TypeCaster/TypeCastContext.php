@@ -13,13 +13,18 @@ final class TypeCastContext
 {
     public function __construct(
         private HydratorInterface $hydrator,
-        private ReflectionParameter|ReflectionProperty $item,
+        private ReflectionParameter|ReflectionProperty $reflection,
     ) {
+    }
+
+    public function getReflection(): ReflectionParameter|ReflectionProperty
+    {
+        return $this->reflection;
     }
 
     public function getReflectionType(): ?ReflectionType
     {
-        return $this->item->getType();
+        return $this->reflection->getType();
     }
 
     public function getHydrator(): HydratorInterface
