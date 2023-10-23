@@ -108,7 +108,7 @@ final class PhpNativeTypeCaster implements TypeCasterInterface
                         return Result::success((int) $value);
                     }
                     if ($value instanceof Stringable || is_string($value)) {
-                        return Result::success((int) NumericHelper::normalize((string) $value));
+                        return Result::success((int) NumericHelper::normalize($value));
                     }
                     break;
 
@@ -117,7 +117,7 @@ final class PhpNativeTypeCaster implements TypeCasterInterface
                         return Result::success((float) $value);
                     }
                     if ($value instanceof Stringable || is_string($value)) {
-                        return Result::success((float) NumericHelper::normalize((string) $value));
+                        return Result::success((float) NumericHelper::normalize($value));
                     }
                     break;
 
