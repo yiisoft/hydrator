@@ -29,7 +29,7 @@
         "php": "^8.0",
         "psr/container": "^2.0",
         "yiisoft/injector": "^1.1",
-        "yiisoft/strings": "^2.1"
+        "yiisoft/strings": "^2.3"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^4.4",
