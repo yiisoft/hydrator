@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\AttributeHandling\ResolverFactory;
 
-use LogicException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 use Yiisoft\Hydrator\AttributeHandling\Exception\AttributeResolverNonInstantiableException;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
-use function is_object;
 use function is_string;
 
 final class ContainerAttributeResolverFactory implements AttributeResolverFactoryInterface
@@ -27,7 +25,7 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
     /**
      * @throws ContainerExceptionInterface
      */
-    public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object
+    public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): mixed
     {
         $resolver = $attribute->getResolver();
         if (!is_string($resolver)) {
@@ -43,18 +41,6 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
             );
         }
 
-        $result = $this->container->get($resolver);
-
-        if (!is_object($result)) {
-            throw new LogicException(
-                sprintf(
-                    'Resolver "%s" must be an object, "%s" given.',
-                    $resolver,
-                    get_debug_type($result),
-                ),
-            );
-        }
-
-        return $result;
+        return $this->container->get($resolver);
     }
 }

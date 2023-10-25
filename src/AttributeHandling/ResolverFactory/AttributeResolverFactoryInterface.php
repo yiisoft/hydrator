@@ -13,5 +13,5 @@ interface AttributeResolverFactoryInterface
     /**
      * @throws AttributeResolverNonInstantiableException
      */
-    public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object;
+    public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): mixed;
 }
