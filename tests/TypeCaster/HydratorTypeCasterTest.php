@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionFunction;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Result;
+use Yiisoft\Hydrator\Tests\Support\PrivateConstructorObject;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
@@ -47,6 +48,11 @@ final class HydratorTypeCasterTest extends TestCase
                 Result::success(new StringableObject('hello')),
                 ['string' => 'hello'],
                 $this->createContext(static fn(int|StringableObject $object) => null),
+            ],
+            'array to non-instantiable object' => [
+                Result::fail(),
+                ['string' => 'hello'],
+                $this->createContext(static fn(PrivateConstructorObject $object) => null),
             ],
         ];
     }

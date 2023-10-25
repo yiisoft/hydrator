@@ -30,6 +30,11 @@ final class HydratorTypeCasterTest extends TestCase
                 ['string' => 'hello'],
                 $this->createContext(static fn(StringableObject|(Stringable&Countable) $object) => null),
             ],
+            'incompatible array to union type with intersection type' => [
+                Result::fail(),
+                ['var' => 'hello'],
+                $this->createContext(static fn(StringableObject|(Stringable&Countable) $object) => null),
+            ],
         ];
     }
 
