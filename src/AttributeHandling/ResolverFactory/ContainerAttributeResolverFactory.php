@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\AttributeHandling\ResolverFactory;
 
-use LogicException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 use Yiisoft\Hydrator\AttributeHandling\Exception\AttributeResolverNonInstantiableException;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
-use function is_object;
 use function is_string;
 
 final class ContainerAttributeResolverFactory implements AttributeResolverFactoryInterface
