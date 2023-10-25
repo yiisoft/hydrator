@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\TypeCaster;
 
-use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionUnionType;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
@@ -57,16 +56,12 @@ final class HydratorTypeCaster implements TypeCasterInterface
 
         $class = $type->getName();
 
-        $reflection = new ReflectionClass($class);
-        if ($reflection->isInstantiable()) {
-            try {
-                $object = $hydrator->create($class, $value);
-            } catch (NonInstantiableException) {
-                return Result::fail();
-            }
-            return Result::success($object);
+        try {
+            $object = $hydrator->create($class, $value);
+        } catch (NonInstantiableException) {
+            return Result::fail();
         }
 
-        return Result::fail();
+        return Result::success($object);
     }
 }
