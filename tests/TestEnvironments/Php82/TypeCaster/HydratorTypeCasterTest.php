@@ -12,7 +12,6 @@ use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
-use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
 
 final class HydratorTypeCasterTest extends TestCase
 {
@@ -24,12 +23,17 @@ final class HydratorTypeCasterTest extends TestCase
                 ['string' => 'hello'],
                 static fn(Stringable&Countable $object) => null,
             ],
-            'array to union type with intersection type' => [
+            'array to object|intersection' => [
                 Result::success(new StringableObject('hello')),
                 ['string' => 'hello'],
                 static fn(StringableObject|(Stringable&Countable) $object) => null,
             ],
-            'incompatible array to union type with intersection type' => [
+            'array to intersection|object' => [
+                Result::success(new StringableObject('hello')),
+                ['string' => 'hello'],
+                static fn((Stringable&Countable)|StringableObject $object) => null,
+            ],
+            'incompatible array to object|intersection' => [
                 Result::fail(),
                 ['var' => 'hello'],
                 static fn(StringableObject|(Stringable&Countable) $object) => null,
