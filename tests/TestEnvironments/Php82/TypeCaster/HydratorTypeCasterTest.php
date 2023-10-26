@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TypeCaster;
 
+use Closure;
 use Countable;
 use PHPUnit\Framework\TestCase;
 use Stringable;
@@ -21,17 +22,17 @@ final class HydratorTypeCasterTest extends TestCase
             'array to intersection type' => [
                 Result::fail(),
                 ['string' => 'hello'],
-                TestHelper::createTypeCastContext(static fn(Stringable&Countable $object) => null),
+                static fn(Stringable&Countable $object) => null,
             ],
             'array to union type with intersection type' => [
                 Result::success(new StringableObject('hello')),
                 ['string' => 'hello'],
-                TestHelper::createTypeCastContext(static fn(StringableObject|(Stringable&Countable) $object) => null),
+                static fn(StringableObject|(Stringable&Countable) $object) => null,
             ],
             'incompatible array to union type with intersection type' => [
                 Result::fail(),
                 ['var' => 'hello'],
-                TestHelper::createTypeCastContext(static fn(StringableObject|(Stringable&Countable) $object) => null),
+                static fn(StringableObject|(Stringable&Countable) $object) => null,
             ],
         ];
     }
@@ -39,9 +40,10 @@ final class HydratorTypeCasterTest extends TestCase
     /**
      * @dataProvider dataBase
      */
-    public function testBase(Result $expected, mixed $value, TypeCastContext $context): void
+    public function testBase(Result $expected, mixed $value, Closure $closure): void
     {
         $typeCaster = new HydratorTypeCaster();
+        $context = TestHelper::createTypeCastContext($closure);
 
         $result = $typeCaster->cast($value, $context);
 
