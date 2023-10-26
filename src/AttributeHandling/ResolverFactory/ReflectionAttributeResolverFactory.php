@@ -33,7 +33,7 @@ final class ReflectionAttributeResolverFactory implements AttributeResolverFacto
         if ($reflectionClass->isAbstract()) {
             throw new AttributeResolverNonInstantiableException(
                 sprintf(
-                    '%s is not instantiable because it is abstract.',
+                    '"%s" is not instantiable because it is abstract.',
                     $reflectionClass->getName(),
                 ),
             );
