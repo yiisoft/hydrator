@@ -14,7 +14,7 @@ final class NonPublicConstructorExceptionTest extends TestCase
     public function testWithPublicConstructor(): void
     {
         $reflection = (new ReflectionObject(
-            new class() {
+            new class () {
                 public function __construct()
                 {
                 }
