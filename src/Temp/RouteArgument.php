@@ -9,6 +9,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
 /**
  * @codeCoverageIgnore
+ * @infection-ignore-all
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
 final class RouteArgument implements ParameterAttributeInterface
