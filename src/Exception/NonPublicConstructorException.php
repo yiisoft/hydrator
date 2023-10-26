@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Exception;
 
+use LogicException;
 use ReflectionMethod;
 
 final class NonPublicConstructorException extends NonInstantiableException
 {
     public function __construct(ReflectionMethod $constructor)
     {
-        $type = $this->getConstructorType($constructor);
         parent::__construct(
             sprintf(
-                '%s is not instantiable because contain non-public%s constructor.',
+                '%s is not instantiable because contain non-public (%s) constructor.',
                 $constructor->getDeclaringClass()->getName(),
-                $type !== null ? ' (' . $type . ')' : '',
+                $this->getConstructorType($constructor),
             ),
         );
     }
 
-    private function getConstructorType(ReflectionMethod $constructor): ?string
+    private function getConstructorType(ReflectionMethod $constructor): string
     {
         if ($constructor->isPrivate()) {
             return 'private';
@@ -30,6 +30,8 @@ final class NonPublicConstructorException extends NonInstantiableException
             return 'protected';
         }
 
-        return null;
+        throw new LogicException(
+            'Exception "NonPublicConstructorException" can be used only for non-public constructors.'
+        );
     }
 }

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Exception;
 
+use ReflectionMethod;
+
 final class WrongConstructorArgumentsCountException extends NonInstantiableException
 {
-    public function __construct(\ReflectionMethod $constructor, int $countArguments)
+    public function __construct(ReflectionMethod $constructor, int $countArguments)
     {
         parent::__construct(
             sprintf(

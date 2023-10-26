@@ -7,6 +7,9 @@ namespace Yiisoft\Hydrator\Temp;
 use Attribute;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
 final class RouteArgument implements ParameterAttributeInterface
 {
