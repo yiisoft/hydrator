@@ -16,6 +16,7 @@ use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolve
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
+use Yiisoft\Hydrator\Tests\Support\Classes\DiNonExists;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiSingle;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiSingleConstructor;
 use Yiisoft\Hydrator\Tests\Support\Classes\DiSingleNulledWithDefault;
@@ -48,6 +49,9 @@ final class DiTest extends TestCase
         $hydrator = $this->createHydrator();
 
         $this->expectException(DiNotFoundException::class);
+        $this->expectExceptionMessage(
+            'Class property "' . DiSingleWithoutType::class . '::$engine" without type not resolved.'
+        );
         $hydrator->create(DiSingleWithoutType::class);
     }
 
@@ -77,11 +81,26 @@ final class DiTest extends TestCase
 
         $this->assertInstanceOf(DiNotFoundException::class, $exception);
         $this->assertSame(
-            'Class property "'
-            . DiSingle::class
-            . '::$engine" with type "'
-            . EngineInterface::class
-            . '" not resolved.',
+            'Class property "' . DiSingle::class . '::$engine" with type "' . EngineInterface::class . '" not resolved.',
+            $exception->getMessage()
+        );
+        $this->assertInstanceOf(NotFoundExceptionInterface::class, $exception->getPrevious());
+    }
+
+    public function testWithNonExistsId(): void
+    {
+        $hydrator = $this->createHydrator();
+
+        $exception = null;
+        try {
+            $hydrator->create(DiNonExists::class);
+        } catch (Throwable $e) {
+            $exception = $e;
+        }
+
+        $this->assertInstanceOf(DiNotFoundException::class, $exception);
+        $this->assertSame(
+            'Class property "' . DiNonExists::class . '::$engine" without type not resolved.',
             $exception->getMessage()
         );
         $this->assertInstanceOf(NotFoundExceptionInterface::class, $exception->getPrevious());
