@@ -12,7 +12,7 @@ final class AbstractClassException extends NonInstantiableException
     {
         parent::__construct(
             sprintf(
-                '%s is not instantiable because it is abstract.',
+                '"%s" is not instantiable because it is abstract.',
                 $reflectionClass->getName(),
             ),
         );

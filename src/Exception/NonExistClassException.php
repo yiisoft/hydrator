@@ -10,7 +10,7 @@ final class NonExistClassException extends NonInstantiableException
     {
         parent::__construct(
             sprintf(
-                'Class %s not exist.',
+                'Class "%s" not exist.',
                 $class
             ),
         );
