@@ -19,17 +19,17 @@ final class PhpNativeTypeCasterTest extends TestCase
             'int to object|int|string' => [
                 Result::success(42),
                 42,
-                static fn(StringableObject|int|string $a) => null
+                static fn(StringableObject|int|string $a) => null,
             ],
             'string to object|int|string' => [
                 Result::success('42'),
                 '42',
-                static fn(StringableObject|int|string $a) => null
+                static fn(StringableObject|int|string $a) => null,
             ],
             'string to object|int' => [
                 Result::success(42),
                 '42',
-                static fn(StringableObject|int $a) => null
+                static fn(StringableObject|int $a) => null,
             ],
         ];
     }

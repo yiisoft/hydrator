@@ -18,12 +18,12 @@ final class PhpNativeTypeCasterTest extends TestCase
             'string to int' => [
                 Result::success(42),
                 '42',
-                static fn(int $a) => null
+                static fn(int $a) => null,
             ],
             'string to float' => [
                 Result::success(42.52),
                 '42.52',
-                static fn(float $a) => null
+                static fn(float $a) => null,
             ],
         ];
     }
