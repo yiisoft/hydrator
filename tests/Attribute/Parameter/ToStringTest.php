@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Hydrator\ArrayData;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
+use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\Tests\Support\Attribute\Counter;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CounterResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
+use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class ToStringTest extends TestCase
@@ -33,7 +37,25 @@ final class ToStringTest extends TestCase
     /**
      * @dataProvider dataBase
      */
-    public function testBase(string $expected, mixed $value): void
+    public function testBase(mixed $expected, mixed $value): void
+    {
+        $attribute = new ToString();
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(string $a) => null),
+            Result::success($value),
+            new ArrayData(),
+        );
+
+        $result = $attribute->getParameterValue($attribute, $context);
+
+        $this->assertSame(true, $result->isResolved());
+        $this->assertSame($expected, $result->getValue());
+    }
+
+    /**
+     * @dataProvider dataBase
+     */
+    public function testBaseWithHydrator(string $expected, mixed $value): void
     {
         $hydrator = new Hydrator();
 

@@ -708,6 +708,7 @@ final class HydratorTest extends TestCase
         $hydrator = new Hydrator();
 
         $this->expectException(AbstractClassException::class);
+        $this->expectExceptionMessage('"' . AbstractClass::class . '" is not instantiable because it is abstract.');
         $hydrator->create(AbstractClass::class);
     }
 
@@ -716,6 +717,7 @@ final class HydratorTest extends TestCase
         $hydrator = new Hydrator();
 
         $this->expectException(NonExistClassException::class);
+        $this->expectExceptionMessage('Class "NonExistClass" not exist.');
         $hydrator->create('NonExistClass');
     }
 }

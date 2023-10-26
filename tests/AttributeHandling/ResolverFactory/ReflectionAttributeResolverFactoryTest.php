@@ -14,6 +14,7 @@ use Yiisoft\Hydrator\Tests\Support\Attribute\CustomResolverAttr;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CustomValue;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ParameterizedResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\PrivateConstructorResolver;
+use Yiisoft\Hydrator\Tests\Support\Attribute\ResolverWithConstructorWithoutParameters;
 
 final class ReflectionAttributeResolverFactoryTest extends TestCase
 {
@@ -79,5 +80,15 @@ final class ReflectionAttributeResolverFactoryTest extends TestCase
             'Class "' . ParameterizedResolver::class . '" cannot be instantiated because it has 1 required parameters in constructor.'
         );
         $factory->create($attribute);
+    }
+
+    public function testConstructorWithoutParameters(): void
+    {
+        $attribute = new CustomResolverAttr(ResolverWithConstructorWithoutParameters::class);
+        $factory = new ReflectionAttributeResolverFactory();
+
+        $resolver = $factory->create($attribute);
+
+        $this->assertInstanceOf(ResolverWithConstructorWithoutParameters::class, $resolver);
     }
 }

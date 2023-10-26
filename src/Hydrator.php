@@ -141,9 +141,11 @@ final class Hydrator implements HydratorInterface
                     new TypeCastContext($this, $property),
                 );
                 if ($result->isResolved()) {
+                    // @codeCoverageIgnoreStart
                     if (PHP_VERSION_ID < 80100) {
                         $property->setAccessible(true);
                     }
+                    // @codeCoverageIgnoreEnd
                     $property->setValue($object, $result->getValue());
                 }
             }

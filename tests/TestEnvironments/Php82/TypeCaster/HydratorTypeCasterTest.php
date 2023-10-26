@@ -7,13 +7,11 @@ namespace TypeCaster;
 use Closure;
 use Countable;
 use PHPUnit\Framework\TestCase;
-use ReflectionFunction;
 use Stringable;
-use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
+use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
-use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
 
 final class HydratorTypeCasterTest extends TestCase
 {
@@ -23,17 +21,22 @@ final class HydratorTypeCasterTest extends TestCase
             'array to intersection type' => [
                 Result::fail(),
                 ['string' => 'hello'],
-                $this->createContext(static fn(Stringable&Countable $object) => null),
+                static fn(Stringable&Countable $object) => null,
             ],
-            'array to union type with intersection type' => [
+            'array to object|intersection' => [
                 Result::success(new StringableObject('hello')),
                 ['string' => 'hello'],
-                $this->createContext(static fn(StringableObject|(Stringable&Countable) $object) => null),
+                static fn(StringableObject|(Stringable&Countable) $object) => null,
             ],
-            'incompatible array to union type with intersection type' => [
+            'array to intersection|object' => [
+                Result::success(new StringableObject('hello')),
+                ['string' => 'hello'],
+                static fn((Stringable&Countable)|StringableObject $object) => null,
+            ],
+            'incompatible array to object|intersection' => [
                 Result::fail(),
                 ['var' => 'hello'],
-                $this->createContext(static fn(StringableObject|(Stringable&Countable) $object) => null),
+                static fn(StringableObject|(Stringable&Countable) $object) => null,
             ],
         ];
     }
@@ -41,21 +44,14 @@ final class HydratorTypeCasterTest extends TestCase
     /**
      * @dataProvider dataBase
      */
-    public function testBase(Result $expected, mixed $value, TypeCastContext $context): void
+    public function testBase(Result $expected, mixed $value, Closure $closure): void
     {
         $typeCaster = new HydratorTypeCaster();
+        $context = TestHelper::createTypeCastContext($closure);
 
         $result = $typeCaster->cast($value, $context);
 
         $this->assertSame($expected->isResolved(), $result->isResolved());
         $this->assertEquals($expected->getValue(), $result->getValue());
-    }
-
-    private function createContext(Closure $fn): TypeCastContext
-    {
-        return new TypeCastContext(
-            new Hydrator(),
-            (new ReflectionFunction($fn))->getParameters()[0],
-        );
     }
 }

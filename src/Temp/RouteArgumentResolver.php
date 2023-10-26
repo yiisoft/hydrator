@@ -15,6 +15,7 @@ use function array_key_exists;
 
 /**
  * @codeCoverageIgnore
+ * @infection-ignore-all
  */
 final class RouteArgumentResolver implements ParameterAttributeResolverInterface
 {
