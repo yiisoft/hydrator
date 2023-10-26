@@ -13,6 +13,9 @@ use Yiisoft\Router\CurrentRoute;
 
 use function array_key_exists;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class RouteArgumentResolver implements ParameterAttributeResolverInterface
 {
     public function __construct(

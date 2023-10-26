@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Exception;
 
+use LogicException;
 use ReflectionMethod;
 
 final class NonPublicConstructorException extends NonInstantiableException
@@ -30,6 +31,8 @@ final class NonPublicConstructorException extends NonInstantiableException
             return 'protected';
         }
 
-        return null;
+        throw new LogicException(
+            'Exception "NonPublicConstructorException" can be used only for non-public constructors.'
+        );
     }
 }
