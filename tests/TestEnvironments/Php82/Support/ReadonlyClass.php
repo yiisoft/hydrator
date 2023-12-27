@@ -9,7 +9,6 @@ final readonly class ReadonlyClass
     public function __construct(
         public string $name,
         public int $age,
-    )
-    {
+    ) {
     }
 }
