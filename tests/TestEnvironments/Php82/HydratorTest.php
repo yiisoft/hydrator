@@ -6,6 +6,7 @@ namespace Yiisoft\Hydrator\Tests\TestEnvironments\Php82;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\Tests\TestEnvironments\Php82\Support\ReadonlyClass;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php82\Support\TypeObject;
 
 final class HydratorTest extends TestCase
@@ -43,5 +44,15 @@ final class HydratorTest extends TestCase
                 'unionIntersection' => (string) $object->unionIntersection,
             ]
         );
+    }
+
+    public function testReadonlyClass(): void
+    {
+        $hydrator = new Hydrator();
+
+        $object = $hydrator->create(ReadonlyClass::class, ['name' => 'Test', 'age' => 19]);
+
+        $this->assertSame('Test', $object->name);
+        $this->assertSame(19, $object->age);
     }
 }
