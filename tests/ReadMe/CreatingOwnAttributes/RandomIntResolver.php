@@ -20,7 +20,7 @@ final class RandomIntResolver implements ParameterAttributeResolverInterface
             throw new UnexpectedAttributeException(RandomInt::class, $attribute);
         }
 
-        $value = rand($attribute->getMin(), $attribute->getMax());
+        $value = random_int($attribute->getMin(), $attribute->getMax());
 
         return Result::success($value);
     }
