@@ -210,6 +210,7 @@ composer require yiisoft/hydrator
 
 ## Documentation
 
+- [Guide](guide/en/index.md)
 - [Internals](docs/internals.md)
 
 ## License
