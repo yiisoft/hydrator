@@ -140,7 +140,7 @@ final class RandomIntResolver implements ParameterAttributeResolverInterface
 
 ## Using a single class for both attribute and resolver
 
-If your attribute simple and don't required dependencies, you can combine attribute and his resolver in one class.
+If your attribute is simple and doesn't require dependencies, you can combine attribute and its resolver in a single class.
 For example:
 
 ```php
