@@ -31,8 +31,8 @@ final class FromArray implements DataAttributeInterface, DataAttributeResolverIn
 
     public function prepareData(DataAttributeInterface $attribute, DataInterface $data): DataInterface
     {
-        if (!$attribute instanceof FromArray) {
-            throw new UnexpectedAttributeException(FromArray::class, $attribute);
+        if (!$attribute instanceof self) {
+            throw new UnexpectedAttributeException(self::class, $attribute);
         }
 
         return new ArrayData($attribute->getData());
