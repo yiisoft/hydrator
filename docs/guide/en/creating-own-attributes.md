@@ -1,6 +1,6 @@
 # Creating own attributes
 
-There are two main parts of attribute:
+There are two main parts of an attribute:
 
 - **Attribute class**. It only stores configuration options and a reference to its handler.
 - **Attribute resolver**. Given an attribute reflection and extra data, it resolves an attribute.
