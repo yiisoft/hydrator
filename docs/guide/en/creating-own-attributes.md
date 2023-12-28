@@ -138,7 +138,7 @@ final class RandomIntResolver implements ParameterAttributeResolverInterface
 }
 ```
 
-## Usage one class for attribute and resolver
+## Using a single class for both attribute and resolver
 
 If your attribute simple and don't required dependencies, you can combine attribute and his resolver in one class.
 For example:
