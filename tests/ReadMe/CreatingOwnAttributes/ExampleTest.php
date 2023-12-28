@@ -19,7 +19,7 @@ final class ExampleTest extends TestCase
 
     public function testRandomInt(): void
     {
-        $object = new class() {
+        $object = new class () {
             #[RandomInt(100, 200)]
             public int $a = -1;
             #[RandomInt(50, 80)]
