@@ -7,6 +7,8 @@ namespace Yiisoft\Hydrator\Tests;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\HydratorInterface;
 
@@ -21,8 +23,10 @@ final class ConfigTest extends TestCase
         );
 
         $hydrator = $container->get(HydratorInterface::class);
+        $attributeResolverFactory = $container->get(AttributeResolverFactoryInterface::class);
 
         $this->assertInstanceOf(Hydrator::class, $hydrator);
+        $this->assertInstanceOf(ContainerAttributeResolverFactory::class, $attributeResolverFactory);
     }
 
     private function getContainerDefinitions(): array
