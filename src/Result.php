@@ -52,7 +52,7 @@ final class Result
     /**
      * Returns the resolved value.
      *
-     * When value is not resolved returns `null`. But `null` can be is resolved value, use {@see isResolved()} for check
+     * When the value is not resolved, returns `null`. But `null` can be is resolved value, use {@see isResolved()} for check
      * the value is resolved or not.
      *
      * @return mixed The resolved value.

@@ -14,7 +14,7 @@ use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 
 /**
- * Resolver for {@see Di} attribute. Obtains dependency from container by ID specified or autoresolved ID by PHP type.
+ * Resolver for {@see Di} attribute. Obtains dependency from container by ID specified or auto-resolved ID by PHP type.
  */
 final class DiResolver implements ParameterAttributeResolverInterface
 {
@@ -28,7 +28,7 @@ final class DiResolver implements ParameterAttributeResolverInterface
 
     /**
      * @throws ContainerExceptionInterface
-     * @throws DiNotFoundException When object not found in container or object ID autoresolving is fail.
+     * @throws DiNotFoundException When an object is not found in a container or object ID auto-resolving fails.
      */
     public function getParameterValue(ParameterAttributeInterface $attribute, ParameterAttributeResolveContext $context): Result
     {
@@ -62,7 +62,7 @@ final class DiResolver implements ParameterAttributeResolverInterface
             }
         } elseif ($type instanceof ReflectionUnionType) {
             foreach ($type->getTypes() as $type) {
-                /** @psalm-suppress RedundantConditionGivenDocblockType Need for PHP less than 8.2 */
+                /** @psalm-suppress RedundantConditionGivenDocblockType Needed for PHP less than 8.2 */
                 if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                     try {
                         return Result::success(

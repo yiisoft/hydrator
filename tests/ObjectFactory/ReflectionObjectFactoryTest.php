@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ObjectFactory;
+namespace Yiisoft\Hydrator\Tests\ObjectFactory;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
