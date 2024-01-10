@@ -52,8 +52,9 @@ final class Result
     /**
      * Returns the resolved value.
      *
-     * When the value is not resolved, returns `null`. But `null` can be is resolved value, use {@see isResolved()} for check
-     * the value is resolved or not.
+     * When the value is not resolved, this method returns `null`.
+     * Since `null` can be a valid value as well, please use {@see isResolved()} to check
+     * if the value is resolved or not.
      *
      * @return mixed The resolved value.
      */
