@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator\Attribute\Parameter;
 use Attribute;
 
 /**
- * Resolve value as instance obtained from container by the specified ID or autoresolvied ID by PHP type.
+ * Resolve value as instance obtained from container by the specified ID or auto-resolved ID by PHP type.
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 final class Di implements ParameterAttributeInterface

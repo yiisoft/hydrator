@@ -16,7 +16,7 @@ use Yiisoft\Hydrator\DataInterface;
 use Yiisoft\Hydrator\Result;
 
 /**
- * Handles parameters attributes that implement {@see ParameterAttributeInterface}.
+ * Handles parameters' attributes that implement {@see ParameterAttributeInterface}.
  */
 final class ParameterAttributesHandler
 {
@@ -33,7 +33,7 @@ final class ParameterAttributesHandler
      * @param Result|null $resolveResult The resolved value object to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
      * @param DataInterface|null $data Raw data and map to pass to attribute resolver via {@see ParameterAttributeResolveContext}.
      *
-     * @return Result The resolved from attributes value object.
+     * @return Result The resolved from attributes' value object.
      */
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,

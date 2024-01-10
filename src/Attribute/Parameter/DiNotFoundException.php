@@ -11,7 +11,7 @@ use RuntimeException;
 use Throwable;
 
 /**
- * Exception that thrown into {@see DiResolver} when object not found or object ID autoresolving is fail.
+ * Exception that is thrown by {@see DiResolver} when an object is not found or object ID auto-resolving fails.
  */
 final class DiNotFoundException extends RuntimeException implements NotFoundExceptionInterface
 {
@@ -22,7 +22,7 @@ final class DiNotFoundException extends RuntimeException implements NotFoundExce
     public function __construct(ReflectionParameter|ReflectionProperty $reflection, ?Throwable $previous = null)
     {
         /**
-         * @psalm-suppress PossiblyNullReference $reflection->getDeclaringClass() returns not null always in this case.
+         * @psalm-suppress PossiblyNullReference $reflection->getDeclaringClass() always returns not null in this case.
          */
         $className = $reflection->getDeclaringClass()->getName();
 

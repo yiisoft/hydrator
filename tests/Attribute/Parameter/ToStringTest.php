@@ -48,7 +48,7 @@ final class ToStringTest extends TestCase
 
         $result = $attribute->getParameterValue($attribute, $context);
 
-        $this->assertSame(true, $result->isResolved());
+        $this->assertTrue($result->isResolved());
         $this->assertSame($expected, $result->getValue());
     }
 
