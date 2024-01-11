@@ -11,7 +11,7 @@ use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 
 /**
- * Converts the resolved value to string. Non-resolved values is skip.
+ * Converts the resolved value to string. Non-resolved values are skipped.
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
 final class ToString implements ParameterAttributeInterface, ParameterAttributeResolverInterface
