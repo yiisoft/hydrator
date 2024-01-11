@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
 
 /**
- * Creates or hydrate objects from a set of raw data.
+ * Creates or hydrates objects from a set of raw data.
  */
 interface HydratorInterface
 {

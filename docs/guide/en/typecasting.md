@@ -1,0 +1,117 @@
+# Typecasting
+
+When PHP types are defined in the class, type-casting automatically happens on object creation or hydration:
+
+```php
+final class Lock
+{
+    public function __construct(
+        private string $name,
+        private bool $isLocked
+    )
+    {
+    }
+}
+
+$hydrator = new Hydrator();
+$lock = $hydrator->create(Lock::class, ['name' => 'The lock', 'isLocked' => 1]);
+```
+
+## Custom type-casting
+
+You can define custom type-casters if needed:
+
+```php
+use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
+use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
+use Yiisoft\Hydrator\Result;
+use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
+
+final class User
+{
+    public function __construct(
+        private string $nickname
+    )
+    {
+    }
+    
+    public function getNickName(): string
+    {
+        return $this->nickname;
+    }
+}
+
+final class NickNameTypeCaster implements TypeCasterInterface
+{
+    public function cast(mixed $value, TypeCastContext $context): Result
+    {
+        $type = $context->getReflectionType();
+    
+        if (
+            $context->getReflection()->getName() === 'author'
+            && $type instanceof ReflectionNamedType
+            && $type->isBuiltin()
+            && $type->getName() === 'string'
+            && preg_match('~^@(.*)$~', $value, $matches)
+        ) {            
+            $user = new User($matches[1]);
+            return Result::success($user);        
+        }       
+
+        return Result::fail();
+    }
+}
+
+final class Post
+{
+    public function __construct(
+        private string $title,
+        private User $author
+    )
+    {    
+    }
+    
+    public function getTitle(): string 
+    {
+        return $this->title;    
+    }
+    
+    public function getAuthor(): User
+    {
+        return $this->author;
+    }
+}
+
+$typeCaster = new CompositeTypeCaster(
+    new NickNameTypeCaster(),
+);
+$hydrator = new Hydrator($typeCaster);
+
+$post = $hydrator->create(Post::class, ['title' => 'Example post', 'author' => '@samdark']);
+echo $post->getAuthor()->getNickName();
+```
+
+## Using attributes
+
+To cast a value to string explicitly, you can use `ToString` attribute:
+
+```php
+use \Yiisoft\Hydrator\Attribute\Parameter\ToString;
+
+class Money
+{
+    public function __construct(
+        #[ToString]
+        private string $value,
+        private string $currency,
+    ) {}
+}
+
+$money = $hydrator->create(Money::class, [
+    'value' => 4200,
+    'currency' => 'AMD',
+]);
+```
+
+
