@@ -18,7 +18,7 @@ implement `DataAttributeResolverInterface`.
 
 ### Example of custom data attribute
 
-For example, let's create data attribute that use predefined array as data for object populating.
+For example, let's create a data attribute that uses predefined array as data for object populating.
 
 Attribute:
 
@@ -78,7 +78,7 @@ resolver should implement `ParameterAttributeResolverInterface`.
 
 ### Example of custom parameter attribute
 
-For example, let's create parameter attribute that provide random value for object property.
+For example, let's create a parameter attribute that provides a random value for object property.
 
 Attribute:
 

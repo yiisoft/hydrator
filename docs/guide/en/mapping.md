@@ -1,7 +1,7 @@
 # Mapping
 
-In many cases, class attribute names differ from data keys you fill or create objects of the class with. For example,
-we have a blog post class:
+In many cases, class attribute names differ from data keys you fill and/or create objects of the class with.
+For example, we have a blog post class:
 
 ```php
 final class Post
@@ -94,3 +94,21 @@ class MyClass
     private $property;
 }
 ```
+
+## Resolving dependencies
+
+To resolve dependencies by specific ID using DI container, use `Di` attribute:
+
+```php
+ues \Yiisoft\Hydrator\Attribute\Parameter\Di;
+
+class MyClass
+{
+    public function __construct(
+        #[Di(id: 'importConnection')]
+        private ConnectionInterface $connection,
+    ) {}
+}
+```
+
+The annotation will instruct hydrator to get `$connection` from DI container by `importConnection` ID.

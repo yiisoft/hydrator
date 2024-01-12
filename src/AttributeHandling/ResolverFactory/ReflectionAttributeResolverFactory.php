@@ -11,6 +11,9 @@ use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
 use function is_string;
 
+/**
+ * A factory for attribute resolvers that are instantiable via reflection.
+ */
 final class ReflectionAttributeResolverFactory implements AttributeResolverFactoryInterface
 {
     public function create(DataAttributeInterface|ParameterAttributeInterface $attribute): object
@@ -44,7 +47,7 @@ final class ReflectionAttributeResolverFactory implements AttributeResolverFacto
             if (!$constructor->isPublic()) {
                 throw new AttributeResolverNonInstantiableException(
                     sprintf(
-                        'Class "%s" is not instantiable because contain non-public constructor.',
+                        'Class "%s" is not instantiable because of non-public constructor.',
                         $constructor->getDeclaringClass()->getName(),
                     ),
                 );

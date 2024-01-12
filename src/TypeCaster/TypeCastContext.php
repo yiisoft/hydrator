@@ -9,6 +9,9 @@ use ReflectionProperty;
 use ReflectionType;
 use Yiisoft\Hydrator\HydratorInterface;
 
+/**
+ * Holds type casting context data.
+ */
 final class TypeCastContext
 {
     public function __construct(

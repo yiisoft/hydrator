@@ -12,6 +12,9 @@ use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
 use function is_string;
 
+/**
+ * A factory for attribute resolvers that are instantiable by a container.
+ */
 final class ContainerAttributeResolverFactory implements AttributeResolverFactoryInterface
 {
     /**

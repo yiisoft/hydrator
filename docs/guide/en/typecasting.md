@@ -17,7 +17,32 @@ $hydrator = new Hydrator();
 $lock = $hydrator->create(Lock::class, ['name' => 'The lock', 'isLocked' => 1]);
 ```
 
-## Custom type-casting
+## Tweaking type-casting
+
+You can adjust type-casting by passing a type-caster to the hydrator:
+
+```php
+use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster
+
+$typeCaster = new CompositeTypeCaster(
+    new PhpNativeTypeCaster(),
+    new HydratorTypeCaster(),
+);
+$hydrator = new Hydrator($typeCaster);
+```
+
+The set above is what's used by default.
+
+Out of the box, the following type-casters are available:
+
+- `CompositeTypeCaster` allows combining multiple type-casters
+- `PhpNativeTypeCaster` casts based on PHP types defined in the class
+- `HydratorTypeCaster` casts arrays to objects
+- `NoTypeCaster` does not cast anything
+
+## Your own type-casting
 
 You can define custom type-casters if needed:
 
@@ -84,6 +109,7 @@ final class Post
 }
 
 $typeCaster = new CompositeTypeCaster(
+    // ...
     new NickNameTypeCaster(),
 );
 $hydrator = new Hydrator($typeCaster);
