@@ -33,15 +33,32 @@ $data = ['header' => 'First post', 'text' => 'Hello, world!'];
 Hydrator allows you to map data: 
 
 ```php
+use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ArrayData;
+
 $hydrator = new Hydrator();
 
-$object = new SimpleClass();
-
 $map = ['title' => 'header', 'body' => 'text'],;
-$hydrator->hydrate($object, new ArrayData($data, $map));
+$post = $hydrator->create(Post::class, new ArrayData($data, $map));
 ```
 
 This way we take `header` key for `title` and `text` key for `body`.
+
+## Strict mode
+
+You can enable strict mode by passing `true` as a third argument of `ArrayData`:
+
+```php
+use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ArrayData;
+
+$hydrator = new Hydrator();
+
+$map = ['title' => 'header', 'body' => 'text'],;
+$post = $hydrator->create(Post::class, new ArrayData($data, $map, true));
+```
+
+In this case, keys absent from the map are ignored so everything should be mapped explicitly.
 
 ## Using attributes
 
@@ -64,4 +81,16 @@ $person = $hydrator->create(Person::class, [
     'first_name' => 'John',
     'last_name' => 'Doe',
 ]);
+```
+
+To skip hydration of a specific property, use `SkipHydration` attribute:
+
+```php
+use \Yiisoft\Hydrator\Attribute\SkipHydration;
+
+class MyClass
+{
+    #[SkipHydration]
+    private $property;
+}
 ```

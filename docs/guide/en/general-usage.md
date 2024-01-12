@@ -53,5 +53,3 @@ $object = $hydrator->create(Car::class, [
 
 That would pass the `name` constructor argument of the `Car` object and create a new `Engine` object for `engine`
 argument passing `V8` as the `name` argument to its constructor.
-
-// TODO: strict mode

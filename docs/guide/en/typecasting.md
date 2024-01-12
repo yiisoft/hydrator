@@ -113,5 +113,3 @@ $money = $hydrator->create(Money::class, [
     'currency' => 'AMD',
 ]);
 ```
-
-

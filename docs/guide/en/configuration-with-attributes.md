@@ -2,20 +2,6 @@
 
 You can configure how the hydrator creates or hydrates a specific class using attributes.
 
-## Skipping hydration
-
-To skip hydration of a specific property, use `SkipHydration` attribute:
-
-```php
-use \Yiisoft\Hydrator\Attribute\SkipHydration;
-
-class MyClass
-{
-    #[SkipHydration]
-    private $property;
-}
-```
-
 ## Resolving dependencies
 
 To resolve dependencies by specific ID using DI container, use `Di` attribute:
