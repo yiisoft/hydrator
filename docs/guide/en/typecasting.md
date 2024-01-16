@@ -8,9 +8,7 @@ final class Lock
     public function __construct(
         private string $name,
         private bool $isLocked
-    )
-    {
-    }
+    ) {}
 }
 
 $hydrator = new Hydrator();
