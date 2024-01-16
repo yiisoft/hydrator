@@ -38,7 +38,7 @@ use Yiisoft\Hydrator\ArrayData;
 
 $hydrator = new Hydrator();
 
-$map = ['title' => 'header', 'body' => 'text'],;
+$map = ['title' => 'header', 'body' => 'text'];
 $post = $hydrator->create(Post::class, new ArrayData($data, $map));
 ```
 
