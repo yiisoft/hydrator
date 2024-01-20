@@ -1,18 +1,14 @@
 # Object Factory
 
-The hydrator uses `ObjectFactoryInterface` implementation to create object when you uses `Hydrator::create()` method: hydrator passes to factory resolved constructor arguments and gets created object for next hydration. The package provides two implementations out of the box.
+The hydrator uses `ObjectFactoryInterface` implementation to create object when you use `Hydrator::create()` method:
+hydrator passes resolved constructor arguments to factory and obtains created object for next hydration.
+The package provides two implementations out of the box:
 
-## Object factories out of the box
-
-### `ReflectionObjectFactory`
-
-It uses reflection to create object, and cannot create objects when not all constructor arguments are resolved.
-This object factory is used by default.
-
-### `ContainerObjectFactory`
-
-It uses [Yii Injector](https://github.com/yiisoft/injector) to create object that allow to use PSR-11 compatible 
-DI container for resolve constructor arguments, which were not resolved by the hydrator.
+- `ReflectionObjectFactory`. Uses reflection to create object. It cannot create objects when some constructor arguments
+  aren't resolved.  This object factory is used by default.
+- `ContainerObjectFactory`. Uses [Yii Injector](https://github.com/yiisoft/injector) to create object that allow to use
+  [PSR-11](https://www.php-fig.org/psr/psr-11/) compatible DI container to resolve constructor argument not resolved
+  by the hydrator.
 
 ## Using object factory
 
