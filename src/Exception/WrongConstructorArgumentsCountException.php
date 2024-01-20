@@ -6,6 +6,9 @@ namespace Yiisoft\Hydrator\Exception;
 
 use ReflectionMethod;
 
+/**
+ * Thrown when a class is not instantiable because of wrong constructor arguments count.
+ */
 final class WrongConstructorArgumentsCountException extends NonInstantiableException
 {
     public function __construct(ReflectionMethod $constructor, int $countArguments)

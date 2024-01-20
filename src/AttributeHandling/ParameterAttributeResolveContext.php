@@ -59,6 +59,9 @@ final class ParameterAttributeResolveContext
         return $this->resolveResult->getValue();
     }
 
+    /**
+     * @return DataInterface Data to be used for resolving.
+     */
     public function getData(): DataInterface
     {
         return $this->data;

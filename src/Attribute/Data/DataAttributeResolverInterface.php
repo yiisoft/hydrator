@@ -12,7 +12,7 @@ use Yiisoft\Hydrator\DataInterface;
 interface DataAttributeResolverInterface
 {
     /**
-     * Prepare data object ({@see DataInterface}) that used for hydration.
+     * Prepare a data object ({@see DataInterface}) that used for hydration.
      *
      * @param DataAttributeInterface $attribute The attribute to be resolved.
      * @param DataInterface $data Current data object ({@see DataInterface}).

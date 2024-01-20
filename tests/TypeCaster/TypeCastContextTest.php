@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TypeCaster;
+namespace Yiisoft\Hydrator\Tests\TypeCaster;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionFunction;

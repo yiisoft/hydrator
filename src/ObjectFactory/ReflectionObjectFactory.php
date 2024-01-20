@@ -11,6 +11,9 @@ use Yiisoft\Hydrator\Exception\WrongConstructorArgumentsCountException;
 
 use function count;
 
+/**
+ * A factory for objects that are instantiable by using reflection.
+ */
 final class ReflectionObjectFactory implements ObjectFactoryInterface
 {
     /**

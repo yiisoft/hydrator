@@ -9,6 +9,9 @@ use ReflectionClass;
 use ReflectionException;
 use Yiisoft\Injector\Injector;
 
+/**
+ * A factory for objects that are instantiable by a container.
+ */
 final class ContainerObjectFactory implements ObjectFactoryInterface
 {
     public function __construct(

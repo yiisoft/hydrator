@@ -7,6 +7,9 @@ namespace Yiisoft\Hydrator\ObjectFactory;
 use ReflectionClass;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
 
+/**
+ * An interface for object factory.
+ */
 interface ObjectFactoryInterface
 {
     /**

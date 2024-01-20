@@ -7,13 +7,16 @@ namespace Yiisoft\Hydrator\Exception;
 use LogicException;
 use ReflectionMethod;
 
+/**
+ * Thrown when a class is not instantiable because of non-public constructor.
+ */
 final class NonPublicConstructorException extends NonInstantiableException
 {
     public function __construct(ReflectionMethod $constructor)
     {
         parent::__construct(
             sprintf(
-                '%s is not instantiable because contain non-public (%s) constructor.',
+                '%s is not instantiable because of non-public (%s) constructor.',
                 $constructor->getDeclaringClass()->getName(),
                 $this->getConstructorType($constructor),
             ),
