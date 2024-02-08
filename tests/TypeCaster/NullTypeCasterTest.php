@@ -145,4 +145,14 @@ final class NullTypeCasterTest extends TestCase
             $this->assertNull($result->getValue());
         }
     }
+
+    public function testConstructor(): void
+    {
+        $typeCaster = new NullTypeCaster();
+        $context = TestHelper::createTypeCastContext(fn($a) => null);
+
+        $result = $typeCaster->cast('hello', $context);
+
+        $this->assertSame(false, $result->isResolved());
+    }
 }
