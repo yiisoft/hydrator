@@ -69,7 +69,6 @@ final class PhpNativeTypeCasterTest extends TestCase
 
     public function dataWithCastEmptyStringToNull(): array
     {
-
         return [
             'empty string to int|null' => [
                 Result::success(null),
