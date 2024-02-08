@@ -9,6 +9,9 @@ use ReflectionType;
 use ReflectionUnionType;
 use Yiisoft\Hydrator\Result;
 
+/**
+ * Configurable type caster for cast value to null.
+ */
 final class NullTypeCaster implements TypeCasterInterface
 {
     public function __construct(
