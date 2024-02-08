@@ -23,11 +23,6 @@ use function is_string;
  */
 final class PhpNativeTypeCaster implements TypeCasterInterface
 {
-    public function __construct(
-        public bool $castEmptyStringToNull = false,
-    ) {
-    }
-
     public function cast(mixed $value, TypeCastContext $context): Result
     {
         $type = $context->getReflectionType();
@@ -54,12 +49,8 @@ final class PhpNativeTypeCaster implements TypeCasterInterface
          * - when pass `"42"` to `int|string` type, `string` will be used.
          */
         foreach ($types as $t) {
-            if ($t->allowsNull()) {
-                if ($value === null
-                    || ($this->castEmptyStringToNull && $value === '')
-                ) {
-                    return Result::success(null);
-                }
+            if ($value === null && $t->allowsNull()) {
+                return Result::success(null);
             }
             if (!$t->isBuiltin()) {
                 continue;
