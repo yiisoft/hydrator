@@ -26,12 +26,58 @@ final class PhpNativeTypeCasterTest extends TestCase
                 static fn(float $a) => null,
             ],
             'empty string to int|null' => [
-                Result::success(null),
+                Result::success(0),
                 '',
                 static fn(?int $a) => null,
             ],
             'empty string to string|null' => [
                 Result::success(''),
+                '',
+                static fn(?string $a) => null,
+            ],
+            'empty string to float|null' => [
+                Result::success(0.0),
+                '',
+                static fn(?float $a) => null,
+            ],
+            'empty string to bool|null' => [
+                Result::success(false),
+                '',
+                static fn(?bool $a) => null,
+            ],
+            'empty string to array|null' => [
+                Result::fail(),
+                '',
+                static fn(?array $a) => null,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataBase
+     */
+    public function testBase(Result $expected, mixed $value, Closure $closure): void
+    {
+        $typeCaster = new PhpNativeTypeCaster();
+        $context = TestHelper::createTypeCastContext($closure);
+
+        $result = $typeCaster->cast($value, $context);
+
+        $this->assertSame($expected->isResolved(), $result->isResolved());
+        $this->assertSame($expected->getValue(), $result->getValue());
+    }
+
+    public function dataWithCastEmptyStringToNull(): array
+    {
+
+        return [
+            'empty string to int|null' => [
+                Result::success(null),
+                '',
+                static fn(?int $a) => null,
+            ],
+            'empty string to string|null' => [
+                Result::success(null),
                 '',
                 static fn(?string $a) => null,
             ],
@@ -45,15 +91,20 @@ final class PhpNativeTypeCasterTest extends TestCase
                 '',
                 static fn(?bool $a) => null,
             ],
+            'empty string to array|null' => [
+                Result::success(null),
+                '',
+                static fn(?array $a) => null,
+            ],
         ];
     }
 
     /**
-     * @dataProvider dataBase
+     * @dataProvider dataWithCastEmptyStringToNull
      */
-    public function testBase(Result $expected, mixed $value, Closure $closure): void
+    public function testWithCastEmptyStringToNull(Result $expected, mixed $value, Closure $closure): void
     {
-        $typeCaster = new PhpNativeTypeCaster();
+        $typeCaster = new PhpNativeTypeCaster(castEmptyStringToNull: true);
         $context = TestHelper::createTypeCastContext($closure);
 
         $result = $typeCaster->cast($value, $context);
