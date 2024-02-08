@@ -108,7 +108,8 @@ final class PhpNativeTypeCaster implements TypeCasterInterface
                         return Result::success((int) $value);
                     }
                     if ($value instanceof Stringable || is_string($value)) {
-                        return Result::success((int) NumericHelper::normalize($value));
+                        $value = NumericHelper::normalize($value);
+                        return Result::success($t->allowsNull() && $value === '' ? null : (int) $value);
                     }
                     break;
 
@@ -117,11 +118,15 @@ final class PhpNativeTypeCaster implements TypeCasterInterface
                         return Result::success((float) $value);
                     }
                     if ($value instanceof Stringable || is_string($value)) {
-                        return Result::success((float) NumericHelper::normalize($value));
+                        $value = NumericHelper::normalize($value);
+                        return Result::success($t->allowsNull() && $value === '' ? null : (float) $value);
                     }
                     break;
 
                 case 'bool':
+                    if ($t->allowsNull() && $value === '') {
+                        return Result::success(null);
+                    }
                     if (is_scalar($value) || $value === null || is_array($value) || is_object($value)) {
                         return Result::success((bool) $value);
                     }

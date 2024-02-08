@@ -25,6 +25,26 @@ final class PhpNativeTypeCasterTest extends TestCase
                 '42.52',
                 static fn(float $a) => null,
             ],
+            'empty string to int|null' => [
+                Result::success(null),
+                '',
+                static fn(?int $a) => null,
+            ],
+            'empty string to string|null' => [
+                Result::success(''),
+                '',
+                static fn(?string $a) => null,
+            ],
+            'empty string to float|null' => [
+                Result::success(null),
+                '',
+                static fn(?float $a) => null,
+            ],
+            'empty string to bool|null' => [
+                Result::success(null),
+                '',
+                static fn(?bool $a) => null,
+            ],
         ];
     }
 
