@@ -1,6 +1,6 @@
 # Yii Hydrator Change Log
 
-## 1.1.0 under development
+## 1.1.0 February 09, 2024
 
 - New #74: Add `NullTypeCaster` (@vjik)
 
