@@ -10,7 +10,7 @@ use ReflectionUnionType;
 use Yiisoft\Hydrator\Result;
 
 /**
- * Configurable type caster for cast value to null.
+ * Configurable type caster for casting value to `null`.
  */
 final class NullTypeCaster implements TypeCasterInterface
 {
