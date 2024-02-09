@@ -38,7 +38,7 @@ Out of the box, the following type-casters are available:
 - `CompositeTypeCaster` allows combining multiple type-casters
 - `PhpNativeTypeCaster` casts based on PHP types defined in the class
 - `HydratorTypeCaster` casts arrays to objects
-- `NullTypeCaster` configurable type caster for cast null, empty string and empty arrays to null
+- `NullTypeCaster` configurable type caster for casting `null`, empty string and empty array to `null`
 - `NoTypeCaster` does not cast anything
 
 ## Your own type-casting
