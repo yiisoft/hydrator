@@ -30,15 +30,7 @@ final class Post
 $data = ['header' => 'First post', 'text' => 'Hello, world!'];
 ```
 
-Гидратор позволяет вам сопоставить данные: 
-
-```php
-use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\ArrayData;
-
-$hydrator = new Hydrator();
-
-$map = ['title' => 'header', 'body' => 'text'];
+Гидратор позволяет вам сопоставинасыщения,dy' => 'text'];
 $post = $hydrator->create(Post::class, new ArrayData($data, $map));
 ```
 
