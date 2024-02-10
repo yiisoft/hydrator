@@ -1,18 +1,14 @@
-# Object Factory
+# Фабрика объектов
 
-The hydrator uses `ObjectFactoryInterface` implementation to create object when you use `Hydrator::create()` method:
-hydrator passes resolved constructor arguments to factory and obtains created object for next hydration.
-The package provides two implementations out of the box:
+Гдратор использует реализацию `ObjectFactoryInterface` для создания объекта когда вы вызываете метод `Hydrator::create()`: гидратор передает разрешенные аргументы конструктора фабрике и получает созданный объект для последующего наполнения.
+Пакет предоставляет две реализации «из коробки»:
 
-- `ReflectionObjectFactory`. Uses reflection to create object. It cannot create objects when some constructor arguments
-  aren't resolved.  This object factory is used by default.
-- `ContainerObjectFactory`. Uses [Yii Injector](https://github.com/yiisoft/injector) to create object that allow to use
-  [PSR-11](https://www.php-fig.org/psr/psr-11/) compatible DI container to resolve constructor argument not resolved
-  by the hydrator.
+- `ReflectionObjectFactory`. Использует рефлексию для создания объекта. Она не может создавать объекты, когда некоторые аргументы конструктора не разрешены. Эта фабрика объектов используется по-умолчанию.
+- `ContainerObjectFactory`.  Использует [Yii Injector](https://github.com/yiisoft/injector) для создания объектов и может использовать совместимый с [PSR-11](https://www.php-fig.org/psr/psr-11/) DI-контейнер для разрешения аргументов конструктора, не разрешенных в гидраторе.
 
-## Using object factory
+## Использование фабрики объектов
 
-To use non-default object factory, pass it to the hydrator constructor:
+Для использования фабрики объектов, отличную от стандартной, передайте ее в конструктор гидратора:
 
 ```php
 use Yiisoft\Injector\Injector;
