@@ -87,7 +87,7 @@ value for specific parameter or for preparing the value (for example, by type ca
 
 Parameter attribute class should implement `ParameterAttributeInterface` and the corresponding parameter attribute
 resolver should implement `ParameterAttributeResolverInterface`.
-Класс параметра атрибутов должен реализовывать `ParameterAttributeInterface`, а соответствующий параметр атрибута сопостовителя атрибутов должен реализовывать `ParameterAttributeResolverInterface`.
+Класс параметра атрибутов должен реализовывать `ParameterAttributeInterface`, а соответствующий сопостовитель атрибутов должен реализовывать `ParameterAttributeResolverInterface`.
 
 ### Example of custom parameter attribute
 ### Пример пользовательского параметра атрибута
