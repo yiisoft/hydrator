@@ -1,20 +1,16 @@
-# Attribute resolver factory
+# Фабрика сопоставителей атрибутов
 
-The hydrator uses `AttributeResolverFactoryInterface` implementation to create attribute resolvers.
-The package provides two implementations out of the box:
+Гидратор использует реализацию `AttributeResolverFactoryInterface` для создания преобразователей атрибутов.
+Пакет предоставляет две реализации "из коробки":
 
-- `ReflectionAttributeResolverFactory`. Uses reflection to create attribute resolver, and can create attribute resolvers
-  without dependencies only.
-- `ContainerAttributeResolverFactory`. Uses [PSR-11](https://www.php-fig.org/psr/psr-11/) compatible DI container
-  to create attribute resolver.
+- `ReflectionAttributeResolverFactory`. Использует рефлексию для создания сопоставителя атрибута и может создавать сопоставителя атрибутов только без зависимостей.
+- `ContainerAttributeResolverFactory`. Использует совместимый с [PSR-11](https://www.php-fig.org/psr/psr-11/) DI-контейнер для создания сопоставителя атрибутов
 
-Default factory used depends on the environment. When using hydrator package within the Yii ecosystem (an application
-uses [Yii Config](https://github.com/yiisoft/config)), default is `ContainerAttributeResolverFactory`. Otherwise,
-it is `ReflectionAttributeResolverFactory`.
+Используемая по-умолчанию фабрика зависит от среды. Когда пакет гидратора работает внутри экосистемы Yii (приложение использует [Yii Config](https://github.com/yiisoft/config)) используется `ContainerAttributeResolverFactory`. В других случаях используется `ReflectionAttributeResolverFactory`.
 
-## Using attribute resolver factory
+## Использование фабрики сопоставителей атрибутов
 
-To use non-default attribute resolver factory, pass it to the hydrator constructor:
+Чтобы использовать фабрику сопоставления атрибутов, отличную от стандартной, передайте ее в конструктор гидратора:
 
 ```php
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
