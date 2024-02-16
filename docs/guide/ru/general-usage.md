@@ -18,7 +18,7 @@ $hydrator = new Hydrator();
 $object = $hydrator->create(MyClass::class, $data);
 ```
 
-Для передачи аргументов в конструктор вложенного объекта используйте вложенный массив или запись «через точку» (dot-notation):
+Для передачи аргументов в конструктор вложенного объекта используйте вложенный массив или запись «через точку»:
 
 ```php
 final class Engine
@@ -44,7 +44,7 @@ $object = $hydrator->create(Car::class, [
     ]
 ]);
 
-// или dot-notation
+// или через точку
 $object = $hydrator->create(Car::class, [
     'name' => 'Ferrari',
     'engine.name' => 'V8',
