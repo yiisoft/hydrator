@@ -6,6 +6,7 @@ namespace TypeCaster;
 
 use Closure;
 use Countable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Stringable;
 use Yiisoft\Hydrator\Result;
@@ -15,7 +16,7 @@ use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 
 final class HydratorTypeCasterTest extends TestCase
 {
-    public function dataBase(): array
+    public static function dataBase(): array
     {
         return [
             'array to intersection type' => [
@@ -41,9 +42,7 @@ final class HydratorTypeCasterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataBase
-     */
+    #[DataProvider('dataBase')]
     public function testBase(Result $expected, mixed $value, Closure $closure): void
     {
         $typeCaster = new HydratorTypeCaster();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
@@ -34,8 +35,10 @@ use Yiisoft\Hydrator\Tests\Support\Classes\NestedModel\UserModel;
 use Yiisoft\Hydrator\Tests\Support\Classes\ObjectPropertyModel\ObjectPropertyModel;
 use Yiisoft\Hydrator\Tests\Support\Classes\ObjectPropertyModel\RedCar;
 use Yiisoft\Hydrator\Tests\Support\Classes\PreparePropertyClass;
+use Yiisoft\Hydrator\Tests\Support\Classes\ReadonlyClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\SimpleClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\StaticClass;
+use Yiisoft\Hydrator\Tests\Support\Classes\StringableCar;
 use Yiisoft\Hydrator\Tests\Support\Classes\TypeClass;
 use Yiisoft\Hydrator\Tests\Support\PrivateConstructor;
 use Yiisoft\Hydrator\Tests\Support\ProtectedConstructor;
@@ -115,7 +118,7 @@ final class HydratorTest extends TestCase
         $this->assertSame('.', $object->getC());
     }
 
-    public function dataSimpleHydrateWithMap(): array
+    public static function dataSimpleHydrateWithMap(): array
     {
         return [
             'simple' => [
@@ -141,9 +144,7 @@ final class HydratorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataSimpleHydrateWithMap
-     */
+    #[DataProvider('dataSimpleHydrateWithMap')]
     public function testSimpleHydrateWithMap(array $data, array $map): void
     {
         $hydrator = new Hydrator();
@@ -177,7 +178,7 @@ final class HydratorTest extends TestCase
         $this->assertSame('Mike Li', $object->getName());
     }
 
-    public function dataCreateNestedObjectWithMap(): array
+    public static function dataCreateNestedObjectWithMap(): array
     {
         return [
             [
@@ -199,9 +200,7 @@ final class HydratorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataCreateNestedObjectWithMap
-     */
+    #[DataProvider('dataCreateNestedObjectWithMap')]
     public function testCreateNestedObjectWithMap(array $data, array $map): void
     {
         $hydrator = new Hydrator();
@@ -211,7 +210,7 @@ final class HydratorTest extends TestCase
         $this->assertSame('Mike Li', $object->getName());
     }
 
-    public function dataTypeCast(): array
+    public static function dataTypeCast(): array
     {
         return [
             // Integer
@@ -393,12 +392,26 @@ final class HydratorTest extends TestCase
                 ['arrayOrString' => 'test'],
                 ['arrayOrString' => new StringableObject('test')],
             ],
+
+            // int|string
+            'int-to-int-string' => [
+                ['intString' => 42],
+                ['intString' => 42],
+            ],
+            'string-to-int-string' => [
+                ['intString' => '42'],
+                ['intString' => '42'],
+            ],
+
+            // intersection type casting is not supported
+            'intersection' => [
+                ['intersection' => 'red car'],
+                ['intersection' => new StringableCar('yellow')],
+            ],
         ];
     }
 
-    /**
-     * @dataProvider dataTypeCast
-     */
+    #[DataProvider('dataTypeCast')]
     public function testTypeCast(array $expectedValues, array $data, ?callable $prepareCallable = null): void
     {
         $object = new TypeClass();
@@ -420,6 +433,8 @@ final class HydratorTest extends TestCase
                 'float' => -2.0,
                 'array' => [-1],
                 'arrayOrString' => 'x',
+                'intString' => -1,
+                'intersection' => 'red car',
             ],
             $expectedValues
         );
@@ -436,11 +451,13 @@ final class HydratorTest extends TestCase
                 'float' => $object->float,
                 'array' => $object->array,
                 'arrayOrString' => $object->arrayOrString,
+                'intString' => $object->intString,
+                'intersection' => (string) $object->intersection,
             ]
         );
     }
 
-    public function dataConstructorTypeCast(): array
+    public static function dataConstructorTypeCast(): array
     {
         return [
             'array-to-int' => [
@@ -450,9 +467,7 @@ final class HydratorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataConstructorTypeCast
-     */
+    #[DataProvider('dataConstructorTypeCast')]
     public function testConstructorTypeCast(array $expectedValues, array $data): void
     {
         $hydrator = new Hydrator();
@@ -719,5 +734,17 @@ final class HydratorTest extends TestCase
         $this->expectException(NonExistClassException::class);
         $this->expectExceptionMessage('Class "NonExistClass" not exist.');
         $hydrator->create('NonExistClass');
+    }
+
+    public function testReadonlyObject(): void
+    {
+        $hydrator = new Hydrator();
+
+        $object = $hydrator->create(ReadonlyClass::class, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
+
+        $this->assertSame(99, $object->a);
+        $this->assertSame(2, $object->b);
+        $this->assertSame(3, $object->c);
+        $this->assertSame(4, $object->d);
     }
 }
