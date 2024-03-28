@@ -1,8 +1,8 @@
 # Yii Hydrator Change Log
 
-## 1.1.1 under development
+## 1.2.0 under development
 
-- no changes in this release.
+- Enh #76: Raise the minimum version of PHP to 8.1 (@vjik)
 
 ## 1.1.0 February 09, 2024
 

@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\TypeCaster;
 
 use Closure;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Result;
+use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
 
 final class PhpNativeTypeCasterTest extends TestCase
 {
-    public function dataBase(): array
+    public static function dataBase(): array
     {
         return [
             'string to int' => [
@@ -25,12 +27,25 @@ final class PhpNativeTypeCasterTest extends TestCase
                 '42.52',
                 static fn(float $a) => null,
             ],
+            'int to object|int|string' => [
+                Result::success(42),
+                42,
+                static fn(StringableObject|int|string $a) => null,
+            ],
+            'string to object|int|string' => [
+                Result::success('42'),
+                '42',
+                static fn(StringableObject|int|string $a) => null,
+            ],
+            'string to object|int' => [
+                Result::success(42),
+                '42',
+                static fn(StringableObject|int $a) => null,
+            ],
         ];
     }
 
-    /**
-     * @dataProvider dataBase
-     */
+    #[DataProvider('dataBase')]
     public function testBase(Result $expected, mixed $value, Closure $closure): void
     {
         $typeCaster = new PhpNativeTypeCaster();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\TestEnvironments\Php82;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\TestEnvironments\Php82\Support\ReadonlyClass;
@@ -11,7 +12,7 @@ use Yiisoft\Hydrator\Tests\TestEnvironments\Php82\Support\TypeObject;
 
 final class HydratorTest extends TestCase
 {
-    public function dataTypeCast(): array
+    public static function dataTypeCast(): array
     {
         return [
             'union-intersection' => [
@@ -21,9 +22,7 @@ final class HydratorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataTypeCast
-     */
+    #[DataProvider('dataTypeCast')]
     public function testTypeCast(array $expectedValues, array $data): void
     {
         $object = new TypeObject();

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\TestEnvironments\Php81\Support;
+namespace Yiisoft\Hydrator\Tests\Support\Classes;
 
 use Stringable;
 
