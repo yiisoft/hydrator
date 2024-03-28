@@ -32,7 +32,7 @@
         "yiisoft/strings": "^2.3"
     },
     "require-dev": {
-        "maglnet/composer-require-checker": "^4.8",
+        "maglnet/composer-require-checker": "^4.7",
         "phpunit/phpunit": "^10.5",
         "rector/rector": "^1.0.0",
         "roave/infection-static-analysis-plugin": "^1.16",
