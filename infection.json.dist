@@ -9,11 +9,5 @@
         "stryker": {
             "report": "master"
         }
-    },
-    "mutators": {
-        "@default": true,
-        "global-ignoreSourceCodeByRegex": [
-            "if \\(PHP_VERSION_ID.*"
-        ]
     }
 }

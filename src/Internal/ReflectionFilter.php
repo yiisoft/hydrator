@@ -30,8 +30,7 @@ final class ReflectionFilter
                 continue;
             }
 
-            /** @psalm-suppress UndefinedMethod Need for PHP 8.0 only */
-            if (PHP_VERSION_ID >= 80100 && $property->isReadOnly()) {
+            if ($property->isReadOnly()) {
                 continue;
             }
             $propertyName = $property->getName();
