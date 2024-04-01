@@ -42,6 +42,9 @@
         "yiisoft/dummy-provider": "^1.0",
         "yiisoft/test-support": "^3.0"
     },
+    "suggest": {
+        "ext-intl": "Allows using `ToDateTimeImmutable` parameter attribute"
+    },
     "autoload": {
         "psr-4": {
             "Yiisoft\\Hydrator\\": "src"
