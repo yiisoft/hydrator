@@ -143,7 +143,7 @@ $money = $hydrator->create(Money::class, [
 
 ```php
 use DateTimeImmutable;
-use \Yiisoft\Hydrator\Attribute\Parameter\ToDateTimeImmutable;
+use Yiisoft\Hydrator\Attribute\Parameter\ToDateTimeImmutable;
 
 class Person
 {
