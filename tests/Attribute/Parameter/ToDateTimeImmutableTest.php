@@ -107,11 +107,25 @@ final class ToDateTimeImmutableTest extends TestCase
     }
 
     #[DataProvider('dataNotResolve')]
-    public function testNotResolve(mixed $value): void
+    public function testNotResolvePhpFormat(mixed $value): void
     {
         $hydrator = new Hydrator();
         $object = new class () {
             #[ToDateTimeImmutable(format: 'php:d.m.Y')]
+            public ?DateTimeImmutable $a = null;
+        };
+
+        $hydrator->hydrate($object, ['a' => $value]);
+
+        $this->assertNull($object->a);
+    }
+
+    #[DataProvider('dataNotResolve')]
+    public function testNotResolveIntlFormat(mixed $value): void
+    {
+        $hydrator = new Hydrator();
+        $object = new class () {
+            #[ToDateTimeImmutable(format: 'dd.MM.yyyy')]
             public ?DateTimeImmutable $a = null;
         };
 
@@ -169,6 +183,44 @@ final class ToDateTimeImmutableTest extends TestCase
         $hydrator->hydrate($object, ['a' => '12.11.2003, 12:34']);
 
         $this->assertEquals(new DateTimeImmutable('12.11.2003, 12:34', new DateTimeZone('UTC')), $object->a);
+    }
+
+    public function testOverrideDefaultLocale(): void
+    {
+        $hydrator = new Hydrator(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    ToDateTimeImmutableResolver::class => new ToDateTimeImmutableResolver(locale: 'en'),
+                ]),
+            ),
+        );
+        $object = new class () {
+            #[ToDateTimeImmutable(locale: 'ru')]
+            public ?DateTimeImmutable $a = null;
+        };
+
+        $hydrator->hydrate($object, ['a' => '12.11.2003, 12:20']);
+
+        $this->assertEquals(new DateTimeImmutable('12.11.2003, 12:20'), $object->a);
+    }
+
+    public function testOverrideDefaultFormat(): void
+    {
+        $hydrator = new Hydrator(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    ToDateTimeImmutableResolver::class => new ToDateTimeImmutableResolver(format: 'php:Y-m-d'),
+                ]),
+            ),
+        );
+        $object = new class () {
+            #[ToDateTimeImmutable(format: 'php:d.m.Y')]
+            public ?DateTimeImmutable $a = null;
+        };
+
+        $hydrator->hydrate($object, ['a' => '12.11.2003']);
+
+        $this->assertEquals(new DateTimeImmutable('12.11.2003'), $object->a);
     }
 
     public function testUnexpectedAttributeException(): void
