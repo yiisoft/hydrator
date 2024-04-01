@@ -138,3 +138,20 @@ $money = $hydrator->create(Money::class, [
     'currency' => 'AMD',
 ]);
 ```
+
+To cast a value to `DateTimeImmutable` object explicitly, you can use `ToDateTimeImmutable` attribute:
+
+```php
+use DateTimeImmutable;
+use \Yiisoft\Hydrator\Attribute\Parameter\ToDateTimeImmutable;
+
+class Person
+{
+    public function __construct(
+        #[ToDateTimeImmutable(locale: 'ru')]
+        private ?DateTimeImmutable $birthday = null,
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
+```

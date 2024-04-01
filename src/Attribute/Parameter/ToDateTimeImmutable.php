@@ -8,6 +8,8 @@ use Attribute;
 use IntlDateFormatter;
 
 /**
+ * Converts the resolved value to `DateTimeImmutable` object. Non-resolved and invalid values are skipped.
+ *
  * @psalm-type IntlDateFormatterFormat = IntlDateFormatter::FULL | IntlDateFormatter::LONG | IntlDateFormatter::MEDIUM | IntlDateFormatter::SHORT | IntlDateFormatter::NONE
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
