@@ -68,7 +68,7 @@ final class ToDateTimeImmutableTest extends TestCase
     }
 
     #[DataProvider('dataBase')]
-    public function testBase(mixed $expected, ToDateTimeImmutable $attribute, mixed $value): void
+    public function testBase(DateTimeImmutable $expected, ToDateTimeImmutable $attribute, mixed $value): void
     {
         $resolver = new ToDateTimeImmutableResolver();
         $context = new ParameterAttributeResolveContext(
