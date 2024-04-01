@@ -26,44 +26,42 @@ use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class ToDateTimeImmutableTest extends TestCase
 {
-    public static function dataBase(): array
+    public static function dataBase(): iterable
     {
-        return [
-            'DateTime' => [
-                new DateTimeImmutable('04/01/2024'),
-                new ToDateTimeImmutable(),
-                new DateTime('04/01/2024'),
-            ],
-            'DateTimeImmutable' => [
-                new DateTimeImmutable('04/01/2024'),
-                new ToDateTimeImmutable(),
-                new DateTimeImmutable('04/01/2024'),
-            ],
-            'string-php-format' => [
-                new DateTimeImmutable('04/01/2024'),
-                new ToDateTimeImmutable(format: 'php:m/d/Y'),
-                '04/01/2024',
-            ],
-            'string-intl-format' => [
-                new DateTimeImmutable('04/01/2024'),
-                new ToDateTimeImmutable(format: 'MM/dd/yyyy'),
-                '04/01/2024',
-            ],
-            'timestamp-integer' => [
-                (new DateTimeImmutable())->setTimestamp(1711972838),
-                new ToDateTimeImmutable(),
-                1711972838,
-            ],
-            'timezone' => [
-                new DateTimeImmutable('12.11.2003, 07:20', new DateTimeZone('UTC')),
-                new ToDateTimeImmutable(format: 'php:d.m.Y, H:i', timeZone: 'GMT+5'),
-                '12.11.2003, 12:20',
-            ],
-            'locale-ru' => [
-                new DateTimeImmutable('12.11.2020, 12:20'),
-                new ToDateTimeImmutable(locale: 'ru'),
-                '12.11.2020, 12:20',
-            ],
+        yield 'DateTime' => [
+            new DateTimeImmutable('04/01/2024'),
+            new ToDateTimeImmutable(),
+            new DateTime('04/01/2024'),
+        ];
+        yield 'DateTimeImmutable' => [
+            new DateTimeImmutable('04/01/2024'),
+            new ToDateTimeImmutable(),
+            new DateTimeImmutable('04/01/2024'),
+        ];
+        yield 'string-php-format' => [
+            new DateTimeImmutable('04/01/2024'),
+            new ToDateTimeImmutable(format: 'php:m/d/Y'),
+            '04/01/2024',
+        ];
+        yield 'string-intl-format' => [
+            new DateTimeImmutable('04/01/2024'),
+            new ToDateTimeImmutable(format: 'MM/dd/yyyy'),
+            '04/01/2024',
+        ];
+        yield 'timestamp-integer' => [
+            (new DateTimeImmutable())->setTimestamp(1711972838),
+            new ToDateTimeImmutable(),
+            1711972838,
+        ];
+        yield 'timezone' => [
+            new DateTimeImmutable('12.11.2003, 07:20', new DateTimeZone('UTC')),
+            new ToDateTimeImmutable(format: 'php:d.m.Y, H:i', timeZone: 'GMT+5'),
+            '12.11.2003, 12:20',
+        ];
+        yield 'locale-ru' => [
+            new DateTimeImmutable('12.11.2020, 12:20'),
+            new ToDateTimeImmutable(locale: 'ru'),
+            '12.11.2020, 12:20',
         ];
     }
 
@@ -96,13 +94,11 @@ final class ToDateTimeImmutableTest extends TestCase
         $this->assertEquals(new DateTimeImmutable('12.11.2003'), $object->a);
     }
 
-    public static function dataNotResolve(): array
+    public static function dataNotResolve(): iterable
     {
-        return [
-            'invalid-string' => ['12-11-2003'],
-            'invalid-date' => ['30.02.2021'],
-            'not-supported-type' => [new stdClass()],
-        ];
+        yield 'invalid-string' => ['12-11-2003'];
+        yield 'invalid-date' => ['30.02.2021'];
+        yield 'not-supported-type' => [new stdClass()];
     }
 
     #[DataProvider('dataNotResolve')]
