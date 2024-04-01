@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\ArrayData;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
@@ -21,7 +22,7 @@ use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class ToStringTest extends TestCase
 {
-    public function dataBase(): array
+    public static function dataBase(): array
     {
         return [
             ['99', 99],
@@ -34,9 +35,7 @@ final class ToStringTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataBase
-     */
+    #[DataProvider('dataBase')]
     public function testBase(mixed $expected, mixed $value): void
     {
         $attribute = new ToString();
@@ -52,9 +51,7 @@ final class ToStringTest extends TestCase
         $this->assertSame($expected, $result->getValue());
     }
 
-    /**
-     * @dataProvider dataBase
-     */
+    #[DataProvider('dataBase')]
     public function testBaseWithHydrator(string $expected, mixed $value): void
     {
         $hydrator = new Hydrator();

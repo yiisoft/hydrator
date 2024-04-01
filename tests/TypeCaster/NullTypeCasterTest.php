@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace TypeCaster;
 
 use Closure;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Hydrator\TypeCaster\NullTypeCaster;
 
 final class NullTypeCasterTest extends TestCase
 {
-    public function dataBase(): array
+    public static function dataBase(): array
     {
         return [
             'default, null to non-type' => [
@@ -131,9 +132,7 @@ final class NullTypeCasterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataBase
-     */
+    #[DataProvider('dataBase')]
     public function testBase(bool $success, NullTypeCaster $typeCaster, mixed $value, Closure $closure): void
     {
         $context = TestHelper::createTypeCastContext($closure);

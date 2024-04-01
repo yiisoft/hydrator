@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\TypeCaster;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\Tests\Support\PrivateConstructorObject;
@@ -14,7 +15,7 @@ use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
 
 final class HydratorTypeCasterTest extends TestCase
 {
-    public function dataBase(): array
+    public static function dataBase(): array
     {
         return [
             'not array to not array' => [
@@ -55,9 +56,7 @@ final class HydratorTypeCasterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataBase
-     */
+    #[DataProvider('dataBase')]
     public function testBase(Result $expected, mixed $value, TypeCastContext $context): void
     {
         $typeCaster = new HydratorTypeCaster();
