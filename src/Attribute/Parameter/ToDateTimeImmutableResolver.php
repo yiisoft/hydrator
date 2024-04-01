@@ -93,7 +93,7 @@ final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInt
         }
 
         $errors = DateTimeImmutable::getLastErrors();
-        if ($errors !== false && !empty($errors['warning_count'])) {
+        if (!empty($errors['warning_count'])) {
             return Result::fail();
         }
 
