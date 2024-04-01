@@ -65,11 +65,12 @@ final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInt
         }
 
         if (is_string($resolvedValue) && !empty($resolvedValue)) {
-            return (is_string($attribute->format) && str_starts_with($attribute->format, 'php:'))
-                ? $this->parseWithPhpFormat($resolvedValue, substr($attribute->format, 4), $timeZone)
+            $format = $attribute->format ?? $this->format;
+            return (is_string($format) && str_starts_with($format, 'php:'))
+                ? $this->parseWithPhpFormat($resolvedValue, substr($format, 4), $timeZone)
                 : $this->parseWithIntlFormat(
                     $resolvedValue,
-                    $attribute->format ?? $this->format,
+                    $format,
                     $attribute->dateType ?? $this->dateType,
                     $attribute->timeType ?? $this->timeType,
                     $timeZone,

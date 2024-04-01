@@ -133,6 +133,25 @@ final class ToDateTimeImmutableTest extends TestCase
         $this->assertNull($object->a);
     }
 
+    public function testDefaultFormat(): void
+    {
+        $hydrator = new Hydrator(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    ToDateTimeImmutableResolver::class => new ToDateTimeImmutableResolver(format: 'php:Y?m?d'),
+                ]),
+            ),
+        );
+        $object = new class () {
+            #[ToDateTimeImmutable]
+            public ?DateTimeImmutable $a = null;
+        };
+
+        $hydrator->hydrate($object, ['a' => '2003x11x12']);
+
+        $this->assertEquals(new DateTimeImmutable('12.11.2003'), $object->a);
+    }
+
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
