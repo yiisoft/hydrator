@@ -1,5 +1,6 @@
 {
     "symbol-whitelist": [
-        "Yiisoft\\Router\\CurrentRoute"
+        "Yiisoft\\Router\\CurrentRoute",
+        "IntlDateFormatter"
     ]
 }
