@@ -152,6 +152,25 @@ final class ToDateTimeImmutableTest extends TestCase
         $this->assertEquals(new DateTimeImmutable('12.11.2003'), $object->a);
     }
 
+    public function testOverrideDefaultTimeZone(): void
+    {
+        $hydrator = new Hydrator(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    ToDateTimeImmutableResolver::class => new ToDateTimeImmutableResolver(timeZone: 'GMT+3'),
+                ]),
+            ),
+        );
+        $object = new class () {
+            #[ToDateTimeImmutable(locale: 'ru', timeZone: 'UTC')]
+            public ?DateTimeImmutable $a = null;
+        };
+
+        $hydrator->hydrate($object, ['a' => '12.11.2003, 12:34']);
+
+        $this->assertEquals(new DateTimeImmutable('12.11.2003, 12:34', new DateTimeZone('UTC')), $object->a);
+    }
+
     public function testUnexpectedAttributeException(): void
     {
         $hydrator = new Hydrator(
