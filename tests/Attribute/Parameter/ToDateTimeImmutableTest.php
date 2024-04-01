@@ -13,7 +13,6 @@ use stdClass;
 use Yiisoft\Hydrator\ArrayData;
 use Yiisoft\Hydrator\Attribute\Parameter\ToDateTimeImmutable;
 use Yiisoft\Hydrator\Attribute\Parameter\ToDateTimeImmutableResolver;
-use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
@@ -53,17 +52,17 @@ final class ToDateTimeImmutableTest extends TestCase
             'timestamp-integer' => [
                 (new DateTimeImmutable())->setTimestamp(1711972838),
                 new ToDateTimeImmutable(),
-                1711972838
+                1711972838,
             ],
             'timezone' => [
                 new DateTimeImmutable('12.11.2003, 07:20', new DateTimeZone('UTC')),
                 new ToDateTimeImmutable(format: 'php:d.m.Y, H:i', timeZone: 'GMT+5'),
-                '12.11.2003, 12:20'
+                '12.11.2003, 12:20',
             ],
             'locale-ru' => [
                 new DateTimeImmutable('12.11.2020, 12:20'),
                 new ToDateTimeImmutable(locale: 'ru'),
-                '12.11.2020, 12:20'
+                '12.11.2020, 12:20',
             ],
         ];
     }
