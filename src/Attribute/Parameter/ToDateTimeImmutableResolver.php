@@ -95,6 +95,11 @@ final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInt
             return Result::fail();
         }
 
+        // If no time was provided in the format string set time to 0
+        if (!strpbrk($format, 'aAghGHisvuU')) {
+            $date = $date->setTime(0, 0);
+        }
+
         return Result::success($date);
     }
 
