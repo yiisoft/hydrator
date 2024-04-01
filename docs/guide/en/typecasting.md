@@ -143,7 +143,7 @@ To cast a value to `DateTimeImmutable` object explicitly, you can use `ToDateTim
 
 ```php
 use DateTimeImmutable;
-use \Yiisoft\Hydrator\Attribute\Parameter\ToDateTimeImmutable;
+use Yiisoft\Hydrator\Attribute\Parameter\ToDateTimeImmutable;
 
 class Person
 {
