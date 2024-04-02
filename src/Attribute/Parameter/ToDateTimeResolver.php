@@ -91,8 +91,7 @@ final class ToDateTimeResolver implements ParameterAttributeResolverInterface
         string $format,
         ?DateTimeZone $timeZone,
         bool $shouldBeMutable,
-    ): Result
-    {
+    ): Result {
         $date = $shouldBeMutable
             ? DateTime::createFromFormat($format, $resolvedValue, $timeZone)
             : DateTimeImmutable::createFromFormat($format, $resolvedValue, $timeZone);

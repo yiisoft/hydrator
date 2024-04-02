@@ -241,7 +241,7 @@ final class ToDateTimeTest extends TestCase
 
     public static function dataResultType(): iterable
     {
-        yield 'immutable-to-immutable' =>[
+        yield 'immutable-to-immutable' => [
             DateTimeImmutable::class,
             static fn(DateTimeImmutable $a) => null,
             new DateTimeImmutable(),
@@ -251,7 +251,7 @@ final class ToDateTimeTest extends TestCase
             static fn(?DateTimeImmutable $a) => null,
             new DateTimeImmutable(),
         ];
-        yield 'mutable-to-immutable' =>[
+        yield 'mutable-to-immutable' => [
             DateTimeImmutable::class,
             static fn(DateTimeImmutable $a) => null,
             new DateTime(),
@@ -261,12 +261,12 @@ final class ToDateTimeTest extends TestCase
             static fn(?DateTimeImmutable $a) => null,
             new DateTime(),
         ];
-        yield 'string-to-immutable' =>[
+        yield 'string-to-immutable' => [
             DateTimeImmutable::class,
             static fn(DateTimeImmutable $a) => null,
             '12.11.2003',
         ];
-        yield 'immutable-to-mutable' =>[
+        yield 'immutable-to-mutable' => [
             DateTime::class,
             static fn(DateTime $a) => null,
             new DateTimeImmutable(),
@@ -276,7 +276,7 @@ final class ToDateTimeTest extends TestCase
             static fn(?DateTime $a) => null,
             new DateTimeImmutable(),
         ];
-        yield 'mutable-to-mutable' =>[
+        yield 'mutable-to-mutable' => [
             DateTime::class,
             static fn(DateTime $a) => null,
             new DateTime(),
@@ -286,12 +286,12 @@ final class ToDateTimeTest extends TestCase
             static fn(?DateTime $a) => null,
             new DateTime(),
         ];
-        yield 'string-to-mutable' =>[
+        yield 'string-to-mutable' => [
             DateTime::class,
             static fn(DateTime $a) => null,
             '12.11.2003',
         ];
-        yield 'immutable-to-interface' =>[
+        yield 'immutable-to-interface' => [
             DateTimeImmutable::class,
             static fn(DateTimeInterface $a) => null,
             new DateTimeImmutable(),
@@ -301,7 +301,7 @@ final class ToDateTimeTest extends TestCase
             static fn(?DateTimeInterface $a) => null,
             new DateTimeImmutable(),
         ];
-        yield 'mutable-to-interface' =>[
+        yield 'mutable-to-interface' => [
             DateTimeImmutable::class,
             static fn(DateTimeInterface $a) => null,
             new DateTime(),
@@ -311,7 +311,7 @@ final class ToDateTimeTest extends TestCase
             static fn(?DateTimeInterface $a) => null,
             new DateTime(),
         ];
-        yield 'string-to-interface' =>[
+        yield 'string-to-interface' => [
             DateTimeImmutable::class,
             static fn(DateTimeInterface $a) => null,
             '12.11.2003',
