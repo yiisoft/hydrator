@@ -9,5 +9,13 @@
         "stryker": {
             "report": "master"
         }
+    },
+    "mutators": {
+        "@default": true,
+        "FalseValue": {
+            "ignoreSourceCodeByRegex": [
+                ".*\\$hasMutable = false.*"
+            ]
+        }
     }
 }

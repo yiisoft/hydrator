@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
+use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use IntlDateFormatter;
+use ReflectionNamedType;
+use ReflectionUnionType;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
 /**
- * @psalm-import-type IntlDateFormatterFormat from ToDateTimeImmutable
+ * @psalm-import-type IntlDateFormatterFormat from ToDateTime
  */
-final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInterface
+final class ToDateTimeResolver implements ParameterAttributeResolverInterface
 {
     /**
      * @psalm-param IntlDateFormatterFormat $dateType
@@ -35,8 +38,8 @@ final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInt
         ParameterAttributeInterface $attribute,
         ParameterAttributeResolveContext $context
     ): Result {
-        if (!$attribute instanceof ToDateTimeImmutable) {
-            throw new UnexpectedAttributeException(ToDateTimeImmutable::class, $attribute);
+        if (!$attribute instanceof ToDateTime) {
+            throw new UnexpectedAttributeException(ToDateTime::class, $attribute);
         }
 
         if (!$context->isResolved()) {
@@ -44,13 +47,10 @@ final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInt
         }
 
         $resolvedValue = $context->getResolvedValue();
-
-        if ($resolvedValue instanceof DateTimeImmutable) {
-            return Result::success($resolvedValue);
-        }
+        $shouldBeMutable = $this->shouldResultBeMutable($context);
 
         if ($resolvedValue instanceof DateTimeInterface) {
-            return Result::success(DateTimeImmutable::createFromInterface($resolvedValue));
+            return $this->createSuccessResult($resolvedValue, $shouldBeMutable);
         }
 
         $timeZone = $attribute->timeZone ?? $this->timeZone;
@@ -60,14 +60,14 @@ final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInt
 
         if (is_int($resolvedValue)) {
             return Result::success(
-                $this->makeDateTimeFromTimestamp($resolvedValue, $timeZone)
+                $this->makeDateTimeFromTimestamp($resolvedValue, $timeZone, $shouldBeMutable)
             );
         }
 
         if (is_string($resolvedValue) && !empty($resolvedValue)) {
             $format = $attribute->format ?? $this->format;
             if (is_string($format) && str_starts_with($format, 'php:')) {
-                return $this->parseWithPhpFormat($resolvedValue, substr($format, 4), $timeZone);
+                return $this->parseWithPhpFormat($resolvedValue, substr($format, 4), $timeZone, $shouldBeMutable);
             }
             return $this->parseWithIntlFormat(
                 $resolvedValue,
@@ -76,6 +76,7 @@ final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInt
                 $attribute->timeType ?? $this->timeType,
                 $timeZone,
                 $attribute->locale ?? $this->locale,
+                $shouldBeMutable,
             );
         }
 
@@ -85,9 +86,16 @@ final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInt
     /**
      * @psalm-param non-empty-string $resolvedValue
      */
-    private function parseWithPhpFormat(string $resolvedValue, string $format, ?DateTimeZone $timeZone): Result
+    private function parseWithPhpFormat(
+        string $resolvedValue,
+        string $format,
+        ?DateTimeZone $timeZone,
+        bool $shouldBeMutable,
+    ): Result
     {
-        $date = DateTimeImmutable::createFromFormat($format, $resolvedValue, $timeZone);
+        $date = $shouldBeMutable
+            ? DateTime::createFromFormat($format, $resolvedValue, $timeZone)
+            : DateTimeImmutable::createFromFormat($format, $resolvedValue, $timeZone);
         if ($date === false) {
             return Result::fail();
         }
@@ -117,6 +125,7 @@ final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInt
         int $timeType,
         ?DateTimeZone $timeZone,
         ?string $locale,
+        bool $shouldBeMutable,
     ): Result {
         $formatter = $format === null
             ? new IntlDateFormatter($locale, $dateType, $timeType, $timeZone)
@@ -130,12 +139,63 @@ final class ToDateTimeImmutableResolver implements ParameterAttributeResolverInt
         $formatter->setLenient(false);
         $timestamp = $formatter->parse($resolvedValue);
         return is_int($timestamp)
-            ? Result::success($this->makeDateTimeFromTimestamp($timestamp, $timeZone))
+            ? Result::success($this->makeDateTimeFromTimestamp($timestamp, $timeZone, $shouldBeMutable))
             : Result::fail();
     }
 
-    private function makeDateTimeFromTimestamp(int $timestamp, ?DateTimeZone $timeZone): DateTimeImmutable
+    private function makeDateTimeFromTimestamp(
+        int $timestamp,
+        ?DateTimeZone $timeZone,
+        bool $shouldBeMutable
+    ): DateTimeInterface {
+        /**
+         * @psalm-suppress InvalidNamedArgument Psalm bug: https://github.com/vimeo/psalm/issues/10872
+         */
+        return $shouldBeMutable
+            ? (new DateTime(timezone: $timeZone))->setTimestamp($timestamp)
+            : (new DateTimeImmutable(timezone: $timeZone))->setTimestamp($timestamp);
+    }
+
+    private function createSuccessResult(DateTimeInterface $date, bool $shouldBeMutable): Result
     {
-        return (new DateTimeImmutable(timezone: $timeZone))->setTimestamp($timestamp);
+        if ($shouldBeMutable) {
+            return Result::success(
+                $date instanceof DateTime ? $date : DateTime::createFromInterface($date)
+            );
+        }
+        return Result::success(
+            $date instanceof DateTimeImmutable ? $date : DateTimeImmutable::createFromInterface($date)
+        );
+    }
+
+    private function shouldResultBeMutable(ParameterAttributeResolveContext $context): bool
+    {
+        $type = $context->getParameter()->getType();
+
+        if ($type instanceof ReflectionNamedType && $type->getName() === DateTime::class) {
+            return true;
+        }
+
+        if ($type instanceof ReflectionUnionType) {
+            $hasMutable = false;
+            /**
+             * @psalm-suppress RedundantConditionGivenDocblockType Need for PHP 8.1
+             */
+            foreach ($type->getTypes() as $subType) {
+                if ($subType instanceof ReflectionNamedType) {
+                    switch ($subType->getName()) {
+                        case DateTime::class:
+                            $hasMutable = true;
+                            break;
+                        case DateTimeImmutable::class:
+                        case DateTimeInterface::class:
+                            return false;
+                    }
+                }
+            }
+            return $hasMutable;
+        }
+
+        return false;
     }
 }

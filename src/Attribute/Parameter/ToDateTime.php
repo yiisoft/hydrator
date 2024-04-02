@@ -13,7 +13,7 @@ use IntlDateFormatter;
  * @psalm-type IntlDateFormatterFormat = IntlDateFormatter::FULL | IntlDateFormatter::LONG | IntlDateFormatter::MEDIUM | IntlDateFormatter::SHORT | IntlDateFormatter::NONE
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
-final class ToDateTimeImmutable implements ParameterAttributeInterface
+final class ToDateTime implements ParameterAttributeInterface
 {
     /**
      * @psalm-param IntlDateFormatterFormat|null $dateType
@@ -31,6 +31,6 @@ final class ToDateTimeImmutable implements ParameterAttributeInterface
 
     public function getResolver(): string
     {
-        return ToDateTimeImmutableResolver::class;
+        return ToDateTimeResolver::class;
     }
 }

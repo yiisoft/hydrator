@@ -2,7 +2,7 @@
 
 ## 1.2.0 under development
 
-- New #77: Add `ToDateTimeImmutable` parameter attribute (@vjik)
+- New #77: Add `ToDateTime` parameter attribute (@vjik)
 - Enh #76: Raise the minimum version of PHP to 8.1 (@vjik)
 
 ## 1.1.0 February 09, 2024

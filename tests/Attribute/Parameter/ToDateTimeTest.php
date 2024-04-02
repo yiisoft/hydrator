@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
+use Closure;
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use DateTimeZone;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Yiisoft\Hydrator\ArrayData;
-use Yiisoft\Hydrator\Attribute\Parameter\ToDateTimeImmutable;
-use Yiisoft\Hydrator\Attribute\Parameter\ToDateTimeImmutableResolver;
+use Yiisoft\Hydrator\Attribute\Parameter\ToDateTime;
+use Yiisoft\Hydrator\Attribute\Parameter\ToDateTimeResolver;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
@@ -24,51 +26,51 @@ use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
-final class ToDateTimeImmutableTest extends TestCase
+final class ToDateTimeTest extends TestCase
 {
     public static function dataBase(): iterable
     {
         yield 'DateTime' => [
             new DateTimeImmutable('04/01/2024'),
-            new ToDateTimeImmutable(),
+            new ToDateTime(),
             new DateTime('04/01/2024'),
         ];
         yield 'DateTimeImmutable' => [
             new DateTimeImmutable('04/01/2024'),
-            new ToDateTimeImmutable(),
+            new ToDateTime(),
             new DateTimeImmutable('04/01/2024'),
         ];
         yield 'string-php-format' => [
             new DateTimeImmutable('04/01/2024'),
-            new ToDateTimeImmutable(format: 'php:m/d/Y'),
+            new ToDateTime(format: 'php:m/d/Y'),
             '04/01/2024',
         ];
         yield 'string-intl-format' => [
             new DateTimeImmutable('04/01/2024'),
-            new ToDateTimeImmutable(format: 'MM/dd/yyyy'),
+            new ToDateTime(format: 'MM/dd/yyyy'),
             '04/01/2024',
         ];
         yield 'timestamp-integer' => [
             (new DateTimeImmutable())->setTimestamp(1711972838),
-            new ToDateTimeImmutable(),
+            new ToDateTime(),
             1711972838,
         ];
         yield 'timezone' => [
             new DateTimeImmutable('12.11.2003, 07:20', new DateTimeZone('UTC')),
-            new ToDateTimeImmutable(format: 'php:d.m.Y, H:i', timeZone: 'GMT+5'),
+            new ToDateTime(format: 'php:d.m.Y, H:i', timeZone: 'GMT+5'),
             '12.11.2003, 12:20',
         ];
         yield 'locale-ru' => [
             new DateTimeImmutable('12.11.2020, 12:20'),
-            new ToDateTimeImmutable(locale: 'ru'),
+            new ToDateTime(locale: 'ru'),
             '12.11.2020, 12:20',
         ];
     }
 
     #[DataProvider('dataBase')]
-    public function testBase(DateTimeImmutable $expected, ToDateTimeImmutable $attribute, mixed $value): void
+    public function testBase(DateTimeImmutable $expected, ToDateTime $attribute, mixed $value): void
     {
-        $resolver = new ToDateTimeImmutableResolver();
+        $resolver = new ToDateTimeResolver();
         $context = new ParameterAttributeResolveContext(
             TestHelper::getFirstParameter(static fn(?DateTimeImmutable $a) => null),
             Result::success($value),
@@ -85,12 +87,13 @@ final class ToDateTimeImmutableTest extends TestCase
     {
         $hydrator = new Hydrator();
         $object = new class () {
-            #[ToDateTimeImmutable(format: 'php:d.m.Y')]
+            #[ToDateTime(format: 'php:d.m.Y')]
             public ?DateTimeImmutable $a = null;
         };
 
         $hydrator->hydrate($object, ['a' => '12.11.2003']);
 
+        $this->assertInstanceOf(DateTimeImmutable::class, $object->a);
         $this->assertEquals(new DateTimeImmutable('12.11.2003'), $object->a);
     }
 
@@ -106,7 +109,7 @@ final class ToDateTimeImmutableTest extends TestCase
     {
         $hydrator = new Hydrator();
         $object = new class () {
-            #[ToDateTimeImmutable(format: 'php:d.m.Y')]
+            #[ToDateTime(format: 'php:d.m.Y')]
             public ?DateTimeImmutable $a = null;
         };
 
@@ -120,7 +123,7 @@ final class ToDateTimeImmutableTest extends TestCase
     {
         $hydrator = new Hydrator();
         $object = new class () {
-            #[ToDateTimeImmutable(format: 'dd.MM.yyyy')]
+            #[ToDateTime(format: 'dd.MM.yyyy')]
             public ?DateTimeImmutable $a = null;
         };
 
@@ -133,7 +136,7 @@ final class ToDateTimeImmutableTest extends TestCase
     {
         $hydrator = new Hydrator();
         $object = new class () {
-            #[ToDateTimeImmutable(format: 'php:d.m.Y')]
+            #[ToDateTime(format: 'php:d.m.Y')]
             public ?DateTimeImmutable $a = null;
         };
 
@@ -147,12 +150,12 @@ final class ToDateTimeImmutableTest extends TestCase
         $hydrator = new Hydrator(
             attributeResolverFactory: new ContainerAttributeResolverFactory(
                 new SimpleContainer([
-                    ToDateTimeImmutableResolver::class => new ToDateTimeImmutableResolver(format: 'php:Y?m?d'),
+                    ToDateTimeResolver::class => new ToDateTimeResolver(format: 'php:Y?m?d'),
                 ]),
             ),
         );
         $object = new class () {
-            #[ToDateTimeImmutable]
+            #[ToDateTime]
             public ?DateTimeImmutable $a = null;
         };
 
@@ -166,12 +169,12 @@ final class ToDateTimeImmutableTest extends TestCase
         $hydrator = new Hydrator(
             attributeResolverFactory: new ContainerAttributeResolverFactory(
                 new SimpleContainer([
-                    ToDateTimeImmutableResolver::class => new ToDateTimeImmutableResolver(timeZone: 'GMT+3'),
+                    ToDateTimeResolver::class => new ToDateTimeResolver(timeZone: 'GMT+3'),
                 ]),
             ),
         );
         $object = new class () {
-            #[ToDateTimeImmutable(locale: 'ru', timeZone: 'UTC')]
+            #[ToDateTime(locale: 'ru', timeZone: 'UTC')]
             public ?DateTimeImmutable $a = null;
         };
 
@@ -185,12 +188,12 @@ final class ToDateTimeImmutableTest extends TestCase
         $hydrator = new Hydrator(
             attributeResolverFactory: new ContainerAttributeResolverFactory(
                 new SimpleContainer([
-                    ToDateTimeImmutableResolver::class => new ToDateTimeImmutableResolver(locale: 'en'),
+                    ToDateTimeResolver::class => new ToDateTimeResolver(locale: 'en'),
                 ]),
             ),
         );
         $object = new class () {
-            #[ToDateTimeImmutable(locale: 'ru')]
+            #[ToDateTime(locale: 'ru')]
             public ?DateTimeImmutable $a = null;
         };
 
@@ -204,12 +207,12 @@ final class ToDateTimeImmutableTest extends TestCase
         $hydrator = new Hydrator(
             attributeResolverFactory: new ContainerAttributeResolverFactory(
                 new SimpleContainer([
-                    ToDateTimeImmutableResolver::class => new ToDateTimeImmutableResolver(format: 'php:Y-m-d'),
+                    ToDateTimeResolver::class => new ToDateTimeResolver(format: 'php:Y-m-d'),
                 ]),
             ),
         );
         $object = new class () {
-            #[ToDateTimeImmutable(format: 'php:d.m.Y')]
+            #[ToDateTime(format: 'php:d.m.Y')]
             public ?DateTimeImmutable $a = null;
         };
 
@@ -223,7 +226,7 @@ final class ToDateTimeImmutableTest extends TestCase
         $hydrator = new Hydrator(
             attributeResolverFactory: new ContainerAttributeResolverFactory(
                 new SimpleContainer([
-                    CounterResolver::class => new ToDateTimeImmutableResolver(),
+                    CounterResolver::class => new ToDateTimeResolver(),
                 ]),
             ),
         );
@@ -231,8 +234,139 @@ final class ToDateTimeImmutableTest extends TestCase
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage(
-            'Expected "' . ToDateTimeImmutable::class . '", but "' . Counter::class . '" given.'
+            'Expected "' . ToDateTime::class . '", but "' . Counter::class . '" given.'
         );
         $hydrator->hydrate($object);
+    }
+
+    public static function dataResultType(): iterable
+    {
+        yield 'immutable-to-immutable' =>[
+            DateTimeImmutable::class,
+            static fn(DateTimeImmutable $a) => null,
+            new DateTimeImmutable(),
+        ];
+        yield 'immutable-to-nullable-immutable' => [
+            DateTimeImmutable::class,
+            static fn(?DateTimeImmutable $a) => null,
+            new DateTimeImmutable(),
+        ];
+        yield 'mutable-to-immutable' =>[
+            DateTimeImmutable::class,
+            static fn(DateTimeImmutable $a) => null,
+            new DateTime(),
+        ];
+        yield 'mutable-to-nullable-immutable' => [
+            DateTimeImmutable::class,
+            static fn(?DateTimeImmutable $a) => null,
+            new DateTime(),
+        ];
+        yield 'string-to-immutable' =>[
+            DateTimeImmutable::class,
+            static fn(DateTimeImmutable $a) => null,
+            '12.11.2003',
+        ];
+        yield 'immutable-to-mutable' =>[
+            DateTime::class,
+            static fn(DateTime $a) => null,
+            new DateTimeImmutable(),
+        ];
+        yield 'immutable-to-nullable-mutable' => [
+            DateTime::class,
+            static fn(?DateTime $a) => null,
+            new DateTimeImmutable(),
+        ];
+        yield 'mutable-to-mutable' =>[
+            DateTime::class,
+            static fn(DateTime $a) => null,
+            new DateTime(),
+        ];
+        yield 'mutable-to-nullable-mutable' => [
+            DateTime::class,
+            static fn(?DateTime $a) => null,
+            new DateTime(),
+        ];
+        yield 'string-to-mutable' =>[
+            DateTime::class,
+            static fn(DateTime $a) => null,
+            '12.11.2003',
+        ];
+        yield 'immutable-to-interface' =>[
+            DateTimeImmutable::class,
+            static fn(DateTimeInterface $a) => null,
+            new DateTimeImmutable(),
+        ];
+        yield 'immutable-to-nullable-interface' => [
+            DateTimeImmutable::class,
+            static fn(?DateTimeInterface $a) => null,
+            new DateTimeImmutable(),
+        ];
+        yield 'mutable-to-interface' =>[
+            DateTimeImmutable::class,
+            static fn(DateTimeInterface $a) => null,
+            new DateTime(),
+        ];
+        yield 'mutable-to-nullable-interface' => [
+            DateTimeImmutable::class,
+            static fn(?DateTimeInterface $a) => null,
+            new DateTime(),
+        ];
+        yield 'string-to-interface' =>[
+            DateTimeImmutable::class,
+            static fn(DateTimeInterface $a) => null,
+            '12.11.2003',
+        ];
+        yield 'string-to-interface-and-mutable' => [
+            DateTimeImmutable::class,
+            static fn(DateTimeInterface|DateTime $a) => null,
+            '12.11.2003',
+        ];
+        yield 'string-to-immutable-and-mutable' => [
+            DateTimeImmutable::class,
+            static fn(DateTimeImmutable|DateTime $a) => null,
+            '12.11.2003',
+        ];
+        yield 'string-to-mutable-and-immutable' => [
+            DateTimeImmutable::class,
+            static fn(DateTime|DateTimeImmutable $a) => null,
+            '12.11.2003',
+        ];
+        yield 'string-to-int-and-mutable' => [
+            DateTime::class,
+            static fn(int|DateTime $a) => null,
+            '12.11.2003',
+        ];
+    }
+
+    #[DataProvider('dataResultType')]
+    public function testResultType(string $expected, Closure $closure, mixed $value): void
+    {
+        $resolver = new ToDateTimeResolver();
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter($closure),
+            Result::success($value),
+            new ArrayData(),
+        );
+
+        $result = $resolver->getParameterValue(new ToDateTime(format: 'php:d.m.Y'), $context);
+
+        $this->assertTrue($result->isResolved());
+        $this->assertInstanceOf($expected, $result->getValue());
+    }
+
+    #[DataProvider('dataResultType')]
+    public function testResultTypeWithIntlFormat(string $expected, Closure $closure, mixed $value): void
+    {
+        $resolver = new ToDateTimeResolver();
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter($closure),
+            Result::success($value),
+            new ArrayData(),
+        );
+
+        $result = $resolver->getParameterValue(new ToDateTime(format: 'dd.MM.yyyy'), $context);
+
+        $this->assertTrue($result->isResolved());
+        $this->assertInstanceOf($expected, $result->getValue());
     }
 }
