@@ -1,5 +1,9 @@
 # Yii Hydrator Change Log
 
+## 1.2.1 under development
+
+- no changes in this release.
+
 ## 1.2.0 April 03, 2024
 
 - New #77: Add `ToDateTime` parameter attribute (@vjik)
