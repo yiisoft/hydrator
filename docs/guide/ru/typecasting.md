@@ -155,3 +155,21 @@ class Person
 
 $person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
 ```
+
+Для удаления пробелов (или других символов) из начала и/или конца строки, вы можете использовать атрибуты `Trim`,
+`LeftTrim` или `RightTrim`:
+
+```php
+use DateTimeImmutable;
+use Yiisoft\Hydrator\Attribute\Parameter\Trim;
+
+class Person
+{
+    public function __construct(
+        #[Trim] // '  John ' → 'John'
+        private ?string $name = null, 
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, ['name' => '  John ']);
+```

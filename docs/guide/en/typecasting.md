@@ -155,3 +155,21 @@ class Person
 
 $person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
 ```
+
+To strip whitespace (or other characters) from the beginning and/or end of a resolved string value, you can use `Trim`, 
+`LeftTrim` or `RightTrim` attributes:
+
+```php
+use DateTimeImmutable;
+use Yiisoft\Hydrator\Attribute\Parameter\Trim;
+
+class Person
+{
+    public function __construct(
+        #[Trim] // '  John ' → 'John'
+        private ?string $name = null, 
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, ['name' => '  John ']);
+```
