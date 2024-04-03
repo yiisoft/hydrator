@@ -138,3 +138,20 @@ $money = $hydrator->create(Money::class, [
     'currency' => 'AMD',
 ]);
 ```
+
+Для приведения значения к объекту `DateTimeImmutable` или `DateTime` явно, вы можете использовать атрибут `ToDateTime`:
+
+```php
+use DateTimeImmutable;
+use Yiisoft\Hydrator\Attribute\Parameter\ToDateTime;
+
+class Person
+{
+    public function __construct(
+        #[ToDateTime(locale: 'ru')]
+        private ?DateTimeImmutable $birthday = null,
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
+```
