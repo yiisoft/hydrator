@@ -39,4 +39,3 @@ final class LeftTrimResolver implements ParameterAttributeResolverInterface
         );
     }
 }
-

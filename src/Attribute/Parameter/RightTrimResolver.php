@@ -39,4 +39,3 @@ final class RightTrimResolver implements ParameterAttributeResolverInterface
         );
     }
 }
-
