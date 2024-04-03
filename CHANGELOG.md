@@ -1,6 +1,6 @@
 # Yii Hydrator Change Log
 
-## 1.2.0 under development
+## 1.2.0 April 03, 2024
 
 - New #77: Add `ToDateTime` parameter attribute (@vjik)
 - New #79: Add `Trim`, `LeftTrim` and `RightTrim` parameter attributes (@vjik)
