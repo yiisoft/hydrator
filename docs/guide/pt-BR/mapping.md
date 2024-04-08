@@ -1,7 +1,7 @@
-# Mapping
+# Mapeamento
 
-In many cases, class attribute names differ from data keys you fill and/or create objects of the class with.
-For example, we have a blog post class:
+Em muitos casos, os nomes dos atributos de classe diferem das chaves de dados com as quais você preenche e/ou cria objetos da classe.
+Por exemplo, temos uma classe de postagem de blog:
 
 ```php
 final class Post
@@ -9,7 +9,7 @@ final class Post
     public function __construct(
         private string $title,
         private string $body,
-    ) {        
+        ) {
     }
 
     public function getTitle(): string
@@ -24,13 +24,13 @@ final class Post
 }
 ```
 
-But the data you have has differently named keys:
+Mas os dados que você possui têm chaves com nomes diferentes:
 
 ```php
 $data = ['header' => 'First post', 'text' => 'Hello, world!'];
 ```
 
-Hydrator allows you to map data:
+O Hydrator permite mapear os dados:
 
 ```php
 use Yiisoft\Hydrator\Hydrator;
@@ -42,11 +42,11 @@ $map = ['title' => 'header', 'body' => 'text'];
 $post = $hydrator->create(Post::class, new ArrayData($data, $map));
 ```
 
-This way we take `header` key for `title` and `text` key for `body`.
+Desta forma, pegamos a chave `header` para `title` e a chave `text` para `body`.
 
-## Strict mode
+## Strict mode (Modo estrito)
 
-You can enable strict mode by passing `true` as a third argument of `ArrayData`:
+Você pode ativar o modo estrito passando `true` como terceiro argumento de `ArrayData`:
 
 ```php
 use Yiisoft\Hydrator\Hydrator;
@@ -58,11 +58,11 @@ $map = ['title' => 'header', 'body' => 'text'],;
 $post = $hydrator->create(Post::class, new ArrayData($data, $map, true));
 ```
 
-In this case, keys absent from the map are ignored so everything should be mapped explicitly.
+Neste caso, as chaves ausentes do mapa são ignoradas, portanto tudo deve ser mapeado explicitamente.
 
-## Using attributes
+## Usando atributos
 
-Alternatively to specifying mapping as an array, you can use `Data` attribute to define mapping inline:
+Alternativamente à especificação do mapeamento como um array, você pode usar o atributo `Data` para definir o mapeamento inline:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\Parameter\Data;
@@ -83,7 +83,7 @@ $person = $hydrator->create(Person::class, [
 ]);
 ```
 
-To skip hydration of a specific property, use `SkipHydration` attribute:
+Para pular a hidratação de uma propriedade específica, use o atributo `SkipHydration`:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\SkipHydration;
@@ -95,9 +95,9 @@ class MyClass
 }
 ```
 
-## Resolving dependencies
+## Resolvendo dependências
 
-To resolve dependencies by specific ID using DI container, use `Di` attribute:
+Para resolver dependências por ID específico usando o contêiner DI, use o atributo `Di`:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\Parameter\Di;
@@ -111,4 +111,4 @@ class MyClass
 }
 ```
 
-The annotation will instruct hydrator to get `$connection` from DI container by `importConnection` ID.
+A anotação instruirá o hydrator a obter `$connection` do contêiner DI pelo ID `importConnection`.
