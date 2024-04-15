@@ -21,7 +21,7 @@ Features are:
 
 - supports properties of any visibility;
 - uses constructor arguments to create objects;
-- resolves dependencies when creating objects using [PSR-11](http://www.php-fig.org/psr/psr-11/) compatible DI container
+- resolves dependencies when creating objects using [PSR-11](https://www.php-fig.org/psr/psr-11/) compatible DI container
   provided;
 - supports nested objects;
 - supports mapping;
