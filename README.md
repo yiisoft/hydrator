@@ -97,15 +97,15 @@ argument passing `V8` as the `name` argument to its constructor.
 
 ## Documentation
 
-- [Guide](docs/guide/en/README.md)
-- [Internals](docs/internals.md)
+- [English](docs/guide/en/README.md)
+- [Português - Brasil](docs/guide/pt-BR/README.md)
 
-## License
+- More information can be found in the [Internals.](docs/internals.md)
 
-The Yii Hydrator is free software. It's released under the terms of the BSD License.
-Please see [`LICENSE`](./LICENSE.md) for more information.
+## Support
 
-Maintained by [Yii Software](https://www.yiiframework.com/).
+If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for that.
+You may also check out other [Yii Community Resources](https://www.yiiframework.com/community).
 
 ## Support the project
 
@@ -118,3 +118,10 @@ Maintained by [Yii Software](https://www.yiiframework.com/).
 [![Telegram](https://img.shields.io/badge/telegram-join-1DA1F2?style=flat&logo=telegram)](https://t.me/yii3en)
 [![Facebook](https://img.shields.io/badge/facebook-join-1DA1F2?style=flat&logo=facebook&logoColor=ffffff)](https://www.facebook.com/groups/yiitalk)
 [![Slack](https://img.shields.io/badge/slack-join-1DA1F2?style=flat&logo=slack)](https://yiiframework.com/go/slack)
+
+## License
+
+The Yii Hydrator is free software. It is released under the terms of the BSD License.
+Please see [`LICENSE`](./LICENSE.md) for more information.
+
+Maintained by [Yii Software](https://www.yiiframework.com/).
