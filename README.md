@@ -99,8 +99,7 @@ argument passing `V8` as the `name` argument to its constructor.
 
 - [English](docs/guide/en/README.md)
 - [Português - Brasil](docs/guide/pt-BR/README.md)
-
-- More information can be found in the [Internals.](docs/internals.md)
+- [Internals](docs/internals.md)
 
 ## Support
 
