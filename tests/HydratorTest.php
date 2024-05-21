@@ -749,7 +749,7 @@ final class HydratorTest extends TestCase
         $this->assertSame(4, $object->d);
     }
 
-    public function testNonInitializedReadonlyProperties(): void
+    public function testCreateNonInitializedReadonlyProperties(): void
     {
         $hydrator = new Hydrator();
 
@@ -757,5 +757,16 @@ final class HydratorTest extends TestCase
 
         $this->assertSame('1', $object->a);
         $this->assertSame('2', $object->b);
+    }
+
+    public function testHydrateNonInitializedReadonlyProperties(): void
+    {
+        $hydrator = new Hydrator();
+
+        $object = new NonInitializedReadonlyProperties('3');
+        $hydrator->hydrate($object, ['a' => 1, 'b' => 2]);
+
+        $this->assertSame('1', $object->a);
+        $this->assertSame('3', $object->b);
     }
 }
