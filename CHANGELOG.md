@@ -1,8 +1,8 @@
 # Yii Hydrator Change Log
 
-## 1.2.1 under development
+## 1.3.0 under development
 
-- no changes in this release.
+- Enh #85: Allow to hydrate non-initialized readonly properties (@vjik)
 
 ## 1.2.0 April 03, 2024
 

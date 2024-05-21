@@ -32,6 +32,7 @@ use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\InvalidDataResolverClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\NestedModel\UserModel;
+use Yiisoft\Hydrator\Tests\Support\Classes\NonInitializedReadonlyProperties;
 use Yiisoft\Hydrator\Tests\Support\Classes\ObjectPropertyModel\ObjectPropertyModel;
 use Yiisoft\Hydrator\Tests\Support\Classes\ObjectPropertyModel\RedCar;
 use Yiisoft\Hydrator\Tests\Support\Classes\PreparePropertyClass;
@@ -746,5 +747,15 @@ final class HydratorTest extends TestCase
         $this->assertSame(2, $object->b);
         $this->assertSame(3, $object->c);
         $this->assertSame(4, $object->d);
+    }
+
+    public function testNonInitializedReadonlyProperties(): void
+    {
+        $hydrator = new Hydrator();
+
+        $object = $hydrator->create(NonInitializedReadonlyProperties::class, ['a' => 1, 'b' => 2]);
+
+        $this->assertSame('1', $object->a);
+        $this->assertSame('2', $object->b);
     }
 }

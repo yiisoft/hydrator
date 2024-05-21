@@ -20,6 +20,7 @@ final class ReflectionFilter
      * @return array<string, ReflectionProperty>
      */
     public static function filterProperties(
+        object $object,
         ReflectionClass $reflectionClass,
         array $propertyNamesToFilter = []
     ): array {
@@ -30,7 +31,7 @@ final class ReflectionFilter
                 continue;
             }
 
-            if ($property->isReadOnly()) {
+            if ($property->isReadOnly() && $property->isInitialized($object)) {
                 continue;
             }
             $propertyName = $property->getName();
