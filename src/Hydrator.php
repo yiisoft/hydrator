@@ -79,7 +79,7 @@ final class Hydrator implements HydratorInterface
 
         $this->hydrateInternal(
             $object,
-            ReflectionFilter::filterProperties($reflectionClass),
+            ReflectionFilter::filterProperties($object, $reflectionClass),
             $data
         );
     }
@@ -108,7 +108,7 @@ final class Hydrator implements HydratorInterface
 
         $this->hydrateInternal(
             $object,
-            ReflectionFilter::filterProperties($reflectionClass, $excludeProperties),
+            ReflectionFilter::filterProperties($object, $reflectionClass, $excludeProperties),
             $data
         );
 
