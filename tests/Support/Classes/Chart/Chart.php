@@ -12,8 +12,7 @@ final class Chart
         #[Collection(Point::class)]
         private array $points = [],
         // private ?Point $point = null,
-    )
-    {
+    ) {
     }
 
     public function getPoints(): array
