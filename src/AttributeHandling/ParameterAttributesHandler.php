@@ -13,6 +13,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\ArrayData;
 use Yiisoft\Hydrator\DataInterface;
+use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\Result;
 
 /**
@@ -22,6 +23,7 @@ final class ParameterAttributesHandler
 {
     public function __construct(
         private AttributeResolverFactoryInterface $attributeResolverFactory,
+        private HydratorInterface $hydrator,
     ) {
     }
 
@@ -60,7 +62,7 @@ final class ParameterAttributesHandler
                 );
             }
 
-            $context = new ParameterAttributeResolveContext($parameter, $resolveResult, $data);
+            $context = new ParameterAttributeResolveContext($parameter, $resolveResult, $data, $this->hydrator);
 
             $tryResolveResult = $resolver->getParameterValue($attribute, $context);
             if ($tryResolveResult->isResolved()) {

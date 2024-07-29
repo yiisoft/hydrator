@@ -7,6 +7,7 @@ namespace Yiisoft\Hydrator\AttributeHandling;
 use ReflectionParameter;
 use ReflectionProperty;
 use Yiisoft\Hydrator\DataInterface;
+use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\Result;
 
 /**
@@ -23,6 +24,7 @@ final class ParameterAttributeResolveContext
         private ReflectionParameter|ReflectionProperty $parameter,
         private Result $resolveResult,
         private DataInterface $data,
+        private HydratorInterface $hydrator,
     ) {
     }
 
@@ -65,5 +67,10 @@ final class ParameterAttributeResolveContext
     public function getData(): DataInterface
     {
         return $this->data;
+    }
+
+    public function getHydrator(): HydratorInterface
+    {
+        return $this->hydrator;
     }
 }
