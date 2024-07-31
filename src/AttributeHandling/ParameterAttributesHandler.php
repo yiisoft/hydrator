@@ -23,7 +23,7 @@ final class ParameterAttributesHandler
 {
     public function __construct(
         private AttributeResolverFactoryInterface $attributeResolverFactory,
-        private HydratorInterface $hydrator,
+        private ?HydratorInterface $hydrator = null,
     ) {
     }
 
@@ -62,6 +62,7 @@ final class ParameterAttributesHandler
                 );
             }
 
+            $this->requireHydrator();
             $context = new ParameterAttributeResolveContext($parameter, $resolveResult, $data, $this->hydrator);
 
             $tryResolveResult = $resolver->getParameterValue($attribute, $context);
@@ -71,5 +72,19 @@ final class ParameterAttributesHandler
         }
 
         return $resolveResult;
+    }
+
+    /**
+     * Ensure that validator is set in paramater attributes handler.
+     *
+     * @psalm-assert HydratorInterface $this->hydrator
+     *
+     * @throws RuntimeException If hydrator is not set in parameter attributes handler.
+     */
+    private function requireHydrator(): void
+    {
+        if ($this->hydrator === null) {
+            throw new RuntimeException('Hydrator is not set in parameter attributes handler.');
+        }
     }
 }

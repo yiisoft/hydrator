@@ -43,6 +43,7 @@ final class ToStringTest extends TestCase
             TestHelper::getFirstParameter(static fn(string $a) => null),
             Result::success($value),
             new ArrayData(),
+            new Hydrator(),
         );
 
         $result = $attribute->getParameterValue($attribute, $context);
