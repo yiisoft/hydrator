@@ -11,8 +11,7 @@ final class ChartSet
     public function __construct(
         #[Collection(Chart::class)]
         private array $charts = [],
-    )
-    {
+    ) {
     }
 
     public function getCharts(): array

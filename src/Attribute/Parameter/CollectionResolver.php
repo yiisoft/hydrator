@@ -13,8 +13,7 @@ final class CollectionResolver implements ParameterAttributeResolverInterface
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
         ParameterAttributeResolveContext $context,
-    ): Result
-    {
+    ): Result {
         if (!$attribute instanceof Collection) {
             throw new UnexpectedAttributeException(Collection::class, $attribute);
         }
