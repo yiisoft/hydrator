@@ -10,8 +10,7 @@ final class Chart
 {
     public function __construct(
         #[Collection(Point::class)]
-        private array $points = [],
-        // private ?Point $point = null,
+        private array $points,
     ) {
     }
 
@@ -19,9 +18,4 @@ final class Chart
     {
         return $this->points;
     }
-
-//    public function getPoint(): ?Point
-//    {
-//        return $this->point;
-//    }
 }

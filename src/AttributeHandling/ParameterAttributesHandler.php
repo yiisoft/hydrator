@@ -75,7 +75,7 @@ final class ParameterAttributesHandler
     }
 
     /**
-     * Ensure that validator is set in paramater attributes handler.
+     * Ensure that validator is set in parameter attributes handler.
      *
      * @psalm-assert HydratorInterface $this->hydrator
      *

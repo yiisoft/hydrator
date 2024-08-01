@@ -13,9 +13,4 @@ final class ChartSet
         private array $charts = [],
     ) {
     }
-
-    public function getCharts(): array
-    {
-        return $this->charts;
-    }
 }

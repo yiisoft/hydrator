@@ -11,14 +11,4 @@ final class Point
         private array $rgb,
     ) {
     }
-
-    public function getCoordinates(): Coordinates
-    {
-        return $this->coordinates;
-    }
-
-    public function getRgb(): array
-    {
-        return $this->rgb;
-    }
 }

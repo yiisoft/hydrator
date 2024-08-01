@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Tests\AttributeHandling;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
@@ -69,5 +70,15 @@ final class ParameterAttributesHandlerTest extends TestCase
         $result = $handler->handle($parameter);
 
         $this->assertSame('42', $result->getValue());
+    }
+
+    public function testHydratorNotSet(): void
+    {
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());
+        $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Hydrator is not set in parameter attributes handler.');
+        $handler->handle($parameter);
     }
 }

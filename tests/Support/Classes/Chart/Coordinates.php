@@ -11,14 +11,4 @@ final class Coordinates
         private int $y,
     ) {
     }
-
-    public function getX(): int
-    {
-        return $this->x;
-    }
-
-    public function getY(): int
-    {
-        return $this->y;
-    }
 }
