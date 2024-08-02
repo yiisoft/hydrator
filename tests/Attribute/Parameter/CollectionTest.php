@@ -101,35 +101,35 @@ final class CollectionTest extends TestCase
                 [
                     [
                         'points' => [
-                            ['coordinates' => ['x' => -11, 'y' => 11], 'rgb' => [-1, 256, 0]],
-                            ['coordinates' => ['x' => -12, 'y' => 12], 'rgb' => [0, -2, 257]],
+                            ['coordinates' => ['x' => 1, 'y' => 1], 'rgb' => [255, 0, 0]],
+                            ['coordinates' => ['x' => 2, 'y' => 2], 'rgb' => [255, 0, 0]],
                         ],
                     ],
                     [
                         'points' => [
-                            ['coordinates' => ['x' => -1, 'y' => 1], 'rgb' => [0, 0, 0]],
-                            ['coordinates' => ['x' => -2, 'y' => 2], 'rgb' => [255, 255, 255]],
+                            ['coordinates' => ['x' => 3, 'y' => 3], 'rgb' => [0, 255, 0]],
+                            ['coordinates' => ['x' => 4, 'y' => 4], 'rgb' => [0, 255, 0]],
                         ],
                     ],
                     [
                         'points' => [
-                            ['coordinates' => ['x' => -13, 'y' => 13], 'rgb' => [-3, 258, 0]],
-                            ['coordinates' => ['x' => -14, 'y' => 14], 'rgb' => [0, -4, 259]],
+                            ['coordinates' => ['x' => 5, 'y' => 5], 'rgb' => [0, 0, 255]],
+                            ['coordinates' => ['x' => 6, 'y' => 6], 'rgb' => [0, 0, 255]],
                         ],
                     ],
                 ],
                 [
                     new Chart([
-                        new Point(new Coordinates(-11, 11), [-1, 256, 0]),
-                        new Point(new Coordinates(-12, 12), [0, -2, 257]),
+                        new Point(new Coordinates(1, 1), [255, 0, 0]),
+                        new Point(new Coordinates(2, 2), [255, 0, 0]),
                     ]),
                     new Chart([
-                        new Point(new Coordinates(-1, 1), [0, 0, 0]),
-                        new Point(new Coordinates(-2, 2), [255, 255, 255]),
+                        new Point(new Coordinates(3, 3), [0, 255, 0]),
+                        new Point(new Coordinates(4, 4), [0, 255, 0]),
                     ]),
                     new Chart([
-                        new Point(new Coordinates(-13, 13), [-3, 258, 0]),
-                        new Point(new Coordinates(-14, 14), [0, -4, 259]),
+                        new Point(new Coordinates(5, 5), [0, 0, 255]),
+                        new Point(new Coordinates(6, 6), [0, 0, 255]),
                     ]),
                 ],
             ],
@@ -179,20 +179,20 @@ final class CollectionTest extends TestCase
                 'charts' => [
                     [
                         'points' => [
-                            ['coordinates' => ['x' => -11, 'y' => 11], 'rgb' => [-1, 256, 0]],
-                            ['coordinates' => ['x' => -12, 'y' => 12], 'rgb' => [0, -2, 257]],
+                            ['coordinates' => ['x' => 1, 'y' => 1], 'rgb' => [255, 0, 0]],
+                            ['coordinates' => ['x' => 2, 'y' => 2], 'rgb' => [255, 0, 0]],
                         ],
                     ],
                     [
                         'points' => [
-                            ['coordinates' => ['x' => -1, 'y' => 1], 'rgb' => [0, 0, 0]],
-                            ['coordinates' => ['x' => -2, 'y' => 2], 'rgb' => [255, 255, 255]],
+                            ['coordinates' => ['x' => 3, 'y' => 3], 'rgb' => [0, 255, 0]],
+                            ['coordinates' => ['x' => 4, 'y' => 4], 'rgb' => [0, 255, 0]],
                         ],
                     ],
                     [
                         'points' => [
-                            ['coordinates' => ['x' => -13, 'y' => 13], 'rgb' => [-3, 258, 0]],
-                            ['coordinates' => ['x' => -14, 'y' => 14], 'rgb' => [0, -4, 259]],
+                            ['coordinates' => ['x' => 5, 'y' => 5], 'rgb' => [0, 0, 255]],
+                            ['coordinates' => ['x' => 6, 'y' => 6], 'rgb' => [0, 0, 255]],
                         ],
                     ],
                 ],
@@ -202,16 +202,16 @@ final class CollectionTest extends TestCase
         $this->assertEquals(
             new ChartSet([
                 new Chart([
-                    new Point(new Coordinates(-11, 11), [-1, 256, 0]),
-                    new Point(new Coordinates(-12, 12), [0, -2, 257]),
+                    new Point(new Coordinates(1, 1), [255, 0, 0]),
+                    new Point(new Coordinates(2, 2), [255, 0, 0]),
                 ]),
                 new Chart([
-                    new Point(new Coordinates(-1, 1), [0, 0, 0]),
-                    new Point(new Coordinates(-2, 2), [255, 255, 255]),
+                    new Point(new Coordinates(3, 3), [0, 255, 0]),
+                    new Point(new Coordinates(4, 4), [0, 255, 0]),
                 ]),
                 new Chart([
-                    new Point(new Coordinates(-13, 13), [-3, 258, 0]),
-                    new Point(new Coordinates(-14, 14), [0, -4, 259]),
+                    new Point(new Coordinates(5, 5), [0, 0, 255]),
+                    new Point(new Coordinates(6, 6), [0, 0, 255]),
                 ]),
             ]),
             $object,
