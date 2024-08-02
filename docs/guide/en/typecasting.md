@@ -120,6 +120,8 @@ echo $post->getAuthor()->getNickName();
 
 ## Using attributes
 
+### Strings
+
 To cast a value to string explicitly, you can use `ToString` attribute:
 
 ```php
@@ -140,6 +142,26 @@ $money = $hydrator->create(Money::class, [
 ]);
 ```
 
+To strip whitespace (or other characters) from the beginning and/or end of a resolved string value, you can use `Trim`,
+`LeftTrim` or `RightTrim` attributes:
+
+```php
+use DateTimeImmutable;
+use Yiisoft\Hydrator\Attribute\Parameter\Trim;
+
+class Person
+{
+    public function __construct(
+        #[Trim] // '  John ' → 'John'
+        private ?string $name = null, 
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, ['name' => '  John ']);
+```
+
+### Datetime
+
 To cast a value to `DateTimeImmutable` or `DateTime` object explicitly, you can use `ToDateTime` attribute:
 
 ```php
@@ -157,20 +179,94 @@ class Person
 $person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
 ```
 
-To strip whitespace (or other characters) from the beginning and/or end of a resolved string value, you can use `Trim`, 
-`LeftTrim` or `RightTrim` attributes:
+### Collections
+
+Hydrator supports collections via `Collection` attribute. The class name of related collection must be specified:                                
 
 ```php
-use DateTimeImmutable;
-use Yiisoft\Hydrator\Attribute\Parameter\Trim;
-
-class Person
+final class PostCategory
 {
     public function __construct(
-        #[Trim] // '  John ' → 'John'
-        private ?string $name = null, 
-    ) {}
+        #[Collection(Post::class)]
+        private array $posts = [],
+    ) {
+    }
 }
 
-$person = $hydrator->create(Person::class, ['name' => '  John ']);
+final class Post
+{
+    public function __construct(
+        private string $name,
+        private string $description = '',
+    ) {
+    }
+}
+
+$category = $hydrator->create(
+    PostCategory::class,
+    [
+        ['name' => 'Post 1'],
+        ['name' => 'Post 2', 'description' => 'Description for post 2'],
+    ],
+);
+```
+
+One-to-many relations can be nested and combined with one-to-one relations:
+
+```php
+final class ChartSet
+{
+    public function __construct(
+        #[Collection(Chart::class)]
+        private array $charts = [],
+    ) {
+    }
+}
+
+final class Chart
+{
+    public function __construct(
+        #[Collection(Point::class)]
+        private array $points,
+    ) {
+    }
+}
+
+final class Point
+{
+    public function __construct(
+        private Coordinates $coordinates,
+        private array $rgb,
+    ) {
+    }
+}
+
+final class Coordinates
+{
+    public function __construct(
+        private int $x,
+        private int $y,
+    ) {
+    }
+}
+
+$object = $hydrator->create(
+    ChartSet::class,
+    [
+        'charts' => [
+            [
+                'points' => [
+                    ['coordinates' => ['x' => 1, 'y' => 1], 'rgb' => [0, 0, 0]],
+                    ['coordinates' => ['x' => 2, 'y' => 2], 'rgb' => [0, 0, 0]],
+                ],
+            ],
+            [
+                'points' => [
+                    ['coordinates' => ['x' => 3, 'y' => 3], 'rgb' => [0, 0, 0]],
+                    ['coordinates' => ['x' => 4, 'y' => 4], 'rgb' => [0, 0, 0]],
+                ],
+            ],
+        ],
+    ],
+);
 ```

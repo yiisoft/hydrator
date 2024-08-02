@@ -13,9 +13,4 @@ final class Chart
         private array $points,
     ) {
     }
-
-    public function getPoints(): array
-    {
-        return $this->points;
-    }
 }
