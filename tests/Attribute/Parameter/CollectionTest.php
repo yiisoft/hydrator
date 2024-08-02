@@ -137,15 +137,14 @@ final class CollectionTest extends TestCase
                 new Collection(Post::class),
                 [
                     ['name' => 'Post 1'],
-                    new class () implements DataInterface
-                    {
+                    new class () implements DataInterface {
                         public function getValue(string $name): Result
                         {
                             $value = $name === 'name' ? 'Post 2' : 'Description for post 2';
 
                             return Result::success($value);
                         }
-                    }
+                    },
                 ],
                 [
                     new Post(name: 'Post 1'),
