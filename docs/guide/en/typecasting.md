@@ -211,7 +211,7 @@ $category = $hydrator->create(
 );
 ```
 
-One-to-many relations can be nested and combined with one-to-one relations:
+Collections can be nested and combined one-to-one relations:
 
 ```php
 final class ChartSet
