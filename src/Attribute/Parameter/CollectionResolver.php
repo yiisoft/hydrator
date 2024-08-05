@@ -38,7 +38,7 @@ final class CollectionResolver implements ParameterAttributeResolverInterface
             try {
                 $collection[] = $context->getHydrator()->create($attribute->className, $item);
             } catch (NonInstantiableException) {
-                continue;
+                break;
             }
         }
 
