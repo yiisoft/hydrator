@@ -43,6 +43,7 @@ final class ParameterAttributesHandler
         ?Result $resolveResult = null,
         ?DataInterface $data = null
     ): Result {
+        $this->requireHydrator();
         $resolveResult ??= Result::fail();
         $data ??= new ArrayData();
 
@@ -63,7 +64,6 @@ final class ParameterAttributesHandler
                 );
             }
 
-            $this->requireHydrator();
             $context = new ParameterAttributeResolveContext($parameter, $resolveResult, $data, $this->hydrator);
 
             $tryResolveResult = $resolver->getParameterValue($attribute, $context);
