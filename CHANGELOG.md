@@ -2,7 +2,10 @@
 
 ## 1.3.0 under development
 
-- New #49: Add support for collections (@arogachev) 
+- New #49: Add support for collections:
+  - Add `Collection` attribute with handler for using with parameters;
+  - Add hydrator dependency to `ParameterAttributeResolveContext` and `ParameterAttributesHandler`.                         
+  (@arogachev) 
 - Enh #85: Allow to hydrate non-initialized readonly properties (@vjik)
 
 ## 1.2.0 April 03, 2024
