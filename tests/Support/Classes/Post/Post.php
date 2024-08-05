@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Support\Classes;
+namespace Yiisoft\Hydrator\Tests\Support\Classes\Post;
 
 final class Post
 {

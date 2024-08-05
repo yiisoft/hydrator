@@ -7,6 +7,7 @@ namespace Yiisoft\Hydrator\Attribute\Parameter;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\DataInterface;
+use Yiisoft\Hydrator\Exception\NonInstantiableException;
 use Yiisoft\Hydrator\Result;
 
 final class CollectionResolver implements ParameterAttributeResolverInterface
@@ -34,7 +35,11 @@ final class CollectionResolver implements ParameterAttributeResolverInterface
                 continue;
             }
 
-            $collection[] = $context->getHydrator()->create($attribute->className, $item);
+            try {
+                $collection[] = $context->getHydrator()->create($attribute->className, $item);
+            } catch (NonInstantiableException) {
+                continue;
+            }
         }
 
         return Result::success($collection);
