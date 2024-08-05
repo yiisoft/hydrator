@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\AttributeHandling;
 
+use LogicException;
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
@@ -79,12 +80,12 @@ final class ParameterAttributesHandler
      *
      * @psalm-assert HydratorInterface $this->hydrator
      *
-     * @throws RuntimeException If hydrator is not set in parameter attributes handler.
+     * @throws LogicException If hydrator is not set in parameter attributes handler.
      */
     private function requireHydrator(): void
     {
         if ($this->hydrator === null) {
-            throw new RuntimeException('Hydrator is not set in parameter attributes handler.');
+            throw new LogicException('Hydrator is not set in parameter attributes handler.');
         }
     }
 }
