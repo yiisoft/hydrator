@@ -75,11 +75,19 @@ final class CollectionTest extends TestCase
             $object,
             [
                 'posts' => [
+                    ['name' => 'Post 1'],
                     new stdClass(),
+                    ['name' => 'Post 2', 'description' => 'Description for post 2'],
                 ],
             ],
         );
-        $this->assertEquals($object->getPosts(), [new stdClass()]);
+        $this->assertEquals(
+            [
+                new Post(name: 'Post 1'),
+                new Post(name: 'Post 2', description: 'Description for post 2'),
+            ],
+            $object->getPosts(),
+        );
     }
 
     public static function dataBase(): array

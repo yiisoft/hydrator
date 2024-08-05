@@ -31,7 +31,7 @@ final class CollectionResolver implements ParameterAttributeResolverInterface
         $collection = [];
         foreach ($resolvedValue as $item) {
             if (!is_array($item) && !$item instanceof DataInterface) {
-                return Result::fail();
+                continue;
             }
 
             $collection[] = $context->getHydrator()->create($attribute->className, $item);
