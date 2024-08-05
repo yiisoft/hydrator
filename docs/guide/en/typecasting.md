@@ -120,7 +120,7 @@ echo $post->getAuthor()->getNickName();
 
 ## Using attributes
 
-### Strings
+### `ToString`
 
 To cast a value to string explicitly, you can use `ToString` attribute:
 
@@ -142,6 +142,8 @@ $money = $hydrator->create(Money::class, [
 ]);
 ```
 
+### `Trim` / `LeftTrim` / `RightTrim`
+
 To strip whitespace (or other characters) from the beginning and/or end of a resolved string value, you can use `Trim`,
 `LeftTrim` or `RightTrim` attributes:
 
@@ -160,7 +162,7 @@ class Person
 $person = $hydrator->create(Person::class, ['name' => '  John ']);
 ```
 
-### Datetime
+### `ToDatetime`
 
 To cast a value to `DateTimeImmutable` or `DateTime` object explicitly, you can use `ToDateTime` attribute:
 
@@ -179,7 +181,7 @@ class Person
 $person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
 ```
 
-### Collections
+### `Collection`
 
 Hydrator supports collections via `Collection` attribute. The class name of related collection must be specified:                                
 
