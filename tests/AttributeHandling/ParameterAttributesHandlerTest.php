@@ -72,6 +72,19 @@ final class ParameterAttributesHandlerTest extends TestCase
         $this->assertSame('42', $result->getValue());
     }
 
+    public function testWithHydrator(): void
+    {
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());
+        $hydrator = new Hydrator();
+
+        $newHandler = $handler->withHydrator($hydrator);
+        $this->assertNotSame($handler, $newHandler);
+
+        $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
+        $result = $newHandler->handle($parameter);
+        $this->assertSame('42', $result->getValue());
+    }
+
     public function testHydratorNotSet(): void
     {
         $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());

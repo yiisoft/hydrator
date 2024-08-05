@@ -77,4 +77,11 @@ final class ParameterAttributesHandler
 
         return $resolveResult;
     }
+
+    public function withHydrator(HydratorInterface $hydrator): static
+    {
+        $new = clone $this;
+        $new->hydrator = $hydrator;
+        return $new;
+    }
 }
