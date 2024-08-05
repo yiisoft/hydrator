@@ -25,7 +25,6 @@ use Yiisoft\Hydrator\Tests\Support\Classes\Chart\Point;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\Post\Post;
 use Yiisoft\Hydrator\Tests\Support\Classes\Post\PostCategory;
-use Yiisoft\Hydrator\Tests\Support\Classes\Post\PostCategoryWithNonExistingPostClass;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -94,18 +93,25 @@ final class CollectionTest extends TestCase
     public function testNonInstantiableValueItem(): void
     {
         $hydrator = new Hydrator();
-        $object = new PostCategoryWithNonExistingPostClass();
+        $object = new PostCategory();
 
         $hydrator->hydrate(
             $object,
             [
                 'posts' => [
                     ['name' => 'Post 1'],
+                    ['name' => []],
                     ['name' => 'Post 2', 'description' => 'Description for post 2'],
                 ],
             ],
         );
-        $this->assertEmpty($object->getPosts());
+        $this->assertEquals(
+            [
+                new Post(name: 'Post 1'),
+                new Post(name: 'Post 2', description: 'Description for post 2'),
+            ],
+            $object->getPosts(),
+        );
     }
 
     public static function dataBase(): array
