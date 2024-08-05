@@ -43,7 +43,10 @@ final class ParameterAttributesHandler
         ?Result $resolveResult = null,
         ?DataInterface $data = null
     ): Result {
-        $this->requireHydrator();
+        if ($this->hydrator === null) {
+            throw new LogicException('Hydrator is not set in parameter attributes handler.');
+        }
+
         $resolveResult ??= Result::fail();
         $data ??= new ArrayData();
 
@@ -73,19 +76,5 @@ final class ParameterAttributesHandler
         }
 
         return $resolveResult;
-    }
-
-    /**
-     * Ensure that validator is set in parameter attributes handler.
-     *
-     * @psalm-assert HydratorInterface $this->hydrator
-     *
-     * @throws LogicException If hydrator is not set in parameter attributes handler.
-     */
-    private function requireHydrator(): void
-    {
-        if ($this->hydrator === null) {
-            throw new LogicException('Hydrator is not set in parameter attributes handler.');
-        }
     }
 }

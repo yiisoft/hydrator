@@ -73,22 +73,10 @@ final class ParameterAttributeResolveContext
 
     public function getHydrator(): HydratorInterface
     {
-        $this->requireHydrator();
-
-        return $this->hydrator;
-    }
-
-    /**
-     * Ensure that validator is set in parameter attribute resolve context.
-     *
-     * @psalm-assert HydratorInterface $this->hydrator
-     *
-     * @throws LogicException If hydrator is not set in parameter attribute resolve context.
-     */
-    private function requireHydrator(): void
-    {
         if ($this->hydrator === null) {
             throw new LogicException('Hydrator is not set in parameter attribute resolve context.');
         }
+
+        return $this->hydrator;
     }
 }
