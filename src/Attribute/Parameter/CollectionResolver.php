@@ -29,7 +29,7 @@ final class CollectionResolver implements ParameterAttributeResolverInterface
         }
 
         $collection = [];
-        foreach ($context->getResolvedValue() as $item) {
+        foreach ($resolvedValue as $item) {
             if (!is_array($item) && !$item instanceof DataInterface) {
                 return Result::fail();
             }
