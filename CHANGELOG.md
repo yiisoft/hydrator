@@ -1,5 +1,9 @@
 # Yii Hydrator Change Log
 
+## 1.3.1 under development
+
+- no changes in this release.
+
 ## 1.3.0 August 07, 2024
 
 - New #49: Add `Collection` PHP attribute (@arogachev)
