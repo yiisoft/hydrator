@@ -6,9 +6,9 @@
     <br>
 </p>
 
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/hydrator/v/stable.png)](https://packagist.org/packages/yiisoft/hydrator)
-[![Total Downloads](https://poser.pugx.org/yiisoft/hydrator/downloads.png)](https://packagist.org/packages/yiisoft/hydrator)
-[![Build status](https://github.com/yiisoft/hydrator/workflows/build/badge.svg)](https://github.com/yiisoft/hydrator/actions?query=workflow%3Abuild)
+[![Latest Stable Version](https://poser.pugx.org/yiisoft/hydrator/v)](https://packagist.org/packages/yiisoft/hydrator)
+[![Total Downloads](https://poser.pugx.org/yiisoft/hydrator/downloads)](https://packagist.org/packages/yiisoft/hydrator)
+[![Build status](https://github.com/yiisoft/hydrator/actions/workflows/build.yml/badge.svg)](https://github.com/yiisoft/hydrator/actions/workflows/build.yml)
 [![Code Coverage](https://codecov.io/gh/yiisoft/hydrator/branch/master/graph/badge.svg)](https://codecov.io/gh/yiisoft/hydrator)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fhydrator%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/hydrator/master)
 [![static analysis](https://github.com/yiisoft/hydrator/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/hydrator/actions?query=workflow%3A%22static+analysis%22)
