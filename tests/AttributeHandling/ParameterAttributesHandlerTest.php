@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\AttributeHandling;
 
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ReflectionAttributeResolverFactory;
+use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewer;
 use Yiisoft\Hydrator\Tests\Support\Attribute\ContextViewerResolver;
 use Yiisoft\Hydrator\Tests\Support\Attribute\CustomValue;
@@ -26,7 +28,8 @@ final class ParameterAttributesHandlerTest extends TestCase
                 new SimpleContainer([
                     ContextViewerResolver::class => $contextViewerResolver,
                 ])
-            )
+            ),
+            new Hydrator(),
         );
 
         $parameter = TestHelper::getFirstParameter(static fn(#[ContextViewer] int $a) => null);
@@ -41,7 +44,7 @@ final class ParameterAttributesHandlerTest extends TestCase
 
     public function testBase(): void
     {
-        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory(), new Hydrator());
 
         $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
 
@@ -52,7 +55,7 @@ final class ParameterAttributesHandlerTest extends TestCase
 
     public function testNotResolvedAttributeAfterResolved(): void
     {
-        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory(), new Hydrator());
 
         $parameter = TestHelper::getFirstParameter(
             static function(
@@ -67,5 +70,28 @@ final class ParameterAttributesHandlerTest extends TestCase
         $result = $handler->handle($parameter);
 
         $this->assertSame('42', $result->getValue());
+    }
+
+    public function testWithHydrator(): void
+    {
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());
+        $hydrator = new Hydrator();
+
+        $newHandler = $handler->withHydrator($hydrator);
+        $this->assertNotSame($handler, $newHandler);
+
+        $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
+        $result = $newHandler->handle($parameter);
+        $this->assertSame('42', $result->getValue());
+    }
+
+    public function testHydratorNotSet(): void
+    {
+        $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory());
+        $parameter = TestHelper::getFirstParameter(static fn(#[CustomValue('42')] int $a) => null);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Hydrator is not set in parameter attributes handler.');
+        $handler->handle($parameter);
     }
 }

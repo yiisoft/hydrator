@@ -20,9 +20,10 @@ $lock = $hydrator->create(Lock::class, ['name' => 'The lock', 'isLocked' => 1]);
 You can adjust type-casting by passing a type-caster to the hydrator:
 
 ```php
+use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
-use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster
+use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 
 $typeCaster = new CompositeTypeCaster(
     new PhpNativeTypeCaster(),
@@ -119,6 +120,8 @@ echo $post->getAuthor()->getNickName();
 
 ## Using attributes
 
+### `ToString`
+
 To cast a value to string explicitly, you can use `ToString` attribute:
 
 ```php
@@ -139,6 +142,28 @@ $money = $hydrator->create(Money::class, [
 ]);
 ```
 
+### `Trim` / `LeftTrim` / `RightTrim`
+
+To strip whitespace (or other characters) from the beginning and/or end of a resolved string value, you can use `Trim`,
+`LeftTrim` or `RightTrim` attributes:
+
+```php
+use DateTimeImmutable;
+use Yiisoft\Hydrator\Attribute\Parameter\Trim;
+
+class Person
+{
+    public function __construct(
+        #[Trim] // '  John ' → 'John'
+        private ?string $name = null, 
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, ['name' => '  John ']);
+```
+
+### `ToDatetime`
+
 To cast a value to `DateTimeImmutable` or `DateTime` object explicitly, you can use `ToDateTime` attribute:
 
 ```php
@@ -156,20 +181,34 @@ class Person
 $person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
 ```
 
-To strip whitespace (or other characters) from the beginning and/or end of a resolved string value, you can use `Trim`, 
-`LeftTrim` or `RightTrim` attributes:
+### `Collection`
+
+Hydrator supports collections via `Collection` attribute. The class name of related collection must be specified:                                
 
 ```php
-use DateTimeImmutable;
-use Yiisoft\Hydrator\Attribute\Parameter\Trim;
-
-class Person
+final class PostCategory
 {
     public function __construct(
-        #[Trim] // '  John ' → 'John'
-        private ?string $name = null, 
-    ) {}
+        #[Collection(Post::class)]
+        private array $posts = [],
+    ) {
+    }
 }
 
-$person = $hydrator->create(Person::class, ['name' => '  John ']);
+final class Post
+{
+    public function __construct(
+        private string $name,
+        private string $description = '',
+    ) {
+    }
+}
+
+$category = $hydrator->create(
+    PostCategory::class,
+    [
+        ['name' => 'Post 1'],
+        ['name' => 'Post 2', 'description' => 'Description for post 2'],
+    ],
+);
 ```

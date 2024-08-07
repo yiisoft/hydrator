@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\AttributeHandling;
 
+use LogicException;
 use ReflectionParameter;
 use ReflectionProperty;
 use Yiisoft\Hydrator\DataInterface;
+use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\Result;
 
 /**
@@ -18,11 +20,13 @@ final class ParameterAttributeResolveContext
      * @param ReflectionParameter|ReflectionProperty $parameter Resolved parameter or property reflection.
      * @param Result $resolveResult The resolved value object.
      * @param DataInterface $data Data to be used for resolving.
+     * @param ?HydratorInterface Hydrator instance.
      */
     public function __construct(
         private ReflectionParameter|ReflectionProperty $parameter,
         private Result $resolveResult,
         private DataInterface $data,
+        private ?HydratorInterface $hydrator = null,
     ) {
     }
 
@@ -65,5 +69,14 @@ final class ParameterAttributeResolveContext
     public function getData(): DataInterface
     {
         return $this->data;
+    }
+
+    public function getHydrator(): HydratorInterface
+    {
+        if ($this->hydrator === null) {
+            throw new LogicException('Hydrator is not set in parameter attribute resolve context.');
+        }
+
+        return $this->hydrator;
     }
 }

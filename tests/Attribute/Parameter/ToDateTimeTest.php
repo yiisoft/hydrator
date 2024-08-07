@@ -75,6 +75,7 @@ final class ToDateTimeTest extends TestCase
             TestHelper::getFirstParameter(static fn(?DateTimeImmutable $a) => null),
             Result::success($value),
             new ArrayData(),
+            new Hydrator(),
         );
 
         $result = $resolver->getParameterValue($attribute, $context);
@@ -346,6 +347,7 @@ final class ToDateTimeTest extends TestCase
             TestHelper::getFirstParameter($closure),
             Result::success($value),
             new ArrayData(),
+            new Hydrator(),
         );
 
         $result = $resolver->getParameterValue(new ToDateTime(format: 'php:d.m.Y'), $context);
@@ -362,6 +364,7 @@ final class ToDateTimeTest extends TestCase
             TestHelper::getFirstParameter($closure),
             Result::success($value),
             new ArrayData(),
+            new Hydrator(),
         );
 
         $result = $resolver->getParameterValue(new ToDateTime(format: 'dd.MM.yyyy'), $context);

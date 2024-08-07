@@ -56,7 +56,7 @@ final class Hydrator implements HydratorInterface
 
         $attributeResolverFactory ??= new ReflectionAttributeResolverFactory();
         $this->dataAttributesHandler = new DataAttributesHandler($attributeResolverFactory);
-        $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory);
+        $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory, $this);
 
         $this->objectFactory = $objectFactory ?? new ReflectionObjectFactory();
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\AttributeHandling;
 
+use LogicException;
 use ReflectionAttribute;
 use ReflectionParameter;
 use ReflectionProperty;
@@ -13,6 +14,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\ArrayData;
 use Yiisoft\Hydrator\DataInterface;
+use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\Result;
 
 /**
@@ -22,6 +24,7 @@ final class ParameterAttributesHandler
 {
     public function __construct(
         private AttributeResolverFactoryInterface $attributeResolverFactory,
+        private ?HydratorInterface $hydrator = null,
     ) {
     }
 
@@ -40,6 +43,10 @@ final class ParameterAttributesHandler
         ?Result $resolveResult = null,
         ?DataInterface $data = null
     ): Result {
+        if ($this->hydrator === null) {
+            throw new LogicException('Hydrator is not set in parameter attributes handler.');
+        }
+
         $resolveResult ??= Result::fail();
         $data ??= new ArrayData();
 
@@ -60,7 +67,7 @@ final class ParameterAttributesHandler
                 );
             }
 
-            $context = new ParameterAttributeResolveContext($parameter, $resolveResult, $data);
+            $context = new ParameterAttributeResolveContext($parameter, $resolveResult, $data, $this->hydrator);
 
             $tryResolveResult = $resolver->getParameterValue($attribute, $context);
             if ($tryResolveResult->isResolved()) {
@@ -69,5 +76,12 @@ final class ParameterAttributesHandler
         }
 
         return $resolveResult;
+    }
+
+    public function withHydrator(HydratorInterface $hydrator): self
+    {
+        $new = clone $this;
+        $new->hydrator = $hydrator;
+        return $new;
     }
 }
