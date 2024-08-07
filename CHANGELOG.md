@@ -1,6 +1,6 @@
 # Yii Hydrator Change Log
 
-## 1.3.0 under development
+## 1.3.0 August 07, 2024
 
 - New #49: Add `Collection` PHP attribute (@arogachev)
 - New #49: Add hydrator dependency and `withHydrator()` method to `ParameterAttributesHandler` (@arogachev)
