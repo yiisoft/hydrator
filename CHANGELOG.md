@@ -2,7 +2,7 @@
 
 ## 1.3.1 under development
 
-- no changes in this release.
+- Enh #93: Add backed enumeration support to `Collection` (@vjik) 
 
 ## 1.3.0 August 07, 2024
 
