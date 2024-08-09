@@ -11,6 +11,7 @@ use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\DataInterface;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
+use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\Result;
 
 final class CollectionResolver implements ParameterAttributeResolverInterface
@@ -33,61 +34,70 @@ final class CollectionResolver implements ParameterAttributeResolverInterface
         }
 
         $isBackedEnum = is_a($attribute->className, BackedEnum::class, true);
-        /**
-         * If `$isBackedEnum` is true, `$attribute->className` is `BackedEnum` class.
-         * @psalm-suppress ArgumentTypeCoercion
-         */
-        $isStringBackedEnum = $isBackedEnum && $this->isStringBackedEnum($attribute->className);
-
-        $collection = [];
 
         if ($isBackedEnum) {
-            foreach ($resolvedValue as $item) {
-                try {
-                    /**
-                     * If `$isBackedEnum` is true, `$attribute->className` is `BackedEnum` class.
-                     * @psalm-suppress ArgumentTypeCoercion
-                     */
-                    $collection[] = $this->createBackedEnum($attribute->className, $isStringBackedEnum, $item);
-                } catch (NonInstantiableException) {
-                    continue;
-                }
-            }
+            /**
+             * If `$isBackedEnum` is true, `$attribute->className` is `BackedEnum` class.
+             * @psalm-suppress ArgumentTypeCoercion
+             */
+            $collection = $this->createCollectionOfBackedEnums($resolvedValue, $attribute->className);
         } else {
-            foreach ($resolvedValue as $item) {
-                if (!is_array($item) && !$item instanceof DataInterface) {
-                    continue;
-                }
-                try {
-                    $collection[] = $context->getHydrator()->create($attribute->className, $item);
-                } catch (NonInstantiableException) {
-                    continue;
-                }
-            }
+            $collection = $this->createCollectionOfObjects(
+                $resolvedValue,
+                $context->getHydrator(),
+                $attribute->className
+            );
         }
-
 
         return Result::success($collection);
     }
 
     /**
-     * @psalm-param class-string<BackedEnum> $className
-     * @throws NonInstantiableException
+     * @psalm-param class-string $className
+     * @return object[]
      */
-    private function createBackedEnum(string $className, bool $isStringBackedEnum, mixed $value): BackedEnum
-    {
-        if ($value instanceof $className) {
-            return $value;
-        }
+    private function createCollectionOfObjects(
+        iterable $resolvedValue,
+        HydratorInterface $hydrator,
+        string $className
+    ): array {
+        $collection = [];
+        foreach ($resolvedValue as $item) {
+            if (!is_array($item) && !$item instanceof DataInterface) {
+                continue;
+            }
 
-        if (is_string($value) || is_int($value)) {
-            $enum = $className::tryFrom($isStringBackedEnum ? (string) $value : (int) $value);
-            if ($enum !== null) {
-                return $enum;
+            try {
+                $collection[] = $hydrator->create($className, $item);
+            } catch (NonInstantiableException) {
+                continue;
             }
         }
+        return $collection;
+    }
 
-        throw new NonInstantiableException();
+    /**
+     * @psalm-param class-string<BackedEnum> $className
+     * @return BackedEnum[]
+     */
+    private function createCollectionOfBackedEnums(iterable $resolvedValue, string $className): array
+    {
+        $collection = [];
+        $isStringBackedEnum = $this->isStringBackedEnum($className);
+        foreach ($resolvedValue as $item) {
+            if ($item instanceof $className) {
+                $collection[] = $item;
+                continue;
+            }
+
+            if (is_string($item) || is_int($item)) {
+                $enum = $className::tryFrom($isStringBackedEnum ? (string) $item : (int) $item);
+                if ($enum !== null) {
+                    $collection[] = $enum;
+                }
+            }
+        }
+        return $collection;
     }
 
     /**
