@@ -210,6 +210,11 @@ final class CollectionTest extends TestCase
             [StringEnum::A, StringEnum::C],
         ];
         yield [
+            new Collection(StringEnum::class),
+            [StringEnum::A, StringEnum::C],
+            [StringEnum::A, StringEnum::C],
+        ];
+        yield [
             new Collection(IntegerEnum::class),
             [],
             [],
@@ -232,6 +237,11 @@ final class CollectionTest extends TestCase
         yield [
             new Collection(IntegerEnum::class),
             [1, 'two', 3],
+            [IntegerEnum::A, IntegerEnum::C],
+        ];
+        yield [
+            new Collection(IntegerEnum::class),
+            [IntegerEnum::A, IntegerEnum::C],
             [IntegerEnum::A, IntegerEnum::C],
         ];
     }
