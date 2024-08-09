@@ -25,6 +25,8 @@ use Yiisoft\Hydrator\Tests\Support\Classes\Chart\Point;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\Post\Post;
 use Yiisoft\Hydrator\Tests\Support\Classes\Post\PostCategory;
+use Yiisoft\Hydrator\Tests\Support\IntegerEnum;
+use Yiisoft\Hydrator\Tests\Support\StringEnum;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
@@ -114,75 +116,123 @@ final class CollectionTest extends TestCase
         );
     }
 
-    public static function dataBase(): array
+    public static function dataBase(): iterable
     {
-        return [
-            'basic' => [
-                new Collection(Post::class),
+        yield 'basic' => [
+            new Collection(Post::class),
+            [
+                ['name' => 'Post 1'],
+                ['name' => 'Post 2', 'description' => 'Description for post 2'],
+            ],
+            [
+                new Post(name: 'Post 1'),
+                new Post(name: 'Post 2', description: 'Description for post 2'),
+            ],
+        ];
+        yield 'nested, one to one and one to many relations' => [
+            new Collection(Chart::class),
+            [
                 [
-                    ['name' => 'Post 1'],
-                    ['name' => 'Post 2', 'description' => 'Description for post 2'],
+                    'points' => [
+                        ['coordinates' => ['x' => 1, 'y' => 1], 'rgb' => [255, 0, 0]],
+                        ['coordinates' => ['x' => 2, 'y' => 2], 'rgb' => [255, 0, 0]],
+                    ],
                 ],
                 [
-                    new Post(name: 'Post 1'),
-                    new Post(name: 'Post 2', description: 'Description for post 2'),
+                    'points' => [
+                        ['coordinates' => ['x' => 3, 'y' => 3], 'rgb' => [0, 255, 0]],
+                        ['coordinates' => ['x' => 4, 'y' => 4], 'rgb' => [0, 255, 0]],
+                    ],
+                ],
+                [
+                    'points' => [
+                        ['coordinates' => ['x' => 5, 'y' => 5], 'rgb' => [0, 0, 255]],
+                        ['coordinates' => ['x' => 6, 'y' => 6], 'rgb' => [0, 0, 255]],
+                    ],
                 ],
             ],
-            'nested, one to one and one to many relations' => [
-                new Collection(Chart::class),
-                [
-                    [
-                        'points' => [
-                            ['coordinates' => ['x' => 1, 'y' => 1], 'rgb' => [255, 0, 0]],
-                            ['coordinates' => ['x' => 2, 'y' => 2], 'rgb' => [255, 0, 0]],
-                        ],
-                    ],
-                    [
-                        'points' => [
-                            ['coordinates' => ['x' => 3, 'y' => 3], 'rgb' => [0, 255, 0]],
-                            ['coordinates' => ['x' => 4, 'y' => 4], 'rgb' => [0, 255, 0]],
-                        ],
-                    ],
-                    [
-                        'points' => [
-                            ['coordinates' => ['x' => 5, 'y' => 5], 'rgb' => [0, 0, 255]],
-                            ['coordinates' => ['x' => 6, 'y' => 6], 'rgb' => [0, 0, 255]],
-                        ],
-                    ],
-                ],
-                [
-                    new Chart([
-                        new Point(new Coordinates(1, 1), [255, 0, 0]),
-                        new Point(new Coordinates(2, 2), [255, 0, 0]),
-                    ]),
-                    new Chart([
-                        new Point(new Coordinates(3, 3), [0, 255, 0]),
-                        new Point(new Coordinates(4, 4), [0, 255, 0]),
-                    ]),
-                    new Chart([
-                        new Point(new Coordinates(5, 5), [0, 0, 255]),
-                        new Point(new Coordinates(6, 6), [0, 0, 255]),
-                    ]),
-                ],
+            [
+                new Chart([
+                    new Point(new Coordinates(1, 1), [255, 0, 0]),
+                    new Point(new Coordinates(2, 2), [255, 0, 0]),
+                ]),
+                new Chart([
+                    new Point(new Coordinates(3, 3), [0, 255, 0]),
+                    new Point(new Coordinates(4, 4), [0, 255, 0]),
+                ]),
+                new Chart([
+                    new Point(new Coordinates(5, 5), [0, 0, 255]),
+                    new Point(new Coordinates(6, 6), [0, 0, 255]),
+                ]),
             ],
-            'value item provided by class' => [
-                new Collection(Post::class),
-                [
-                    ['name' => 'Post 1'],
-                    new class () implements DataInterface {
-                        public function getValue(string $name): Result
-                        {
-                            $value = $name === 'name' ? 'Post 2' : 'Description for post 2';
+        ];
+        yield 'value item provided by class' => [
+            new Collection(Post::class),
+            [
+                ['name' => 'Post 1'],
+                new class () implements DataInterface {
+                    public function getValue(string $name): Result
+                    {
+                        $value = $name === 'name' ? 'Post 2' : 'Description for post 2';
 
-                            return Result::success($value);
-                        }
-                    },
-                ],
-                [
-                    new Post(name: 'Post 1'),
-                    new Post(name: 'Post 2', description: 'Description for post 2'),
-                ],
+                        return Result::success($value);
+                    }
+                },
             ],
+            [
+                new Post(name: 'Post 1'),
+                new Post(name: 'Post 2', description: 'Description for post 2'),
+            ],
+        ];
+        yield [
+            new Collection(StringEnum::class),
+            [],
+            [],
+        ];
+        yield [
+            new Collection(StringEnum::class),
+            ['A'],
+            [],
+        ];
+        yield [
+            new Collection(StringEnum::class),
+            ['one', 'three'],
+            [StringEnum::A, StringEnum::C],
+        ];
+        yield [
+            new Collection(StringEnum::class),
+            ['one', 'four', 'three'],
+            [StringEnum::A, StringEnum::C],
+        ];
+        yield [
+            new Collection(StringEnum::class),
+            ['one', 2, 'three'],
+            [StringEnum::A, StringEnum::C],
+        ];
+        yield [
+            new Collection(IntegerEnum::class),
+            [],
+            [],
+        ];
+        yield [
+            new Collection(IntegerEnum::class),
+            ['A'],
+            [],
+        ];
+        yield [
+            new Collection(IntegerEnum::class),
+            [1, 3],
+            [IntegerEnum::A, IntegerEnum::C],
+        ];
+        yield [
+            new Collection(IntegerEnum::class),
+            [1, 4, 3],
+            [IntegerEnum::A, IntegerEnum::C],
+        ];
+        yield [
+            new Collection(IntegerEnum::class),
+            [1, 'two', 3],
+            [IntegerEnum::A, IntegerEnum::C],
         ];
     }
 
