@@ -130,7 +130,7 @@ final class ToArrayOfStringsTest extends TestCase
             ['hello', 2 => 'world'],
             "hello\n\nworld",
             new class() {
-                #[ToArrayOfStrings(skipEmpty: true)]
+                #[ToArrayOfStrings(removeEmpty: true)]
                 public ?array $value = null;
             },
         ];
@@ -146,7 +146,15 @@ final class ToArrayOfStringsTest extends TestCase
             ['hello', 2 => 'world', 3 => 'good'],
             "hello\n\n world\n good ",
             new class() {
-                #[ToArrayOfStrings(trim: true, skipEmpty: true)]
+                #[ToArrayOfStrings(trim: true, removeEmpty: true)]
+                public ?array $value = null;
+            },
+        ];
+        yield [
+            ['hello', 'world', 'good'],
+            'hello,world,good',
+            new class() {
+                #[ToArrayOfStrings(separator: ',')]
                 public ?array $value = null;
             },
         ];

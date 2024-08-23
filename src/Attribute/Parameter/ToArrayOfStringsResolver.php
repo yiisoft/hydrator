@@ -33,7 +33,7 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
         } else {
             $value = $this->castValueToString($resolvedValue);
             $array = $attribute->splitResolvedValue
-                ? preg_split('~\R~u', $value)
+                ? preg_split('~' . $attribute->separator . '~u', $value)
                 : [$value];
         }
 
@@ -41,7 +41,7 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
             $array = array_map(trim(...), $array);
         }
 
-        if ($attribute->skipEmpty) {
+        if ($attribute->removeEmpty) {
             $array = array_filter(
                 $array,
                 static fn(string $value): bool => $value !== '',
