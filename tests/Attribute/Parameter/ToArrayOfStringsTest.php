@@ -114,7 +114,7 @@ final class ToArrayOfStringsTest extends TestCase
             ["hello\nworld"],
             "hello\nworld",
             new class() {
-                #[ToArrayOfStrings(splitResolvedStringValue: false)]
+                #[ToArrayOfStrings(splitResolvedValue: false)]
                 public ?array $value = null;
             },
         ];

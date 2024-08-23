@@ -12,7 +12,7 @@ final class ToArrayOfStrings implements ParameterAttributeInterface
     public function __construct(
         public readonly bool $trim = false,
         public readonly bool $skipEmpty = false,
-        public readonly bool $splitResolvedStringValue = true,
+        public readonly bool $splitResolvedValue = true,
     ) {
     }
 

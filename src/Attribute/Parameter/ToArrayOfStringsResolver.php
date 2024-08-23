@@ -32,7 +32,7 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
             );
         } else {
             $value = $this->castValueToString($resolvedValue);
-            $array = $attribute->splitResolvedStringValue
+            $array = $attribute->splitResolvedValue
                 ? preg_split('~\R~u', $value)
                 : [$value];
         }
