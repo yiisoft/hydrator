@@ -15,7 +15,7 @@ final class ToArrayOfStrings implements ParameterAttributeInterface
     /**
      * @param bool $trim Trim each string of array.
      * @param bool $removeEmpty Remove empty strings from array.
-     * @param bool $splitResolvedValue Split non-array resolved value to array of strings.
+     * @param bool $splitResolvedValue Split non-array resolved value to array of strings by {@see $separator}.
      * @param string $separator The boundary string. It is a part of regular expression
      * so should be taken into account or properly escaped with {@see preg_quote()}.
      */
