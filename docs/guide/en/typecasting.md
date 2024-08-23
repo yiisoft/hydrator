@@ -212,3 +212,28 @@ $category = $hydrator->create(
     ],
 );
 ```
+
+### `ToArrayOfStrings`
+
+Use `ToArrayOfStrings` attribute to cast a value to an array of strings:
+
+```php
+use Yiisoft\Hydrator\Attribute\Parameter\ToArrayOfStrings;
+
+final class Post
+{
+    #[ToArrayOfStrings(separator: ',')]
+    public array $tags = [];    
+}
+```
+
+Value of `tags` will be cast to an array of strings by splitting it by `,`. For example, string `news,city,hot` will be
+converted to array `['news', 'city', 'hot']`.
+
+Attribute parameters:
+
+- `trim` — trim each string of array (boolean, default `false`);
+- `removeEmpty` — remove empty strings from array (boolean, default `false`);
+- `splitResolvedValue` — split resolved value by separator (boolean, default `true`);
+- `separator` — the boundary string (default, `\R`), it's a part of regular expression so should be taken into account 
+  or properly escaped with `preg_quote()`.
