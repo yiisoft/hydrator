@@ -1,9 +1,9 @@
 # Yii Hydrator Change Log
 
-## 1.3.1 under development
+## 1.4.0 August 23, 2024
 
 - New #94: Add `ToArrayOfStrings` parameter attribute (@vjik)
-- Enh #93: Add backed enumeration support to `Collection` (@vjik) 
+- Enh #93: Add backed enumeration support to `Collection` (@vjik)
 
 ## 1.3.0 August 07, 2024
 
