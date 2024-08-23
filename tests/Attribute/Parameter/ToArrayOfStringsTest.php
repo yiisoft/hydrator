@@ -25,7 +25,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             [],
             [],
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -33,7 +33,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             [''],
             '',
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -41,7 +41,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             [''],
             new stdClass(),
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -49,7 +49,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello'],
             'hello',
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -57,7 +57,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello'],
             ['hello'],
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -65,7 +65,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello '],
             'hello ',
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -73,7 +73,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello'],
             'hello ',
-            new class() {
+            new class () {
                 #[ToArrayOfStrings(trim: true)]
                 public ?array $value = null;
             },
@@ -81,7 +81,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello', 'world'],
             "hello\nworld",
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -89,7 +89,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello', 'world'],
             ['hello', 'world'],
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -97,7 +97,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello', '42', '1', '2.4'],
             ['hello', 42, true, 2.4],
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -105,7 +105,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello', 'world'],
             new ArrayObject(['hello', 'world']),
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -113,7 +113,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ["hello\nworld"],
             "hello\nworld",
-            new class() {
+            new class () {
                 #[ToArrayOfStrings(splitResolvedValue: false)]
                 public ?array $value = null;
             },
@@ -121,7 +121,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello', '', 'world'],
             "hello\n\nworld",
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
@@ -129,7 +129,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello', 2 => 'world'],
             "hello\n\nworld",
-            new class() {
+            new class () {
                 #[ToArrayOfStrings(removeEmpty: true)]
                 public ?array $value = null;
             },
@@ -137,7 +137,7 @@ final class ToArrayOfStringsTest extends TestCase
         yield [
             ['hello', '', ' world', ' good '],
             "hello\n\n world\n good ",
-            new class() {
+            new class () {
                 #[ToArrayOfStrings]
                 public ?array $value = null;
             },
