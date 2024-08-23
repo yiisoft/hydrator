@@ -236,4 +236,4 @@ Attribute parameters:
 - `removeEmpty` — remove empty strings from array (boolean, default `false`);
 - `splitResolvedValue` — split resolved value by separator (boolean, default `true`);
 - `separator` — the boundary string (default, `\R`), it's a part of regular expression so should be taken into account 
-  or properly escaped with {@see preg_quote()}.
+  or properly escaped with `preg_quote()`.
