@@ -1,5 +1,9 @@
 # Yii Hydrator Change Log
 
+## 1.4.1 under development
+
+- no changes in this release.
+
 ## 1.4.0 August 23, 2024
 
 - New #94: Add `ToArrayOfStrings` parameter attribute (@vjik)
