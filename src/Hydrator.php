@@ -22,7 +22,6 @@ use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
 use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
 
 use function is_array;
-use function var_dump;
 
 /**
  * Creates or hydrate objects from a set of raw data.

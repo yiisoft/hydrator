@@ -782,7 +782,7 @@ final class HydratorTest extends TestCase
                 'name' => 'Wheel',
                 'color' => 'Red',
                 'id' => 'x7',
-                'radius' => 17
+                'radius' => 17,
             ]
         );
 
