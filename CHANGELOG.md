@@ -2,7 +2,7 @@
 
 ## 1.4.1 under development
 
-- no changes in this release.
+- Bug #95: Fix populating readonly properties from parent classes (@vjik)
 
 ## 1.4.0 August 23, 2024
 

@@ -79,6 +79,7 @@ final class Hydrator implements HydratorInterface
 
         $this->hydrateInternal(
             $object,
+            $reflectionClass,
             ReflectionFilter::filterProperties($object, $reflectionClass),
             $data
         );
@@ -108,6 +109,7 @@ final class Hydrator implements HydratorInterface
 
         $this->hydrateInternal(
             $object,
+            $reflectionClass,
             ReflectionFilter::filterProperties($object, $reflectionClass, $excludeProperties),
             $data
         );
@@ -120,6 +122,7 @@ final class Hydrator implements HydratorInterface
      */
     private function hydrateInternal(
         object $object,
+        ReflectionClass $reflectionClass,
         array $reflectionProperties,
         DataInterface $data,
     ): void {
@@ -141,9 +144,25 @@ final class Hydrator implements HydratorInterface
                     new TypeCastContext($this, $property),
                 );
                 if ($result->isResolved()) {
-                    $property->setValue($object, $result->getValue());
+                    $this
+                        ->preparePropertyToSetValue($reflectionClass, $property, $propertyName)
+                        ->setValue($object, $result->getValue());
                 }
             }
         }
+    }
+
+    private function preparePropertyToSetValue(
+        ReflectionClass $class,
+        ReflectionProperty $property,
+        string $propertyName,
+    ): ReflectionProperty {
+        if ($property->isReadOnly()) {
+            $declaringClass = $property->getDeclaringClass();
+            if ($declaringClass !== $class) {
+                return $declaringClass->getProperty($propertyName);
+            }
+        }
+        return $property;
     }
 }

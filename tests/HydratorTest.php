@@ -30,6 +30,8 @@ use Yiisoft\Hydrator\Tests\Support\Classes\ConstructorParameterAttributesClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\ConstructorTypeClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
+use Yiisoft\Hydrator\Tests\Support\Classes\Inheritance\ReadOnly\ImageSlideDto;
+use Yiisoft\Hydrator\Tests\Support\Classes\Inheritance\Figure\Circle;
 use Yiisoft\Hydrator\Tests\Support\Classes\InvalidDataResolverClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\NestedModel\UserModel;
 use Yiisoft\Hydrator\Tests\Support\Classes\NonInitializedReadonlyProperties;
@@ -768,5 +770,43 @@ final class HydratorTest extends TestCase
 
         $this->assertSame('1', $object->a);
         $this->assertSame('3', $object->b);
+    }
+
+    public function testBaseInheritance(): void
+    {
+        $hydrator = new Hydrator();
+
+        $object = $hydrator->create(
+            Circle::class,
+            [
+                'name' => 'Wheel',
+                'color' => 'Red',
+                'id' => 'x7',
+                'radius' => 17,
+            ]
+        );
+
+        $this->assertSame(17, $object->radius);
+        $this->assertSame('Wheel', $object->name);
+        $this->assertSame('Red', $object->getColor());
+        $this->assertNull($object->getId());
+    }
+
+    public function testReadOnlyInheritance(): void
+    {
+        $hydrator = new Hydrator();
+
+        $object = $hydrator->create(
+            ImageSlideDto::class,
+            [
+                'src' => '/images/slide.jpg',
+                'width' => 200,
+                'height' => 300,
+            ]
+        );
+
+        $this->assertSame('/images/slide.jpg', $object->src);
+        $this->assertSame(200, $object->width);
+        $this->assertSame(300, $object->height);
     }
 }
