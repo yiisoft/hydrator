@@ -1,6 +1,6 @@
 # Yii Hydrator Change Log
 
-## 1.4.1 under development
+## 1.5.0 September 17, 2024
 
 - New #96: Add `EnumTypeCaster` (@vjik)
 - Bug #95: Fix populating readonly properties from parent classes (@vjik)
