@@ -1,5 +1,9 @@
 # Yii Hydrator Change Log
 
+## 1.5.1 under development
+
+- no changes in this release.
+
 ## 1.5.0 September 17, 2024
 
 - New #96: Add `EnumTypeCaster` (@vjik)
