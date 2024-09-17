@@ -38,6 +38,7 @@ $hydrator = new Hydrator($typeCaster);
 - `CompositeTypeCaster` позволяет комбинировать несколько классов для приведения типов
 - `PhpNativeTypeCaster` приведение типов, основанное на PHP типах, определенных в классе
 - `HydratorTypeCaster` приведение массивов к объектам
+- `EnumTypeCaster` приведение значений к перечислениям
 - `NullTypeCaster` настраиваемый класс для приведения `null`, пустой строки и пустого массива к `null`
 - `NoTypeCaster` не использовать приведение типов
 
