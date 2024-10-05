@@ -6,7 +6,6 @@ namespace Yiisoft\Hydrator;
 
 use Yiisoft\Strings\StringHelper;
 
-use function array_key_exists;
 use function is_array;
 use function is_string;
 use function strlen;
@@ -14,32 +13,58 @@ use function strlen;
 /**
  * Holds data to hydrate an object from and a map to use when populating an object.
  *
- * @psalm-type MapType=array<string,string|list<string>>
+ * @psalm-type MapType=array<string,string|list<string>|Map>
  */
 final class ArrayData implements DataInterface
 {
+    private readonly Map $map;
+
     /**
      * @param array $data Data to hydrate object from.
-     * @param array $map Object property names mapped to keys in the data array that hydrator will use when hydrating
-     * an object.
+     * @param array|Map $map Object property names mapped to keys in the data array that hydrator will use when
+     * hydrating an object.
      * @param bool $strict Whether to hydrate properties from the map only.
      *
-     * @psalm-param MapType $map
+     * @psalm-param Map|MapType $map
      */
     public function __construct(
-        private array $data = [],
-        private array $map = [],
-        private bool $strict = false,
+        private readonly array $data = [],
+        array|Map $map = [],
+        private readonly bool $strict = false,
     ) {
+        $this->map = is_array($map) ? new Map($map) : $map;
     }
 
     public function getValue(string $name): Result
     {
-        if ($this->strict && !array_key_exists($name, $this->map)) {
+        if ($this->strict && !$this->map->exists($name)) {
             return Result::fail();
         }
 
-        return $this->getValueByPath($this->data, $this->map[$name] ?? $name);
+        $path = $this->map->getPath($name) ?? $name;
+        if ($path instanceof Map) {
+            return $this->getValueByMap($this->data, $path);
+        }
+
+        return $this->getValueByPath($this->data, $path);
+    }
+
+    /**
+     * Get an array given a map as resolved result.
+     */
+    private function getValueByMap(array $data, Map $map): Result
+    {
+        $arrayData = new self($data, $map);
+
+        $result = [];
+        foreach ($map->getNames() as $name) {
+            $value = $arrayData->getValue($name);
+            if ($value->isResolved()) {
+                $result[$name] = $value->getValue();
+            }
+        }
+
+        return Result::success($result);
     }
 
     /**

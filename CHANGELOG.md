@@ -2,7 +2,7 @@
 
 ## 1.5.1 under development
 
-- no changes in this release.
+- New #97: Add nested mapping support via new `Map` class (@vjik)
 
 ## 1.5.0 September 17, 2024
 
