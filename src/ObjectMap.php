@@ -26,7 +26,7 @@ final class ObjectMap
     /**
      * @psalm-return string|list<string>|ObjectMap|null
      */
-    public function getPath(string $name): string|array|ObjectMap|null
+    public function getPath(string $name): string|array|self|null
     {
         return $this->map[$name] ?? null;
     }
