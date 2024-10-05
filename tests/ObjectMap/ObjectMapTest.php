@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Hydrator\NestedMapping;
+namespace Yiisoft\Hydrator\Tests\ObjectMap;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\ArrayData;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\Map;
+use Yiisoft\Hydrator\ObjectMap;
 
-final class HydratorNestedMappingTest extends TestCase
+final class ObjectMapTest extends TestCase
 {
     public function testBase(): void
     {
@@ -19,7 +19,7 @@ final class HydratorNestedMappingTest extends TestCase
             Root::class,
             new ArrayData(
                 ['key' => 'test'],
-                ['nested' => new Map(['var' => 'key'])],
+                ['nested' => new ObjectMap(['var' => 'key'])],
             ),
         );
 
@@ -36,9 +36,9 @@ final class HydratorNestedMappingTest extends TestCase
             new ArrayData(
                 ['a' => 'A', 'b' => ['b1' => 'B1'], 'c' => 'C'],
                 [
-                    'nested' => new Map([
+                    'nested' => new ObjectMap([
                         'var' => 'a',
-                        'nested2' => new Map([
+                        'nested2' => new ObjectMap([
                             'var1' => ['b', 'b1'],
                             'var2' => 'c',
                         ]),
@@ -65,8 +65,8 @@ final class HydratorNestedMappingTest extends TestCase
                     'var2' => 'B',
                 ],
                 [
-                    'nested' => new Map([
-                        'nested2' => new Map([
+                    'nested' => new ObjectMap([
+                        'nested2' => new ObjectMap([
                             'var1' => 'var',
                         ]),
                     ]),

@@ -2,7 +2,7 @@
 
 ## 1.5.1 under development
 
-- New #97: Add nested mapping support via new `Map` class (@vjik)
+- New #97: Add nested mapping support via new `ObjectMap` class (@vjik)
 
 ## 1.5.0 September 17, 2024
 

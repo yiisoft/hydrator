@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Hydrator\NestedMapping;
+namespace Yiisoft\Hydrator\Tests\ObjectMap;
 
 use Yiisoft\Hydrator\Attribute\Parameter\Data;
 

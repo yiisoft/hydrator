@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\Hydrator\NestedMapping;
+namespace Yiisoft\Hydrator\Tests\ObjectMap;
 
 final class Root
 {

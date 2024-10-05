@@ -13,37 +13,37 @@ use function strlen;
 /**
  * Holds data to hydrate an object from and a map to use when populating an object.
  *
- * @psalm-type MapType=array<string,string|list<string>|Map>
+ * @psalm-type MapType=array<string,string|list<string>|ObjectMap>
  */
 final class ArrayData implements DataInterface
 {
-    private readonly Map $map;
+    private readonly ObjectMap $objectMap;
 
     /**
      * @param array $data Data to hydrate object from.
-     * @param array|Map $map Object property names mapped to keys in the data array that hydrator will use when
+     * @param array|ObjectMap $map Object property names mapped to keys in the data array that hydrator will use when
      * hydrating an object.
      * @param bool $strict Whether to hydrate properties from the map only.
      *
-     * @psalm-param Map|MapType $map
+     * @psalm-param ObjectMap|MapType $map
      */
     public function __construct(
         private readonly array $data = [],
-        array|Map $map = [],
+        array|ObjectMap $map = [],
         private readonly bool $strict = false,
     ) {
-        $this->map = is_array($map) ? new Map($map) : $map;
+        $this->objectMap = is_array($map) ? new ObjectMap($map) : $map;
     }
 
     public function getValue(string $name): Result
     {
-        if ($this->strict && !$this->map->exists($name)) {
+        if ($this->strict && !$this->objectMap->exists($name)) {
             return Result::fail();
         }
 
-        $path = $this->map->getPath($name) ?? $name;
-        if ($path instanceof Map) {
-            return $this->getValueByMap($this->data, $path);
+        $path = $this->objectMap->getPath($name) ?? $name;
+        if ($path instanceof ObjectMap) {
+            return $this->getValueByObjectMap($this->data, $path);
         }
 
         return $this->getValueByPath($this->data, $path);
@@ -52,12 +52,12 @@ final class ArrayData implements DataInterface
     /**
      * Get an array given a map as resolved result.
      */
-    private function getValueByMap(array $data, Map $map): Result
+    private function getValueByObjectMap(array $data, ObjectMap $objectMap): Result
     {
-        $arrayData = new self($data, $map);
+        $arrayData = new self($data, $objectMap);
 
         $result = [];
-        foreach ($map->getNames() as $name) {
+        foreach ($objectMap->getNames() as $name) {
             $value = $arrayData->getValue($name);
             if ($value->isResolved()) {
                 $result[$name] = $value->getValue();

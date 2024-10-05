@@ -11,7 +11,7 @@ use function array_key_exists;
  *
  * @psalm-import-type MapType from ArrayData
  */
-final class Map
+final class ObjectMap
 {
     /**
      * @param array $map Object property names mapped to keys in the data array that hydrator will use when hydrating
@@ -24,9 +24,9 @@ final class Map
     }
 
     /**
-     * @psalm-return string|list<string>|Map|null
+     * @psalm-return string|list<string>|ObjectMap|null
      */
-    public function getPath(string $name): string|array|Map|null
+    public function getPath(string $name): string|array|ObjectMap|null
     {
         return $this->map[$name] ?? null;
     }
