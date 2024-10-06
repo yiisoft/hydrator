@@ -24,6 +24,8 @@ final class ObjectMap
     }
 
     /**
+     * Returns a path for a given property name or null if mapping is not exist.
+     *
      * @psalm-return string|list<string>|ObjectMap|null
      */
     public function getPath(string $name): string|array|self|null
@@ -32,7 +34,9 @@ final class ObjectMap
     }
 
     /**
-     * @return string[]
+     * Returns a list of property names for which mapping is set.
+     *
+     * @return string[] List of property names.
      * @psalm-return list<string>
      */
     public function getNames(): array
@@ -40,6 +44,13 @@ final class ObjectMap
         return array_keys($this->map);
     }
 
+
+    /**
+     * Checks if a given property name exists in the mapping array.
+     *
+     * @param string $name The property name.
+     * @return bool Whether the property name exists in the mapping array.
+     */
     public function exists(string $name): bool
     {
         return array_key_exists($name, $this->map);
