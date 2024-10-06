@@ -100,4 +100,51 @@ final class ObjectMapTest extends TestCase
         $this->assertSame('A', $root->nested?->nested2?->var1);
         $this->assertSame('B', $root->nested?->nested2?->var2);
     }
+
+    public function testNestedObjectWithRequiredConstructorArgumentWithData(): void
+    {
+        $hydrator = new Hydrator();
+
+        $object = $hydrator->create(
+            Car::class,
+            new ArrayData(
+                [
+                    'full-name' => 'V8',
+                    'engine-version' => '2.0',
+                ],
+                [
+                    'engine' => new ObjectMap([
+                        'name' => 'full-name',
+                        'version' => 'engine-version',
+                    ]),
+                ],
+            ),
+        );
+
+        $this->assertSame('V8', $object->engine?->name);
+        $this->assertSame('2.0', $object->engine?->version);
+    }
+
+    public function testNestedObjectWithRequiredConstructorArgumentWithoutData(): void
+    {
+        $hydrator = new Hydrator();
+
+        $object = $hydrator->create(
+            Car::class,
+            new ArrayData(
+                [
+                    'full-name' => 'V8',
+                    'engine-version' => '2.0',
+                ],
+                [
+                    'engine' => new ObjectMap([
+                        'name' => 'engine-name',
+                        'version' => 'engine-version',
+                    ]),
+                ],
+            ),
+        );
+
+        $this->assertNull($object->engine);
+    }
 }
