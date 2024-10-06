@@ -44,7 +44,6 @@ final class ObjectMap
         return array_keys($this->map);
     }
 
-
     /**
      * Checks if a given property name exists in the mapping array.
      *
