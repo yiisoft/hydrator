@@ -7,7 +7,7 @@ namespace Yiisoft\Hydrator;
 use function array_key_exists;
 
 /**
- * Class provides a mapping of object property names to keys in the data array.
+ * Provides a mapping of object property names to keys in the data array.
  *
  * @psalm-import-type MapType from ArrayData
  */
