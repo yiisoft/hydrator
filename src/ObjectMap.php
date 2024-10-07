@@ -24,7 +24,7 @@ final class ObjectMap
     }
 
     /**
-     * Returns a path for a given property name or null if mapping is not exist.
+     * Returns a path for a given property name or null if mapping dosen't exist.
      *
      * @psalm-return string|list<string>|ObjectMap|null
      */
