@@ -44,6 +44,40 @@ $post = $hydrator->create(Post::class, new ArrayData($data, $map));
 
 This way we take `header` key for `title` and `text` key for `body`.
 
+For nested objects mapping you can use `ObjectMap` class:
+
+```php
+use Yiisoft\Hydrator\ArrayData;
+use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ObjectMap;
+
+final class Message {
+    public string $subject = '';
+    public ?Body $body = null;
+}
+
+final class Body {
+    public string $text = '';
+    public string $html = '';
+}
+
+$hydrator = new Hydrator();
+
+$data = [
+    'title' => 'Hello, World!',
+    'textBody' => 'Nice to meet you.',
+    'htmlBody' => '<h1>Nice to meet you.</h1>',
+];
+$map = [
+    'subject' => 'title',
+    'body' => new ObjectMap([
+        'text' => 'textBody',
+        'html' => 'htmlBody',    
+    ]), 
+];
+$message = $hydrator->create(Message::class, new ArrayData($data, $map));
+```
+
 ## Strict mode
 
 You can enable strict mode by passing `true` as a third argument of `ArrayData`:
@@ -54,7 +88,7 @@ use Yiisoft\Hydrator\ArrayData;
 
 $hydrator = new Hydrator();
 
-$map = ['title' => 'header', 'body' => 'text'],;
+$map = ['title' => 'header', 'body' => 'text'];
 $post = $hydrator->create(Post::class, new ArrayData($data, $map, true));
 ```
 
