@@ -3,6 +3,7 @@
 ## 1.5.1 under development
 
 - New #63: Add nested mapping support via new `ObjectMap` class (@vjik)
+- Enh #99: Improve psalm annotation in `HydratorInterface::create()` method (@vjik)
 
 ## 1.5.0 September 17, 2024
 
