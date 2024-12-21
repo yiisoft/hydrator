@@ -44,6 +44,40 @@ $post = $hydrator->create(Post::class, new ArrayData($data, $map));
 
 Таким образом, мы берем ключ `header` для `title` и ключ `text` для `body`.
 
+Для вложенных объектов вы можете использовать класс `ObjectMap`:
+
+```php
+use Yiisoft\Hydrator\ArrayData;
+use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ObjectMap;
+
+final class Message {
+    public string $subject = '';
+    public ?Body $body = null;
+}
+
+final class Body {
+    public string $text = '';
+    public string $html = '';
+}
+
+$hydrator = new Hydrator();
+
+$data = [
+    'title' => 'Hello, World!',
+    'textBody' => 'Nice to meet you.',
+    'htmlBody' => '<h1>Nice to meet you.</h1>',
+];
+$map = [
+    'subject' => 'title',
+    'body' => new ObjectMap([
+        'text' => 'textBody',
+        'html' => 'htmlBody',    
+    ]), 
+];
+$message = $hydrator->create(Message::class, new ArrayData($data, $map));
+```
+
 ## Строгий режим
 
 Вы можете включить строгий режим, передавая `true` как третий аргумент в `ArrayData`:
