@@ -44,6 +44,40 @@ $post = $hydrator->create(Post::class, new ArrayData($data, $map));
 
 Desta forma, pegamos a chave `header` para `title` e a chave `text` para `body`.
 
+Para mapeamento de objetos aninhados, você pode usar a classe `ObjectMap`:
+
+```php
+use Yiisoft\Hydrator\ArrayData;
+use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ObjectMap;
+
+final class Message {
+    public string $subject = '';
+    public ?Body $body = null;
+}
+
+final class Body {
+    public string $text = '';
+    public string $html = '';
+}
+
+$hydrator = new Hydrator();
+
+$data = [
+    'title' => 'Hello, World!',
+    'textBody' => 'Nice to meet you.',
+    'htmlBody' => '<h1>Nice to meet you.</h1>',
+];
+$map = [
+    'subject' => 'title',
+    'body' => new ObjectMap([
+        'text' => 'textBody',
+        'html' => 'htmlBody',    
+    ]), 
+];
+$message = $hydrator->create(Message::class, new ArrayData($data, $map));
+```
+
 ## Strict mode (Modo estrito)
 
 Você pode ativar o modo estrito passando `true` como terceiro argumento de `ArrayData`:
