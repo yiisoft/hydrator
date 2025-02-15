@@ -1,6 +1,7 @@
 # Приведение типов
 
-Когда PHP типы определены в классе, приведение типов автоматически применяется при создании или наполнении объекта:
+Когда PHP типы определены в классе, приведение типов автоматически
+применяется при создании или наполнении объекта:
 
 ```php
 final class Lock
@@ -17,12 +18,14 @@ $lock = $hydrator->create(Lock::class, ['name' => 'The lock', 'isLocked' => 1]);
 
 ## Настройка приведения типов
 
-Вы можете регулировать приведение типов, передавая объект приведения типов в гидратор:
+Вы можете регулировать приведение типов, передавая объект приведения типов в
+гидратор:
 
 ```php
+use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
-use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster
+use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 
 $typeCaster = new CompositeTypeCaster(
     new PhpNativeTypeCaster(),
@@ -35,16 +38,20 @@ $hydrator = new Hydrator($typeCaster);
 
 Из коробки доступны следующие классы для приведения типов:
 
-- `CompositeTypeCaster` позволяет комбинировать несколько классов для приведения типов
-- `PhpNativeTypeCaster` приведение типов, основанное на PHP типах, определенных в классе
+- `CompositeTypeCaster` позволяет комбинировать несколько классов для
+  приведения типов
+- `PhpNativeTypeCaster` приведение типов, основанное на PHP типах,
+  определенных в классе
 - `HydratorTypeCaster` приведение массивов к объектам
 - `EnumTypeCaster` приведение значений к перечислениям
-- `NullTypeCaster` настраиваемый класс для приведения `null`, пустой строки и пустого массива к `null`
+- `NullTypeCaster` настраиваемый класс для приведения `null`, пустой строки
+  и пустого массива к `null`
 - `NoTypeCaster` не использовать приведение типов
 
 ## Ваше собственное приведение типов
 
-При необходимости, вы можете определить пользовательский класс для приведения типов:
+При необходимости, вы можете определить пользовательский класс для
+приведения типов:
 
 ```php
 use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
@@ -120,7 +127,9 @@ echo $post->getAuthor()->getNickName();
 
 ## Использование атрибутов
 
-Для приведения значения к строке явно, вы можете использовать атрибут `ToString`:
+### `ToString`
+
+To cast a value to string explicitly, you can use `ToString` attribute:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\Parameter\ToString;
@@ -140,7 +149,31 @@ $money = $hydrator->create(Money::class, [
 ]);
 ```
 
-Для приведения значения к объекту `DateTimeImmutable` или `DateTime` явно, вы можете использовать атрибут `ToDateTime`:
+### `Trim` / `LeftTrim` / `RightTrim`
+
+To strip whitespace (or other characters) from the beginning and/or end of a
+resolved string value, you can use `Trim`, `LeftTrim` or `RightTrim`
+attributes:
+
+```php
+use DateTimeImmutable;
+use Yiisoft\Hydrator\Attribute\Parameter\Trim;
+
+class Person
+{
+    public function __construct(
+        #[Trim] // '  John ' → 'John'
+        private ?string $name = null, 
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, ['name' => '  John ']);
+```
+
+### `ToDatetime`
+
+To cast a value to `DateTimeImmutable` or `DateTime` object explicitly, you
+can use `ToDateTime` attribute:
 
 ```php
 use DateTimeImmutable;
@@ -157,20 +190,63 @@ class Person
 $person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
 ```
 
-Для удаления пробелов (или других символов) из начала и/или конца строки, вы можете использовать атрибуты `Trim`,
-`LeftTrim` или `RightTrim`:
+### `Collection`
+
+Hydrator supports collections via `Collection` attribute. The class name of related collection must be specified:                                
 
 ```php
-use DateTimeImmutable;
-use Yiisoft\Hydrator\Attribute\Parameter\Trim;
-
-class Person
+final class PostCategory
 {
     public function __construct(
-        #[Trim] // '  John ' → 'John'
-        private ?string $name = null, 
-    ) {}
+        #[Collection(Post::class)]
+        private array $posts = [],
+    ) {
+    }
 }
 
-$person = $hydrator->create(Person::class, ['name' => '  John ']);
+final class Post
+{
+    public function __construct(
+        private string $name,
+        private string $description = '',
+    ) {
+    }
+}
+
+$category = $hydrator->create(
+    PostCategory::class,
+    [
+        ['name' => 'Post 1'],
+        ['name' => 'Post 2', 'description' => 'Description for post 2'],
+    ],
+);
 ```
+
+### `ToArrayOfStrings`
+
+Use `ToArrayOfStrings` attribute to cast a value to an array of strings:
+
+```php
+use Yiisoft\Hydrator\Attribute\Parameter\ToArrayOfStrings;
+
+final class Post
+{
+    #[ToArrayOfStrings(separator: ',')]
+    public array $tags = [];    
+}
+```
+
+Value of `tags` will be cast to an array of strings by splitting it by
+`,`. For example, string `news,city,hot` will be converted to array
+`['news', 'city', 'hot']`.
+
+Attribute parameters:
+
+- `trim` — trim each string of array (boolean, default `false`);
+- `removeEmpty` — remove empty strings from array (boolean, default
+  `false`);
+- `splitResolvedValue` — split resolved value by separator (boolean, default
+  `true`);
+- `separator` — the boundary string (default, `\R`), it's a part of regular
+  expression so should be taken into account or properly escaped with
+  `preg_quote()`.
