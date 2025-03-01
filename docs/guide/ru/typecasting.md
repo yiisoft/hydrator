@@ -224,7 +224,7 @@ $category = $hydrator->create(
 
 ### `ToArrayOfStrings`
 
- Используйте атрибут `ToArrayOfStrings` для приведения значения к массиву
+Используйте атрибут `ToArrayOfStrings` для приведения значения к массиву
 строк:
 
 ```php
