@@ -129,7 +129,8 @@ echo $post->getAuthor()->getNickName();
 
 ### `ToString`
 
-To cast a value to string explicitly, you can use `ToString` attribute:
+Для приведения значения к строке явно, вы можете использовать атрибут
+`ToString`:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\Parameter\ToString;
@@ -151,9 +152,8 @@ $money = $hydrator->create(Money::class, [
 
 ### `Trim` / `LeftTrim` / `RightTrim`
 
-To strip whitespace (or other characters) from the beginning and/or end of a
-resolved string value, you can use `Trim`, `LeftTrim` or `RightTrim`
-attributes:
+Для удаления пробелов (или других символов) из начала и/или конца строки, вы
+можете использовать атрибуты `Trim`, `LeftTrim` или `RightTrim`:
 
 ```php
 use DateTimeImmutable;
@@ -172,8 +172,8 @@ $person = $hydrator->create(Person::class, ['name' => '  John ']);
 
 ### `ToDatetime`
 
-To cast a value to `DateTimeImmutable` or `DateTime` object explicitly, you
-can use `ToDateTime` attribute:
+Чтобы явно привести значение к объекту `DateTimeImmutable` или `DateTime`,
+можно использовать атрибут `ToDateTime`:
 
 ```php
 use DateTimeImmutable;
@@ -192,7 +192,7 @@ $person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
 
 ### `Collection`
 
-Hydrator supports collections via `Collection` attribute. The class name of related collection must be specified:                                
+Гидратор поддерживает коллекции через атрибут `Collection`. Необходимо указать имя класса связанной коллекции:
 
 ```php
 final class PostCategory
@@ -224,7 +224,8 @@ $category = $hydrator->create(
 
 ### `ToArrayOfStrings`
 
-Use `ToArrayOfStrings` attribute to cast a value to an array of strings:
+ Используйте атрибут `ToArrayOfStrings` для приведения значения к массиву
+строк:
 
 ```php
 use Yiisoft\Hydrator\Attribute\Parameter\ToArrayOfStrings;
@@ -236,17 +237,17 @@ final class Post
 }
 ```
 
-Value of `tags` will be cast to an array of strings by splitting it by
-`,`. For example, string `news,city,hot` will be converted to array
-`['news', 'city', 'hot']`.
+Значение `tags` будет приведено к массиву строк, разделенных `,`. Например,
+строка `news,city,hot` будет приведена к массиву `['news', 'city', 'hot']`.
 
-Attribute parameters:
+Параметры атрибута:
 
-- `trim` — trim each string of array (boolean, default `false`);
-- `removeEmpty` — remove empty strings from array (boolean, default
+- `trim` — обрезка каждой строки массива (логическое значение, по умолчанию
   `false`);
-- `splitResolvedValue` — split resolved value by separator (boolean, default
-  `true`);
-- `separator` — the boundary string (default, `\R`), it's a part of regular
-  expression so should be taken into account or properly escaped with
-  `preg_quote()`.
+- `removeEmpty` — удаление пустой строки из массива (логическое значение, по
+  умолчанию `false`);
+- `splitResolvedValue` — разделить значения по разделитель (логическое
+  значение, по умолчанию `true`);
+- `separator` — символ перевода строки (по умолчанию, `\R`), это часть
+  регулярного выражения, поэтому ее следует учитывать или правильно
+  экранировать с помощью `preg_quote()`.
