@@ -1,0 +1,102 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2025-03-01 21:28+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. type: Title #
+#: guide/en/general-usage.md
+#, no-wrap
+msgid "General usage"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/general-usage.md
+msgid "To hydrate existing object:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/general-usage.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\Hydrator;\n"
+"\n"
+"$hydrator = new Hydrator();\n"
+"$hydrator->hydrate($object, $data);\n"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/general-usage.md
+msgid "To create a new object and fill it with the data:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/general-usage.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\Hydrator;\n"
+"\n"
+"$hydrator = new Hydrator();\n"
+"$object = $hydrator->create(MyClass::class, $data);\n"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/general-usage.md
+msgid ""
+"To pass arguments to the constructor of a nested object, use nested array or "
+"dot-notation:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/general-usage.md
+#, no-wrap
+msgid ""
+"final class Engine\n"
+"{\n"
+"    public function __construct(\n"
+"        private string $name,\n"
+"    ) {}\n"
+"}\n"
+"\n"
+"final class Car\n"
+"{\n"
+"    public function __construct(\n"
+"        private string $name,\n"
+"        private Engine $engine,\n"
+"    ) {}\n"
+"}\n"
+"\n"
+"// nested array\n"
+"$object = $hydrator->create(Car::class, [\n"
+"    'name' => 'Ferrari',\n"
+"    'engine' => [\n"
+"        'name' => 'V8',\n"
+"    ]\n"
+"]);\n"
+"\n"
+"// or dot-notation\n"
+"$object = $hydrator->create(Car::class, [\n"
+"    'name' => 'Ferrari',\n"
+"    'engine.name' => 'V8',\n"
+"]);\n"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/general-usage.md
+msgid ""
+"That would pass the `name` constructor argument of the `Car` object and "
+"create a new `Engine` object for `engine` argument passing `V8` as the "
+"`name` argument to its constructor."
+msgstr ""
