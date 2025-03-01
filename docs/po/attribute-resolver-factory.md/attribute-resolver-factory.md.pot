@@ -1,0 +1,84 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2025-03-01 20:47+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. type: Title #
+#: guide/en/attribute-resolver-factory.md
+#, no-wrap
+msgid "Attribute resolver factory"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/attribute-resolver-factory.md
+msgid ""
+"The hydrator uses `AttributeResolverFactoryInterface` implementation to "
+"create attribute resolvers.  The package provides two implementations out of "
+"the box:"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/attribute-resolver-factory.md
+msgid ""
+"`ReflectionAttributeResolverFactory`. Uses reflection to create attribute "
+"resolver, and can create attribute resolvers without dependencies only."
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/attribute-resolver-factory.md
+msgid ""
+"`ContainerAttributeResolverFactory`. Uses [PSR-11](https://www.php-fig.org/"
+"psr/psr-11/) compatible DI container to create attribute resolver."
+msgstr ""
+
+#. type: Plain text
+#: guide/en/attribute-resolver-factory.md
+msgid ""
+"Default factory used depends on the environment. When using hydrator package "
+"within the Yii ecosystem (an application uses [Yii Config](https://github."
+"com/yiisoft/config)), default is `ContainerAttributeResolverFactory`. "
+"Otherwise, it is `ReflectionAttributeResolverFactory`."
+msgstr ""
+
+#. type: Title ##
+#: guide/en/attribute-resolver-factory.md
+#, no-wrap
+msgid "Using attribute resolver factory"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/attribute-resolver-factory.md
+msgid ""
+"To use non-default attribute resolver factory, pass it to the hydrator "
+"constructor:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/attribute-resolver-factory.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\AttributeHandling\\ResolverFactory\\ContainerAttributeResolverFactory;\n"
+"\n"
+"/**\n"
+" * @var Psr\\Container\\ContainerInterface $container\n"
+" */ \n"
+"$attributeResolverFactory = new ContainerAttributeResolverFactory($container);\n"
+"\n"
+"$hydrator = new Hydrator(\n"
+"    attributeResolverFactory: $attributeResolverFactory,\n"
+"    // ...\n"
+");\n"
+msgstr ""
