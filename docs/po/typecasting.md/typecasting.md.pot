@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-03-01 12:03+0500\n"
+"POT-Creation-Date: 2025-03-01 14:55+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,15 @@ msgstr ""
 
 #. type: Title #
 #: guide/en/typecasting.md
-#, markdown-text, no-wrap
+#, no-wrap
 msgid "Typecasting"
 msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
-msgid "When PHP types are defined in the class, type-casting automatically happens on object creation or hydration:"
+msgid ""
+"When PHP types are defined in the class, type-casting automatically happens "
+"on object creation or hydration:"
 msgstr ""
 
 #. type: Fenced code block (php)
@@ -46,13 +47,12 @@ msgstr ""
 
 #. type: Title ##
 #: guide/en/typecasting.md
-#, markdown-text, no-wrap
+#, no-wrap
 msgid "Tweaking type-casting"
 msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "You can adjust type-casting by passing a type-caster to the hydrator:"
 msgstr ""
 
@@ -74,61 +74,54 @@ msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "The set above is what's used by default."
 msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "Out of the box, the following type-casters are available:"
 msgstr ""
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "`CompositeTypeCaster` allows combining multiple type-casters"
 msgstr ""
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "`PhpNativeTypeCaster` casts based on PHP types defined in the class"
 msgstr ""
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "`HydratorTypeCaster` casts arrays to objects"
 msgstr ""
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "`EnumTypeCaster` casts values to enumerations"
 msgstr ""
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-#, markdown-text
-msgid "`NullTypeCaster` configurable type caster for casting `null`, empty string and empty array to `null`"
+msgid ""
+"`NullTypeCaster` configurable type caster for casting `null`, empty string "
+"and empty array to `null`"
 msgstr ""
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "`NoTypeCaster` does not cast anything"
 msgstr ""
 
 #. type: Title ##
 #: guide/en/typecasting.md
-#, markdown-text, no-wrap
+#, no-wrap
 msgid "Your own type-casting"
 msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "You can define custom type-casters if needed:"
 msgstr ""
 
@@ -208,20 +201,19 @@ msgid ""
 msgstr ""
 
 #. type: Title ##
-#: guide/en/typecasting.md
-#, markdown-text, no-wrap
+#: guide/en/typecasting.md guide/en/mapping.md
+#, no-wrap
 msgid "Using attributes"
 msgstr ""
 
 #. type: Title ###
 #: guide/en/typecasting.md
-#, markdown-text, no-wrap
+#, no-wrap
 msgid "`ToString`"
 msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "To cast a value to string explicitly, you can use `ToString` attribute:"
 msgstr ""
 
@@ -248,14 +240,16 @@ msgstr ""
 
 #. type: Title ###
 #: guide/en/typecasting.md
-#, markdown-text, no-wrap
+#, no-wrap
 msgid "`Trim` / `LeftTrim` / `RightTrim`"
 msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
-msgid "To strip whitespace (or other characters) from the beginning and/or end of a resolved string value, you can use `Trim`, `LeftTrim` or `RightTrim` attributes:"
+msgid ""
+"To strip whitespace (or other characters) from the beginning and/or end of a "
+"resolved string value, you can use `Trim`, `LeftTrim` or `RightTrim` "
+"attributes:"
 msgstr ""
 
 #. type: Fenced code block (php)
@@ -278,14 +272,15 @@ msgstr ""
 
 #. type: Title ###
 #: guide/en/typecasting.md
-#, markdown-text, no-wrap
+#, no-wrap
 msgid "`ToDatetime`"
 msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
-msgid "To cast a value to `DateTimeImmutable` or `DateTime` object explicitly, you can use `ToDateTime` attribute:"
+msgid ""
+"To cast a value to `DateTimeImmutable` or `DateTime` object explicitly, you "
+"can use `ToDateTime` attribute:"
 msgstr ""
 
 #. type: Fenced code block (php)
@@ -308,13 +303,13 @@ msgstr ""
 
 #. type: Title ###
 #: guide/en/typecasting.md
-#, markdown-text, no-wrap
+#, no-wrap
 msgid "`Collection`"
 msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text, no-wrap
+#, no-wrap
 msgid "Hydrator supports collections via `Collection` attribute. The class name of related collection must be specified:                                \n"
 msgstr ""
 
@@ -351,14 +346,14 @@ msgstr ""
 
 #. type: Title ###
 #: guide/en/typecasting.md
-#, markdown-text, no-wrap
+#, no-wrap
 msgid "`ToArrayOfStrings`"
 msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
-msgid "Use `ToArrayOfStrings` attribute to cast a value to an array of strings:"
+msgid ""
+"Use `ToArrayOfStrings` attribute to cast a value to an array of strings:"
 msgstr ""
 
 #. type: Fenced code block (php)
@@ -376,36 +371,39 @@ msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
-msgid "Value of `tags` will be cast to an array of strings by splitting it by `,`. For example, string `news,city,hot` will be converted to array `['news', 'city', 'hot']`."
+msgid ""
+"Value of `tags` will be cast to an array of strings by splitting it by `,`. "
+"For example, string `news,city,hot` will be converted to array `['news', "
+"'city', 'hot']`."
 msgstr ""
 
 #. type: Plain text
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "Attribute parameters:"
 msgstr ""
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-#, markdown-text
 msgid "`trim` — trim each string of array (boolean, default `false`);"
 msgstr ""
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-#, markdown-text
-msgid "`removeEmpty` — remove empty strings from array (boolean, default `false`);"
+msgid ""
+"`removeEmpty` — remove empty strings from array (boolean, default `false`);"
 msgstr ""
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-#, markdown-text
-msgid "`splitResolvedValue` — split resolved value by separator (boolean, default `true`);"
+msgid ""
+"`splitResolvedValue` — split resolved value by separator (boolean, default "
+"`true`);"
 msgstr ""
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-#, markdown-text
-msgid "`separator` — the boundary string (default, `\\R`), it's a part of regular expression so should be taken into account or properly escaped with `preg_quote()`."
+msgid ""
+"`separator` — the boundary string (default, `\\R`), it's a part of regular "
+"expression so should be taken into account or properly escaped with "
+"`preg_quote()`."
 msgstr ""

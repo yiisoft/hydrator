@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-03-01 12:03+0500\n"
-"PO-Revision-Date: 2025-03-01 13:41+0500\n"
+"POT-Creation-Date: 2025-03-01 14:55+0500\n"
+"PO-Revision-Date: 2025-03-01 15:15+0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: ru\n"
@@ -287,7 +287,7 @@ msgstr ""
 "echo $post->getAuthor()->getNickName();\n"
 
 #. type: Title ##
-#: guide/en/typecasting.md
+#: guide/en/typecasting.md guide/en/mapping.md
 #, no-wrap
 msgid "Using attributes"
 msgstr "Использование атрибутов"
@@ -498,7 +498,7 @@ msgstr "`ToArrayOfStrings`"
 #. type: Plain text
 #: guide/en/typecasting.md
 msgid "Use `ToArrayOfStrings` attribute to cast a value to an array of strings:"
-msgstr " Используйте атрибут `ToArrayOfStrings` для приведения значения к массиву строк:"
+msgstr "Используйте атрибут `ToArrayOfStrings` для приведения значения к массиву строк:"
 
 #. type: Fenced code block (php)
 #: guide/en/typecasting.md
