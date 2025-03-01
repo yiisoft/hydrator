@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-03-01 14:55+0500\n"
+"POT-Creation-Date: 2025-03-01 21:45+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,12 +15,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#. type: Title ##
-#: guide/en/typecasting.md guide/en/mapping.md
-#, no-wrap
-msgid "Using attributes"
-msgstr ""
 
 #. type: Title #
 #: guide/en/mapping.md
@@ -164,6 +158,12 @@ msgstr ""
 msgid ""
 "In this case, keys absent from the map are ignored so everything should be "
 "mapped explicitly."
+msgstr ""
+
+#. type: Title ##
+#: guide/en/mapping.md guide/en/typecasting.md
+#, no-wrap
+msgid "Using attributes"
 msgstr ""
 
 #. type: Plain text
