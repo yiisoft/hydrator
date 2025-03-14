@@ -1,5 +1,9 @@
 # Yii Hydrator Change Log
 
+## 1.6.1 under development
+
+- no changes in this release.
+
 ## 1.6.0 March 14, 2025
 
 - New #63: Add nested mapping support via new `ObjectMap` class (@vjik)
