@@ -1,0 +1,57 @@
+name: Update docs translation
+
+on: 
+  push:
+    paths:
+      - 'docs/guide/en/**'
+
+jobs:
+  update-docs:
+    name: Update docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Clone po4a
+        run: |
+          git clone https://github.com/mquinson/po4a.git --branch=v0.73
+     
+      - name: Install Debian dependencies
+        run: |
+          sudo apt update 
+          sudo apt install -y liblocale-gettext-perl libtext-wrapi18n-perl libunicode-linebreak-perl libpod-parser-perl libtest-pod-perl libyaml-tiny-perl libsyntax-keyword-try-perl
+          sudo apt install -y cpanminus gettext docbook-xml docbook-xsl docbook xsltproc
+          sudo apt install -y texlive-binaries texlive-latex-base opensp libsgmls-perl
+      
+      - name: Install CPAN dependencies
+        working-directory: ./po4a
+        run: |
+          sudo cpanm Locale::gettext
+          sudo cpanm http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz
+          sudo cpanm Text::WrapI18N
+          sudo cpanm Unicode::GCString
+          sudo cpanm -v --installdeps --notest .
+
+      - name: Build po4a
+        working-directory: ./po4a
+        run: |
+          sudo perl Build.PL
+          sudo COLUMNS=120 ./Build verbose=1
+          sudo ./Build install
+          po4a --version
+
+      - name: Use po4a
+        working-directory: ./docs
+        run: |
+          po4a po4a.cfg
+
+      - name: Commit changed files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Update docs translation
+          file_pattern: 'docs'
+
+
