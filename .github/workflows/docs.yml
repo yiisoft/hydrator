@@ -1,7 +1,7 @@
 name: Update docs translation
 
-on: 
-  push:
+on:
+  pull_request:
     paths:
       - 'docs/guide/en/**'
       - 'docs/po/**'
@@ -19,14 +19,14 @@ jobs:
       - name: Clone po4a
         run: |
           git clone https://github.com/mquinson/po4a.git --branch=v0.73
-     
+
       - name: Install Debian dependencies
         run: |
-          sudo apt update 
+          sudo apt update
           sudo apt install -y liblocale-gettext-perl libtext-wrapi18n-perl libunicode-linebreak-perl libpod-parser-perl libtest-pod-perl libyaml-tiny-perl libsyntax-keyword-try-perl
           sudo apt install -y cpanminus gettext docbook-xml docbook-xsl docbook xsltproc
           sudo apt install -y texlive-binaries texlive-latex-base opensp libsgmls-perl
-      
+
       - name: Install CPAN dependencies
         working-directory: ./po4a
         run: |
