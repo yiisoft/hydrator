@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'docs/guide/en/**'
+      - 'docs/po/**'
 
 jobs:
   update-docs:
