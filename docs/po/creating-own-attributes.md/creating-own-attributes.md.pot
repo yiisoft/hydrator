@@ -1,0 +1,292 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2025-03-01 21:15+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. type: Title #
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid "Creating own attributes"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid "There are two main parts of an attribute:"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/creating-own-attributes.md
+msgid ""
+"**Attribute class**. It only stores configuration options and a reference to "
+"its handler."
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/creating-own-attributes.md
+msgid ""
+"**Attribute resolver**. Given an attribute reflection and extra data, it "
+"resolves an attribute."
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid ""
+"Besides responsibilities' separation, this approach allows the package to "
+"automatically resolve dependencies for attribute resolver."
+msgstr ""
+
+#. type: Title ##
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid "Data attributes"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid ""
+"You apply data attributes to a whole class. The main goal is getting data "
+"from external sources such as from request.  Additionally, it's possible to "
+"specify how external source attributes map to hydrated class."
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid ""
+"Data attribute class should implement `DataAttributeInterface` and the "
+"corresponding data attribute resolver should implement "
+"`DataAttributeResolverInterface`."
+msgstr ""
+
+#. type: Title ###
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid "Example of custom data attribute"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid ""
+"For example, let's create a data attribute that uses predefined array as "
+"data for object populating."
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid "Attribute:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid ""
+"use Attribute;\n"
+"use Yiisoft\\Hydrator\\Attribute\\Data\\DataAttributeInterface;\n"
+"\n"
+"#[Attribute(Attribute::TARGET_CLASS)]\n"
+"final class FromArray implements DataAttributeInterface\n"
+"{\n"
+"    public function __construct(\n"
+"        private array $data,\n"
+"    ) {\n"
+"    }\n"
+"\n"
+"    public function getData(): array\n"
+"    {\n"
+"        return $this->data;\n"
+"    }\n"
+"\n"
+"    public function getResolver(): string\n"
+"    {\n"
+"        return FromArrayResolver::class;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid "Resolver:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\ArrayData;\n"
+"use Yiisoft\\Hydrator\\Attribute\\Data\\DataAttributeInterface;\n"
+"use Yiisoft\\Hydrator\\Attribute\\Data\\DataAttributeResolverInterface;\n"
+"use Yiisoft\\Hydrator\\AttributeHandling\\Exception\\UnexpectedAttributeException;\n"
+"use Yiisoft\\Hydrator\\DataInterface;\n"
+"\n"
+"final class FromArrayResolver implements DataAttributeResolverInterface\n"
+"{\n"
+"    public function prepareData(DataAttributeInterface $attribute, DataInterface $data): DataInterface\n"
+"    {\n"
+"        if (!$attribute instanceof FromArray) {\n"
+"            throw new UnexpectedAttributeException(FromArray::class, $attribute);\n"
+"        }\n"
+"\n"
+"        return new ArrayData($attribute->getData());\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ##
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid "Parameter attributes"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid ""
+"You apply parameter attributes to class properties and constructor "
+"parameters. You use these attributes for getting value for specific "
+"parameter or for preparing the value (for example, by type casting)."
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid ""
+"Parameter attribute class should implement `ParameterAttributeInterface` and "
+"the corresponding parameter attribute resolver should implement "
+"`ParameterAttributeResolverInterface`."
+msgstr ""
+
+#. type: Title ###
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid "Example of custom parameter attribute"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid ""
+"For example, let's create a parameter attribute that provides a random value "
+"for object property."
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid ""
+"use Attribute;\n"
+"use Yiisoft\\Hydrator\\Attribute\\Parameter\\ParameterAttributeInterface;\n"
+"\n"
+"#[Attribute(Attribute::TARGET_PROPERTY)]\n"
+"final class RandomInt implements ParameterAttributeInterface\n"
+"{\n"
+"    public function __construct(\n"
+"        private int $min = 0,\n"
+"        private int $max = 99,\n"
+"    ) {\n"
+"    }\n"
+"\n"
+"    public function getMin(): int\n"
+"    {\n"
+"        return $this->min;\n"
+"    }\n"
+"\n"
+"    public function getMax(): int\n"
+"    {\n"
+"        return $this->max;\n"
+"    }\n"
+"\n"
+"    public function getResolver(): string\n"
+"    {\n"
+"        return RandomIntResolver::class;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\Attribute\\Parameter\\ParameterAttributeInterface;\n"
+"use Yiisoft\\Hydrator\\Attribute\\Parameter\\ParameterAttributeResolverInterface;\n"
+"use Yiisoft\\Hydrator\\AttributeHandling\\Exception\\UnexpectedAttributeException;\n"
+"use Yiisoft\\Hydrator\\AttributeHandling\\ParameterAttributeResolveContext;\n"
+"use Yiisoft\\Hydrator\\Result;\n"
+"\n"
+"final class RandomIntResolver implements ParameterAttributeResolverInterface\n"
+"{\n"
+"    public function getParameterValue(\n"
+"        ParameterAttributeInterface $attribute,\n"
+"        ParameterAttributeResolveContext $context\n"
+"    ): Result {\n"
+"        if (!$attribute instanceof RandomInt) {\n"
+"            throw new UnexpectedAttributeException(RandomInt::class, $attribute);\n"
+"        }\n"
+"\n"
+"        $value = rand($attribute->getMin(), $attribute->getMax());\n"
+"\n"
+"        return Result::success($value);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ##
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid "Using a single class for both attribute and resolver"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/creating-own-attributes.md
+msgid ""
+"If your attribute is simple and doesn't require dependencies, you can "
+"combine attribute and its resolver in a single class.  For example:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/creating-own-attributes.md
+#, no-wrap
+msgid ""
+"use Attribute;\n"
+"use Yiisoft\\Hydrator\\ArrayData;\n"
+"use Yiisoft\\Hydrator\\Attribute\\Data\\DataAttributeInterface;\n"
+"use Yiisoft\\Hydrator\\Attribute\\Data\\DataAttributeResolverInterface;\n"
+"use Yiisoft\\Hydrator\\AttributeHandling\\Exception\\UnexpectedAttributeException;\n"
+"use Yiisoft\\Hydrator\\DataInterface;\n"
+"\n"
+"#[Attribute(Attribute::TARGET_CLASS)]\n"
+"final class FromArray implements DataAttributeInterface, DataAttributeResolverInterface\n"
+"{\n"
+"    public function __construct(\n"
+"        private array $data,\n"
+"    ) {\n"
+"    }\n"
+"\n"
+"    public function getData(): array\n"
+"    {\n"
+"        return $this->data;\n"
+"    }\n"
+"\n"
+"    public function getResolver(): self\n"
+"    {\n"
+"        return $this;\n"
+"    }\n"
+"\n"
+"    public function prepareData(DataAttributeInterface $attribute, DataInterface $data): DataInterface\n"
+"    {\n"
+"        if (!$attribute instanceof FromArray) {\n"
+"            throw new UnexpectedAttributeException(FromArray::class, $attribute);\n"
+"        }\n"
+"\n"
+"        return new ArrayData($attribute->getData());\n"
+"    }\n"
+"}\n"
+msgstr ""

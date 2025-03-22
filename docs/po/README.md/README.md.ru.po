@@ -1,0 +1,59 @@
+# Russian translations for PACKAGE package
+# Copyright (C) 2025 Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2025-03-01 14:55+0500\n"
+"PO-Revision-Date: 2025-03-01 20:29+0500\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.5\n"
+
+#. type: Title #
+#: guide/en/README.md
+#, no-wrap
+msgid "Yii Hydrator"
+msgstr "Yii Hydrator"
+
+#. type: Plain text
+#: guide/en/README.md
+msgid "The package provides a way to create and hydrate objects from a set of raw data."
+msgstr "Пакет предназначен для создания и гидрации (заполнения) объектов из набора «сырых» данных."
+
+#. type: Bullet: '- '
+#: guide/en/README.md
+msgid "[General usage](general-usage.md)"
+msgstr "[Общее использование](general-usage.md)"
+
+#. type: Bullet: '- '
+#: guide/en/README.md
+msgid "[Type casting](typecasting.md)"
+msgstr "[Приведение типов](typecasting.md)"
+
+#. type: Bullet: '- '
+#: guide/en/README.md
+msgid "[Mapping](mapping.md)"
+msgstr "[Маппинг (сопоставление)](mapping.md)"
+
+#. type: Bullet: '- '
+#: guide/en/README.md
+msgid "[Creating own attributes](creating-own-attributes.md)"
+msgstr "[Создание собственных атрибутов](creating-own-attributes.md)"
+
+#. type: Bullet: '- '
+#: guide/en/README.md
+msgid "[Attribute resolver factory](attribute-resolver-factory.md)"
+msgstr "[Фабрика обработчиков атрибутов](attribute-resolver-factory.md)"
+
+#. type: Bullet: '- '
+#: guide/en/README.md
+msgid "[Object factory](object-factory.md)"
+msgstr "[Фабрика объектов](object-factory.md)"

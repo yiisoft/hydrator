@@ -1,0 +1,409 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2025-03-01 21:45+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. type: Title ##
+#: guide/en/mapping.md guide/en/typecasting.md
+#, no-wrap
+msgid "Using attributes"
+msgstr ""
+
+#. type: Title #
+#: guide/en/typecasting.md
+#, no-wrap
+msgid "Typecasting"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid ""
+"When PHP types are defined in the class, type-casting automatically happens "
+"on object creation or hydration:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/typecasting.md
+#, no-wrap
+msgid ""
+"final class Lock\n"
+"{\n"
+"    public function __construct(\n"
+"        private string $name,\n"
+"        private bool $isLocked\n"
+"    ) {}\n"
+"}\n"
+"\n"
+"$hydrator = new Hydrator();\n"
+"$lock = $hydrator->create(Lock::class, ['name' => 'The lock', 'isLocked' => 1]);\n"
+msgstr ""
+
+#. type: Title ##
+#: guide/en/typecasting.md
+#, no-wrap
+msgid "Tweaking type-casting"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid "You can adjust type-casting by passing a type-caster to the hydrator:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/typecasting.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\Hydrator;\n"
+"use Yiisoft\\Hydrator\\TypeCaster\\CompositeTypeCaster;\n"
+"use Yiisoft\\Hydrator\\TypeCaster\\PhpNativeTypeCaster;\n"
+"use Yiisoft\\Hydrator\\TypeCaster\\HydratorTypeCaster;\n"
+"\n"
+"$typeCaster = new CompositeTypeCaster(\n"
+"    new PhpNativeTypeCaster(),\n"
+"    new HydratorTypeCaster(),\n"
+");\n"
+"$hydrator = new Hydrator($typeCaster);\n"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid "The set above is what's used by default."
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid "Out of the box, the following type-casters are available:"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid "`CompositeTypeCaster` allows combining multiple type-casters"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid "`PhpNativeTypeCaster` casts based on PHP types defined in the class"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid "`HydratorTypeCaster` casts arrays to objects"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid "`EnumTypeCaster` casts values to enumerations"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid ""
+"`NullTypeCaster` configurable type caster for casting `null`, empty string "
+"and empty array to `null`"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid "`NoTypeCaster` does not cast anything"
+msgstr ""
+
+#. type: Title ##
+#: guide/en/typecasting.md
+#, no-wrap
+msgid "Your own type-casting"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid "You can define custom type-casters if needed:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/typecasting.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\TypeCaster\\TypeCastContext;\n"
+"use Yiisoft\\Hydrator\\TypeCaster\\TypeCasterInterface;\n"
+"use Yiisoft\\Hydrator\\Result;\n"
+"use Yiisoft\\Hydrator\\Hydrator;\n"
+"use Yiisoft\\Hydrator\\TypeCaster\\CompositeTypeCaster;\n"
+"\n"
+"final class User\n"
+"{\n"
+"    public function __construct(\n"
+"        private string $nickname\n"
+"    )\n"
+"    {\n"
+"    }\n"
+"    \n"
+"    public function getNickName(): string\n"
+"    {\n"
+"        return $this->nickname;\n"
+"    }\n"
+"}\n"
+"\n"
+"final class NickNameTypeCaster implements TypeCasterInterface\n"
+"{\n"
+"    public function cast(mixed $value, TypeCastContext $context): Result\n"
+"    {\n"
+"        $type = $context->getReflectionType();\n"
+"    \n"
+"        if (\n"
+"            $context->getReflection()->getName() === 'author'\n"
+"            && $type instanceof ReflectionNamedType\n"
+"            && $type->isBuiltin()\n"
+"            && $type->getName() === 'string'\n"
+"            && preg_match('~^@(.*)$~', $value, $matches)\n"
+"        ) {            \n"
+"            $user = new User($matches[1]);\n"
+"            return Result::success($user);        \n"
+"        }       \n"
+"\n"
+"        return Result::fail();\n"
+"    }\n"
+"}\n"
+"\n"
+"final class Post\n"
+"{\n"
+"    public function __construct(\n"
+"        private string $title,\n"
+"        private User $author\n"
+"    )\n"
+"    {    \n"
+"    }\n"
+"    \n"
+"    public function getTitle(): string \n"
+"    {\n"
+"        return $this->title;    \n"
+"    }\n"
+"    \n"
+"    public function getAuthor(): User\n"
+"    {\n"
+"        return $this->author;\n"
+"    }\n"
+"}\n"
+"\n"
+"$typeCaster = new CompositeTypeCaster(\n"
+"    // ...\n"
+"    new NickNameTypeCaster(),\n"
+");\n"
+"$hydrator = new Hydrator($typeCaster);\n"
+"\n"
+"$post = $hydrator->create(Post::class, ['title' => 'Example post', 'author' => '@samdark']);\n"
+"echo $post->getAuthor()->getNickName();\n"
+msgstr ""
+
+#. type: Title ###
+#: guide/en/typecasting.md
+#, no-wrap
+msgid "`ToString`"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid "To cast a value to string explicitly, you can use `ToString` attribute:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/typecasting.md
+#, no-wrap
+msgid ""
+"use \\Yiisoft\\Hydrator\\Attribute\\Parameter\\ToString;\n"
+"\n"
+"class Money\n"
+"{\n"
+"    public function __construct(\n"
+"        #[ToString]\n"
+"        private string $value,\n"
+"        private string $currency,\n"
+"    ) {}\n"
+"}\n"
+"\n"
+"$money = $hydrator->create(Money::class, [\n"
+"    'value' => 4200,\n"
+"    'currency' => 'AMD',\n"
+"]);\n"
+msgstr ""
+
+#. type: Title ###
+#: guide/en/typecasting.md
+#, no-wrap
+msgid "`Trim` / `LeftTrim` / `RightTrim`"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid ""
+"To strip whitespace (or other characters) from the beginning and/or end of a "
+"resolved string value, you can use `Trim`, `LeftTrim` or `RightTrim` "
+"attributes:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/typecasting.md
+#, no-wrap
+msgid ""
+"use DateTimeImmutable;\n"
+"use Yiisoft\\Hydrator\\Attribute\\Parameter\\Trim;\n"
+"\n"
+"class Person\n"
+"{\n"
+"    public function __construct(\n"
+"        #[Trim] // '  John ' → 'John'\n"
+"        private ?string $name = null, \n"
+"    ) {}\n"
+"}\n"
+"\n"
+"$person = $hydrator->create(Person::class, ['name' => '  John ']);\n"
+msgstr ""
+
+#. type: Title ###
+#: guide/en/typecasting.md
+#, no-wrap
+msgid "`ToDatetime`"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid ""
+"To cast a value to `DateTimeImmutable` or `DateTime` object explicitly, you "
+"can use `ToDateTime` attribute:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/typecasting.md
+#, no-wrap
+msgid ""
+"use DateTimeImmutable;\n"
+"use Yiisoft\\Hydrator\\Attribute\\Parameter\\ToDateTime;\n"
+"\n"
+"class Person\n"
+"{\n"
+"    public function __construct(\n"
+"        #[ToDateTime(locale: 'ru')]\n"
+"        private ?DateTimeImmutable $birthday = null,\n"
+"    ) {}\n"
+"}\n"
+"\n"
+"$person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);\n"
+msgstr ""
+
+#. type: Title ###
+#: guide/en/typecasting.md
+#, no-wrap
+msgid "`Collection`"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+#, no-wrap
+msgid "Hydrator supports collections via `Collection` attribute. The class name of related collection must be specified:                                \n"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/typecasting.md
+#, no-wrap
+msgid ""
+"final class PostCategory\n"
+"{\n"
+"    public function __construct(\n"
+"        #[Collection(Post::class)]\n"
+"        private array $posts = [],\n"
+"    ) {\n"
+"    }\n"
+"}\n"
+"\n"
+"final class Post\n"
+"{\n"
+"    public function __construct(\n"
+"        private string $name,\n"
+"        private string $description = '',\n"
+"    ) {\n"
+"    }\n"
+"}\n"
+"\n"
+"$category = $hydrator->create(\n"
+"    PostCategory::class,\n"
+"    [\n"
+"        ['name' => 'Post 1'],\n"
+"        ['name' => 'Post 2', 'description' => 'Description for post 2'],\n"
+"    ],\n"
+");\n"
+msgstr ""
+
+#. type: Title ###
+#: guide/en/typecasting.md
+#, no-wrap
+msgid "`ToArrayOfStrings`"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid ""
+"Use `ToArrayOfStrings` attribute to cast a value to an array of strings:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/typecasting.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\Attribute\\Parameter\\ToArrayOfStrings;\n"
+"\n"
+"final class Post\n"
+"{\n"
+"    #[ToArrayOfStrings(separator: ',')]\n"
+"    public array $tags = [];    \n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid ""
+"Value of `tags` will be cast to an array of strings by splitting it by `,`. "
+"For example, string `news,city,hot` will be converted to array `['news', "
+"'city', 'hot']`."
+msgstr ""
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid "Attribute parameters:"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid "`trim` — trim each string of array (boolean, default `false`);"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid ""
+"`removeEmpty` — remove empty strings from array (boolean, default `false`);"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid ""
+"`splitResolvedValue` — split resolved value by separator (boolean, default "
+"`true`);"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid ""
+"`separator` — the boundary string (default, `\\R`), it's a part of regular "
+"expression so should be taken into account or properly escaped with "
+"`preg_quote()`."
+msgstr ""
