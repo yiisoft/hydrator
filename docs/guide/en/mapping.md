@@ -1,6 +1,6 @@
 # Mapping
 
-In many cases, class attribute names differ from data keys you fill and/or create objects of the class with.
+In many cases1, class attribute names differ from data keys you fill and/or create objects of the class with.
 For example, we have a blog post class:
 
 ```php
