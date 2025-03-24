@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-03-24 15:13+0000\n"
+"POT-Creation-Date: 2025-03-24 15:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. type: Plain text
 #: guide/en/attribute-resolver-factory.md
 msgid ""
-"The hydrator 1 uses `AttributeResolverFactoryInterface` implementation to "
+"The hydrator uses `AttributeResolverFactoryInterface` implementation to "
 "create attribute resolvers.  The package provides two implementations out of "
 "the box:"
 msgstr ""

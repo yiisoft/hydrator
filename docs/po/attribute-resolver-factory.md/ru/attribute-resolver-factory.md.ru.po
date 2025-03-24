@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-03-24 15:13+0000\n"
+"POT-Creation-Date: 2025-03-24 15:26+0000\n"
 "PO-Revision-Date: 2025-03-01 20:53+0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -27,7 +27,7 @@ msgstr "Фабрика обработчиков атрибутов"
 #: guide/en/attribute-resolver-factory.md
 #, fuzzy
 #| msgid "The hydrator uses `AttributeResolverFactoryInterface` implementation to create attribute resolvers.  The package provides two implementations out of the box:"
-msgid "The hydrator 1 uses `AttributeResolverFactoryInterface` implementation to create attribute resolvers.  The package provides two implementations out of the box:"
+msgid "The hydrator uses `AttributeResolverFactoryInterface` implementation to create attribute resolvers.  The package provides two implementations out of the box:"
 msgstr "Гидратор использует реализацию `AttributeResolverFactoryInterface` для создания обработчиков атрибутов. Пакет предоставляет две реализации из коробки:"
 
 #. type: Bullet: '- '

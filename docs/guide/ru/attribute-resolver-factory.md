@@ -1,6 +1,6 @@
 # Фабрика обработчиков атрибутов
 
-The hydrator 1 uses `AttributeResolverFactoryInterface` implementation to
+The hydrator uses `AttributeResolverFactoryInterface` implementation to
 create attribute resolvers.  The package provides two implementations out of
 the box:
 
