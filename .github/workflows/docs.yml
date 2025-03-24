@@ -1,7 +1,7 @@
 name: Update docs translation
 
 on:
-  push:
+  pull_request_target:
     paths:
       - 'docs/**'
 
