@@ -1,6 +1,6 @@
 # Attribute resolver factory
 
-The hydrator 1 uses `AttributeResolverFactoryInterface` implementation to create attribute resolvers.
+The hydrator uses `AttributeResolverFactoryInterface` implementation to create attribute resolvers.
 The package provides two implementations out of the box:
 
 - `ReflectionAttributeResolverFactory`. Uses reflection to create attribute resolver, and can create attribute resolvers
