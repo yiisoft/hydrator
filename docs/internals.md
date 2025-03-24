@@ -51,11 +51,12 @@ Translation algorithm:
 - Find folder with the name of the file you want to translate in `/docs/po`
 - Open the file with the `.po` extension in `Poedit` from the folder with the desired localization, for example `/docs/po/attribute-resolver-factory.md/ru/attribute-resolver-factory.md.ru.po`. If there is no localization yet, create an issue.
 - Translate necessary strings and push the changes
+- Open pull request to main repository
 
 > Warning: Do not change the translation in files in `/docs/guide/{lang}` manually
 
 If you have changed English documentation:
 - Open pull request to main repository
-- Pull updated branch after successful completion of workflow "Update docs translation" in Github Action
+- Pull updated branch after successful completion of workflow `Update docs translation` in Github Action
 - Update translation in `.po` files by `Poedit`
 - Push changes
