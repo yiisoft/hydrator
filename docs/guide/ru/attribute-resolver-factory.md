@@ -1,8 +1,8 @@
 # Фабрика обработчиков атрибутов
 
-Гидратор использует реализацию `AttributeResolverFactoryInterface` для
-создания обработчиков атрибутов. Пакет предоставляет две реализации из
-коробки:
+The hydrator 1 uses `AttributeResolverFactoryInterface` implementation to
+create attribute resolvers.  The package provides two implementations out of
+the box:
 
 - `ReflectionAttributeResolverFactory`. Использует рефлексию для создания
   обработчика атрибута и может создавать обработчики только без
