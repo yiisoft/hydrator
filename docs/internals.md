@@ -45,11 +45,17 @@ all dependencies are correctly defined in `composer.json`. To run the checker, e
 
 ## Translation
 
-This package uses [po4a](https://github.com/mquinson/po4a) for translations. Translation algorithm:
+This package uses [po4a](https://github.com/mquinson/po4a) in Github Action for translations.  
+Translation algorithm:
 - Install an application for working with .po translation files. For example, [Poedit](https://poedit.net/), [Lokalize](https://apps.kde.org/ru/lokalize/), [Gtranslator](https://wiki.gnome.org/Apps/Gtranslator) or another.
-- Find the folder with the name of the file you want to translate in `/docs/po`
+- Find folder with the name of the file you want to translate in `/docs/po`
 - Open the file with the `.po` extension in `Poedit` from the folder with the desired localization, for example `/docs/po/attribute-resolver-factory.md/ru/attribute-resolver-factory.md.ru.po`. If there is no localization yet, create an issue.
 - Translate the necessary strings and commit the changes
 
 > Warning: Do not change the translation in files in `/docs/guide/{lang}` manually
 
+If you have changed English documentation:
+- Open pull request to main repository
+- Pull updated branch after successful completion of workflow "Update docs translation" in Github Action
+- Update translation in `.po` files by `Poedit`
+- Push changes
