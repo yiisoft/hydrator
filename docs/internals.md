@@ -50,7 +50,7 @@ Translation algorithm:
 - Install an application for working with .po translation files. For example, [Poedit](https://poedit.net/), [Lokalize](https://apps.kde.org/ru/lokalize/), [Gtranslator](https://wiki.gnome.org/Apps/Gtranslator) or another.
 - Find folder with the name of the file you want to translate in `/docs/po`
 - Open the file with the `.po` extension in `Poedit` from the folder with the desired localization, for example `/docs/po/attribute-resolver-factory.md/ru/attribute-resolver-factory.md.ru.po`. If there is no localization yet, create an issue.
-- Translate the necessary strings and commit the changes
+- Translate necessary strings and push the changes
 
 > Warning: Do not change the translation in files in `/docs/guide/{lang}` manually
 
