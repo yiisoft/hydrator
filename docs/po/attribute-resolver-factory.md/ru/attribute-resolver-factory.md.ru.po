@@ -1,0 +1,83 @@
+# Russian translations for PACKAGE package
+# Copyright (C) 2025 Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2025-03-24 15:26+0000\n"
+"PO-Revision-Date: 2025-03-24 20:33+0500\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.5\n"
+
+#. type: Title #
+#: guide/en/attribute-resolver-factory.md
+#, no-wrap
+msgid "Attribute resolver factory"
+msgstr "Фабрика обработчиков атрибутов"
+
+#. type: Plain text
+#: guide/en/attribute-resolver-factory.md
+msgid "The hydrator uses `AttributeResolverFactoryInterface` implementation to create attribute resolvers.  The package provides two implementations out of the box:"
+msgstr "Гидратор использует реализацию `AttributeResolverFactoryInterface` для создания обработчиков атрибутов. Пакет предоставляет две реализации из коробки:"
+
+#. type: Bullet: '- '
+#: guide/en/attribute-resolver-factory.md
+msgid "`ReflectionAttributeResolverFactory`. Uses reflection to create attribute resolver, and can create attribute resolvers without dependencies only."
+msgstr "`ReflectionAttributeResolverFactory`. Использует рефлексию для создания обработчика атрибута и может создавать обработчики только без зависимостей."
+
+#. type: Bullet: '- '
+#: guide/en/attribute-resolver-factory.md
+msgid "`ContainerAttributeResolverFactory`. Uses [PSR-11](https://www.php-fig.org/psr/psr-11/) compatible DI container to create attribute resolver."
+msgstr "`ContainerAttributeResolverFactory`. Использует совместимый с [PSR-11](https://www.php-fig.org/psr/psr-11/) DI-контейнер для создания обработчика атрибутов."
+
+#. type: Plain text
+#: guide/en/attribute-resolver-factory.md
+msgid "Default factory used depends on the environment. When using hydrator package within the Yii ecosystem (an application uses [Yii Config](https://github.com/yiisoft/config)), default is `ContainerAttributeResolverFactory`. Otherwise, it is `ReflectionAttributeResolverFactory`."
+msgstr "Используемая по-умолчанию фабрика зависит от среды. Когда пакет гидратора работает внутри экосистемы Yii (приложение использует [Yii Config](https://github.com/yiisoft/config)) используется `ContainerAttributeResolverFactory`. В других случаях используется `ReflectionAttributeResolverFactory`."
+
+#. type: Title ##
+#: guide/en/attribute-resolver-factory.md
+#, no-wrap
+msgid "Using attribute resolver factory"
+msgstr "Использование фабрики обработчиков атрибутов"
+
+#. type: Plain text
+#: guide/en/attribute-resolver-factory.md
+msgid "To use non-default attribute resolver factory, pass it to the hydrator constructor:"
+msgstr "Чтобы использовать фабрику обработчиков атрибутов, отличную от стандартной, передайте ее в конструктор гидратора:"
+
+#. type: Fenced code block (php)
+#: guide/en/attribute-resolver-factory.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\AttributeHandling\\ResolverFactory\\ContainerAttributeResolverFactory;\n"
+"\n"
+"/**\n"
+" * @var Psr\\Container\\ContainerInterface $container\n"
+" */ \n"
+"$attributeResolverFactory = new ContainerAttributeResolverFactory($container);\n"
+"\n"
+"$hydrator = new Hydrator(\n"
+"    attributeResolverFactory: $attributeResolverFactory,\n"
+"    // ...\n"
+");\n"
+msgstr ""
+"use Yiisoft\\Hydrator\\AttributeHandling\\ResolverFactory\\ContainerAttributeResolverFactory;\n"
+"\n"
+"/**\n"
+" * @var Psr\\Container\\ContainerInterface $container\n"
+" */ \n"
+"$attributeResolverFactory = new ContainerAttributeResolverFactory($container);\n"
+"\n"
+"$hydrator = new Hydrator(\n"
+"    attributeResolverFactory: $attributeResolverFactory,\n"
+"    // ...\n"
+");\n"

@@ -1,0 +1,79 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2025-03-01 21:49+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. type: Title #
+#: guide/en/object-factory.md
+#, no-wrap
+msgid "Object Factory"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/object-factory.md
+msgid ""
+"The hydrator uses `ObjectFactoryInterface` implementation to create object "
+"when you use `Hydrator::create()` method: hydrator passes resolved "
+"constructor arguments to factory and obtains created object for next "
+"hydration.  The package provides two implementations out of the box:"
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/object-factory.md
+msgid ""
+"`ReflectionObjectFactory`. Uses reflection to create object. It cannot "
+"create objects when some constructor arguments aren't resolved.  This object "
+"factory is used by default."
+msgstr ""
+
+#. type: Bullet: '- '
+#: guide/en/object-factory.md
+msgid ""
+"`ContainerObjectFactory`. Uses [Yii Injector](https://github.com/yiisoft/"
+"injector) to create object that allow to use [PSR-11](https://www.php-fig."
+"org/psr/psr-11/) compatible DI container to resolve constructor argument not "
+"resolved by the hydrator."
+msgstr ""
+
+#. type: Title ##
+#: guide/en/object-factory.md
+#, no-wrap
+msgid "Using object factory"
+msgstr ""
+
+#. type: Plain text
+#: guide/en/object-factory.md
+msgid "To use non-default object factory, pass it to the hydrator constructor:"
+msgstr ""
+
+#. type: Fenced code block (php)
+#: guide/en/object-factory.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Injector\\Injector;\n"
+"use Yiisoft\\Hydrator\\ObjectFactory\\ContainerObjectFactory;\n"
+"\n"
+"/**\n"
+" * @var Psr\\Container\\ContainerInterface $container\n"
+" */ \n"
+"$injector = new Injector($container)\n"
+"$objectFactory = new ContainerObjectFactory($injector);\n"
+"\n"
+"$hydrator = new Hydrator(\n"
+"    objectFactory: $objectFactory,\n"
+"    // ...\n"
+");\n"
+msgstr ""
