@@ -20,6 +20,7 @@ $lock = $hydrator->create(Lock::class, ['name' => 'The lock', 'isLocked' => 1]);
 Você pode ajustar a conversão de tipo passando um type-caster para o hidratador:
 
 ```php
+use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster
