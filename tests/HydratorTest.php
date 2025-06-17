@@ -29,6 +29,7 @@ use Yiisoft\Hydrator\Tests\Support\Attribute\NotResolver;
 use Yiisoft\Hydrator\Tests\Support\Classes\ConstructorParameterAttributesClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\ConstructorTypeClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
+use Yiisoft\Hydrator\Tests\Support\Classes\EnumsByDefault;
 use Yiisoft\Hydrator\Tests\Support\Classes\FromPredefinedArrayClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\Inheritance\ReadOnly\ImageSlideDto;
 use Yiisoft\Hydrator\Tests\Support\Classes\Inheritance\Figure\Circle;
@@ -43,10 +44,12 @@ use Yiisoft\Hydrator\Tests\Support\Classes\SimpleClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\StaticClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\StringableCar;
 use Yiisoft\Hydrator\Tests\Support\Classes\TypeClass;
+use Yiisoft\Hydrator\Tests\Support\IntegerEnum;
 use Yiisoft\Hydrator\Tests\Support\PrivateConstructor;
 use Yiisoft\Hydrator\Tests\Support\ProtectedConstructor;
 use Yiisoft\Hydrator\Tests\Support\String42TypeCaster;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
+use Yiisoft\Hydrator\Tests\Support\StringEnum;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\NoTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
@@ -808,5 +811,24 @@ final class HydratorTest extends TestCase
         $this->assertSame('/images/slide.jpg', $object->src);
         $this->assertSame(200, $object->width);
         $this->assertSame(300, $object->height);
+    }
+
+    public function testHydrateEnumsByDefault(): void
+    {
+        $hydrator = new Hydrator();
+
+        $data = [
+            'string' => 'hello',
+            'integer' => 42,
+            'stringEnum' => StringEnum::B->value,
+            'integerEnum' => IntegerEnum::C->value,
+        ];
+
+        $object = $hydrator->create(EnumsByDefault::class, $data);
+
+        $this->assertSame($data['string'], $object->string);
+        $this->assertSame($data['integer'], $object->integer);
+        $this->assertSame(StringEnum::tryFrom($data['stringEnum']), $object->stringEnum);
+        $this->assertSame(IntegerEnum::tryFrom($data['integerEnum']), $object->integerEnum);
     }
 }

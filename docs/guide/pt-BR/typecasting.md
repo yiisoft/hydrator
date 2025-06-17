@@ -21,12 +21,14 @@ Você pode ajustar a conversão de tipo passando um type-caster para o hidratado
 
 ```php
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\EnumTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster
 
 $typeCaster = new CompositeTypeCaster(
     new PhpNativeTypeCaster(),
     new HydratorTypeCaster(),
+    new EnumTypeCaster(),
 );
 $hydrator = new Hydrator($typeCaster);
 ```
