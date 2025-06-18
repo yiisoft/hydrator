@@ -25,6 +25,7 @@ Features are:
   provided;
 - supports nested objects;
 - supports mapping;
+- supports PHP built-in enumerations;
 - allows fine-tuning hydration via PHP attributes.
 
 ## Requirements
@@ -62,10 +63,17 @@ $object = $hydrator->create(MyClass::class, $data);
 To pass arguments to the constructor of a nested object, use nested array or dot-notation:
 
 ```php
+enum EngineFuel: string
+{
+    case DIESEL = 'diesel';
+    case GASOLINE = 'gasoline';
+}
+
 final class Engine
 {
     public function __construct(
         private string $name,
+        private EngineFuel $fuel,
     ) {}
 }
 
@@ -82,6 +90,7 @@ $object = $hydrator->create(Car::class, [
     'name' => 'Ferrari',
     'engine' => [
         'name' => 'V8',
+        'fuel' => 'gasoline'
     ]
 ]);
 
@@ -89,11 +98,12 @@ $object = $hydrator->create(Car::class, [
 $object = $hydrator->create(Car::class, [
     'name' => 'Ferrari',
     'engine.name' => 'V8',
+    'engine.fuel' => 'gasoline',
 ]);
 ```
 
 That would pass the `name` constructor argument of the `Car` object and create a new `Engine` object for `engine`
-argument passing `V8` as the `name` argument to its constructor.
+argument passing `V8` as the `name` argument and enumeration `EngineFuel::GASOLINE` as the `fuel` argument to its constructor.
 
 ## Documentation
 

@@ -22,12 +22,14 @@ You can adjust type-casting by passing a type-caster to the hydrator:
 ```php
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\EnumTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 
 $typeCaster = new CompositeTypeCaster(
     new PhpNativeTypeCaster(),
     new HydratorTypeCaster(),
+    new EnumTypeCaster(),
 );
 $hydrator = new Hydrator($typeCaster);
 ```

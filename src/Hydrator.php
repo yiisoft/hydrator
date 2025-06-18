@@ -16,6 +16,7 @@ use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\EnumTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
@@ -52,6 +53,7 @@ final class Hydrator implements HydratorInterface
         $this->typeCaster = $typeCaster ?? new CompositeTypeCaster(
             new PhpNativeTypeCaster(),
             new HydratorTypeCaster(),
+            new EnumTypeCaster(),
         );
 
         $attributeResolverFactory ??= new ReflectionAttributeResolverFactory();
