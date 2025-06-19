@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
-use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\AttributeHandling\DataAttributesHandler;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
-use Yiisoft\Hydrator\Internal\InternalHydrator;
-use Yiisoft\Hydrator\Internal\ObjectFactoryWithConstructor;
-use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
-use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
+use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ReflectionAttributeResolverFactory;
+use Yiisoft\Hydrator\Internal\InternalHydrator;
+use Yiisoft\Hydrator\Internal\ObjectFactoryWithoutConstructor;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
 
-/**
- * Creates or hydrate objects from a set of raw data.
- */
-final class Hydrator implements HydratorInterface
+final class NoConstructorHydrator implements HydratorInterface
 {
     private InternalHydrator $internalHydrator;
 
@@ -30,29 +25,17 @@ final class Hydrator implements HydratorInterface
     public function __construct(
         ?TypeCasterInterface $typeCaster = null,
         ?AttributeResolverFactoryInterface $attributeResolverFactory = null,
-        ?ObjectFactoryInterface $objectFactory = null,
     ) {
         $typeCaster ??= new CompositeTypeCaster(
             new PhpNativeTypeCaster(),
             new HydratorTypeCaster(),
         );
-
         $attributeResolverFactory ??= new ReflectionAttributeResolverFactory();
-        $dataAttributesHandler = new DataAttributesHandler($attributeResolverFactory);
-        $parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory, $this);
-
-        $internalObjectFactory = new ObjectFactoryWithConstructor(
-            $objectFactory ?? new ReflectionObjectFactory(),
-            $this,
-            $parameterAttributesHandler,
-            $typeCaster,
-        );
-
         $this->internalHydrator = new InternalHydrator(
             $typeCaster,
-            $dataAttributesHandler,
-            $parameterAttributesHandler,
-            $internalObjectFactory,
+            new DataAttributesHandler($attributeResolverFactory),
+            new ParameterAttributesHandler($attributeResolverFactory, $this),
+            new ObjectFactoryWithoutConstructor(),
             $this,
         );
     }

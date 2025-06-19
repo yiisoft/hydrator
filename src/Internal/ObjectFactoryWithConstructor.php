@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Internal;
 
+use ReflectionClass;
 use ReflectionMethod;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
 use Yiisoft\Hydrator\DataInterface;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
+use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
 use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
@@ -15,13 +17,24 @@ use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
 /**
  * @internal
  */
-final class ConstructorArgumentsExtractor
+final class ObjectFactoryWithConstructor implements InternalObjectFactoryInterface
 {
     public function __construct(
-        private Hydrator $hydrator,
-        private ParameterAttributesHandler $parameterAttributesHandler,
-        private TypeCasterInterface $typeCaster,
+        private readonly ObjectFactoryInterface $objectFactory,
+        private readonly Hydrator $hydrator,
+        private readonly ParameterAttributesHandler $parameterAttributesHandler,
+        private readonly TypeCasterInterface $typeCaster,
     ) {
+    }
+
+    public function create(ReflectionClass $reflectionClass, DataInterface $data): array
+    {
+        [$excludeProperties, $constructorArguments] = $this->extract(
+            $reflectionClass->getConstructor(),
+            $data,
+        );
+        $object = $this->objectFactory->create($reflectionClass, $constructorArguments);
+        return [$object, $excludeProperties];
     }
 
     /**
