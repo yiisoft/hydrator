@@ -7,10 +7,8 @@ namespace Yiisoft\Hydrator\Tests\NoConstructorHydrator\Base;
 final class Post
 {
     public int $id;
-    public string $title = '';
 
-    public function __construct(string $title = 'no-title')
+    public function __construct(public string $title = 'no-title')
     {
-        $this->title = $title;
     }
 }
