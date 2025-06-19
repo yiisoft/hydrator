@@ -208,8 +208,10 @@ final class Post
 $category = $hydrator->create(
     PostCategory::class,
     [
-        ['name' => 'Post 1'],
-        ['name' => 'Post 2', 'description' => 'Description for post 2'],
+        'posts' => [
+            ['name' => 'Post 1'],
+            ['name' => 'Post 2', 'description' => 'Description for post 2'],
+        ],
     ],
 );
 ```
