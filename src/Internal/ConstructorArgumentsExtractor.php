@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Internal;
 
-use ReflectionClass;
 use ReflectionMethod;
-use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
 use Yiisoft\Hydrator\DataInterface;
 use Yiisoft\Hydrator\Hydrator;
-use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
+use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
 use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
 use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
@@ -17,24 +15,13 @@ use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
 /**
  * @internal
  */
-final class ObjectFactoryWithConstructor implements InternalObjectFactoryInterface
+final class ConstructorArgumentsExtractor
 {
     public function __construct(
-        private readonly ObjectFactoryInterface $objectFactory,
-        private readonly Hydrator $hydrator,
-        private readonly ParameterAttributesHandler $parameterAttributesHandler,
-        private readonly TypeCasterInterface $typeCaster,
+        private Hydrator $hydrator,
+        private ParameterAttributesHandler $parameterAttributesHandler,
+        private TypeCasterInterface $typeCaster,
     ) {
-    }
-
-    public function create(ReflectionClass $reflectionClass, DataInterface $data): array
-    {
-        [$excludeProperties, $constructorArguments] = $this->extract(
-            $reflectionClass->getConstructor(),
-            $data,
-        );
-        $object = $this->objectFactory->create($reflectionClass, $constructorArguments);
-        return [$object, $excludeProperties];
     }
 
     /**
@@ -71,7 +58,7 @@ final class ObjectFactoryWithConstructor implements InternalObjectFactoryInterfa
             if ($resolveResult->isResolved()) {
                 $typeCastedValue = $this->typeCaster->cast(
                     $resolveResult->getValue(),
-                    new TypeCastContext($this->hydrator, $parameter),
+                    new TypeCastContext($this->hydrator, $parameter, true),
                 );
                 if ($typeCastedValue->isResolved()) {
                     $constructorArguments[$parameterName] = $typeCastedValue->getValue();

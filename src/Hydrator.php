@@ -4,25 +4,42 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use ReflectionClass;
+use ReflectionProperty;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\AttributeHandling\DataAttributesHandler;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
-use Yiisoft\Hydrator\Internal\InternalHydrator;
-use Yiisoft\Hydrator\Internal\ObjectFactoryWithConstructor;
+use Yiisoft\Hydrator\Exception\NonExistClassException;
+use Yiisoft\Hydrator\Internal\ConstructorArgumentsExtractor;
+use Yiisoft\Hydrator\Internal\ReflectionFilter;
 use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
 use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ReflectionAttributeResolverFactory;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
+use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
 use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
+
+use function is_array;
 
 /**
  * Creates or hydrate objects from a set of raw data.
  */
 final class Hydrator implements HydratorInterface
 {
-    private InternalHydrator $internalHydrator;
+    /**
+     * @var TypeCasterInterface Type caster used to cast raw values.
+     */
+    private TypeCasterInterface $typeCaster;
+
+    private ObjectFactoryInterface $objectFactory;
+
+    private DataAttributesHandler $dataAttributesHandler;
+
+    private ParameterAttributesHandler $parameterAttributesHandler;
+
+    private ConstructorArgumentsExtractor $constructorArgumentsExtractor;
 
     /**
      * @param TypeCasterInterface|null $typeCaster Type caster used to cast raw values.
@@ -32,38 +49,125 @@ final class Hydrator implements HydratorInterface
         ?AttributeResolverFactoryInterface $attributeResolverFactory = null,
         ?ObjectFactoryInterface $objectFactory = null,
     ) {
-        $typeCaster ??= new CompositeTypeCaster(
+        $this->typeCaster = $typeCaster ?? new CompositeTypeCaster(
             new PhpNativeTypeCaster(),
             new HydratorTypeCaster(),
         );
 
         $attributeResolverFactory ??= new ReflectionAttributeResolverFactory();
-        $dataAttributesHandler = new DataAttributesHandler($attributeResolverFactory);
-        $parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory, $this);
+        $this->dataAttributesHandler = new DataAttributesHandler($attributeResolverFactory);
+        $this->parameterAttributesHandler = new ParameterAttributesHandler($attributeResolverFactory, $this);
 
-        $internalObjectFactory = new ObjectFactoryWithConstructor(
-            $objectFactory ?? new ReflectionObjectFactory(),
-            $this,
-            $parameterAttributesHandler,
-            $typeCaster,
-        );
+        $this->objectFactory = $objectFactory ?? new ReflectionObjectFactory();
 
-        $this->internalHydrator = new InternalHydrator(
-            $typeCaster,
-            $dataAttributesHandler,
-            $parameterAttributesHandler,
-            $internalObjectFactory,
+        $this->constructorArgumentsExtractor = new ConstructorArgumentsExtractor(
             $this,
+            $this->parameterAttributesHandler,
+            $this->typeCaster,
         );
     }
 
-    public function hydrate(object $object, array|DataInterface $data = []): void
+    public function hydrate(object $object, array|DataInterface $data = [], bool $useConstructor = true): void
     {
-        $this->internalHydrator->hydrate($object, $data);
+        if (is_array($data)) {
+            $data = new ArrayData($data);
+        }
+
+        $reflectionClass = new ReflectionClass($object);
+
+        $data = $this->dataAttributesHandler->handle($reflectionClass, $data);
+
+        $this->hydrateInternal(
+            $object,
+            $reflectionClass,
+            ReflectionFilter::filterProperties($object, $reflectionClass),
+            $data,
+            $useConstructor,
+        );
     }
 
-    public function create(string $class, array|DataInterface $data = []): object
+    public function create(string $class, array|DataInterface $data = [], bool $useConstructor = true): object
     {
-        return $this->internalHydrator->create($class, $data);
+        if (!class_exists($class)) {
+            throw new NonExistClassException($class);
+        }
+
+        if (is_array($data)) {
+            $data = new ArrayData($data);
+        }
+
+        $reflectionClass = new ReflectionClass($class);
+        $data = $this->dataAttributesHandler->handle($reflectionClass, $data);
+
+        if ($useConstructor) {
+            [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->extract(
+                $reflectionClass->getConstructor(),
+                $data,
+            );
+            $object = $this->objectFactory->create($reflectionClass, $constructorArguments);
+        } else {
+            $object = $reflectionClass->newInstanceWithoutConstructor();
+            $excludeProperties = [];
+        }
+
+        $this->hydrateInternal(
+            $object,
+            $reflectionClass,
+            ReflectionFilter::filterProperties($object, $reflectionClass, $excludeProperties),
+            $data,
+            $useConstructor,
+        );
+
+        return $object;
+    }
+
+    /**
+     * @param array<string, ReflectionProperty> $reflectionProperties
+     */
+    private function hydrateInternal(
+        object $object,
+        ReflectionClass $reflectionClass,
+        array $reflectionProperties,
+        DataInterface $data,
+        bool $useConstructor,
+    ): void {
+        foreach ($reflectionProperties as $propertyName => $property) {
+            $resolveResult = $data->getValue($propertyName);
+
+            $attributesHandleResult = $this->parameterAttributesHandler->handle(
+                $property,
+                $resolveResult,
+                $data,
+            );
+            if ($attributesHandleResult->isResolved()) {
+                $resolveResult = $attributesHandleResult;
+            }
+
+            if ($resolveResult->isResolved()) {
+                $result = $this->typeCaster->cast(
+                    $resolveResult->getValue(),
+                    new TypeCastContext($this, $property, $useConstructor),
+                );
+                if ($result->isResolved()) {
+                    $this
+                        ->preparePropertyToSetValue($reflectionClass, $property, $propertyName)
+                        ->setValue($object, $result->getValue());
+                }
+            }
+        }
+    }
+
+    private function preparePropertyToSetValue(
+        ReflectionClass $class,
+        ReflectionProperty $property,
+        string $propertyName,
+    ): ReflectionProperty {
+        if ($property->isReadOnly()) {
+            $declaringClass = $property->getDeclaringClass();
+            if ($declaringClass !== $class) {
+                return $declaringClass->getProperty($propertyName);
+            }
+        }
+        return $property;
     }
 }

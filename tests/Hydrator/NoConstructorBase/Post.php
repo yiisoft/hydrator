@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\NoConstructorHydrator\Base;
+namespace Yiisoft\Hydrator\Tests\Hydrator\NoConstructorBase;
 
 use LogicException;
 

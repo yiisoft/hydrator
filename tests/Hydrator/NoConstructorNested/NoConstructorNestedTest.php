@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\NoConstructorHydrator\Nested;
+namespace Yiisoft\Hydrator\Tests\Hydrator\NoConstructorNested;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Hydrator\NoConstructorHydrator;
+use Yiisoft\Hydrator\Hydrator;
 
 use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertSame;
@@ -14,7 +14,7 @@ final class NoConstructorNestedTest extends TestCase
 {
     public function testBase(): void
     {
-        $hydrator = new NoConstructorHydrator();
+        $hydrator = new Hydrator();
 
         $post = $hydrator->create(
             Post::class,
@@ -25,6 +25,7 @@ final class NoConstructorNestedTest extends TestCase
                     'age' => 30,
                 ],
             ],
+            false,
         );
 
         assertInstanceOf(Post::class, $post);

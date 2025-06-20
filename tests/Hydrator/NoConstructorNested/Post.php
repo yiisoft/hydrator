@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Hydrator\Tests\NoConstructorHydrator\Nested;
+namespace Yiisoft\Hydrator\Tests\Hydrator\NoConstructorNested;
 
 use LogicException;
 

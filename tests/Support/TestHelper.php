@@ -19,11 +19,12 @@ final class TestHelper
         return reset($parameters);
     }
 
-    public static function createTypeCastContext(Closure $closure): TypeCastContext
+    public static function createTypeCastContext(Closure $closure, bool $useConstructor = true): TypeCastContext
     {
         return new TypeCastContext(
             new Hydrator(),
             self::getFirstParameter($closure),
+            $useConstructor,
         );
     }
 }
