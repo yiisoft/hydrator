@@ -2,7 +2,7 @@
 
 ## 1.6.1 under development
 
-- no changes in this release.
+- New #109: Add `NoConstructorHydrator` (@vjik)
 
 ## 1.6.0 March 14, 2025
 
