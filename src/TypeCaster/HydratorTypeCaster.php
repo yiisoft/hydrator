@@ -53,8 +53,7 @@ final class HydratorTypeCaster implements TypeCasterInterface
         ReflectionNamedType $type,
         HydratorInterface $hydrator,
         bool $useConstructor,
-    ): Result
-    {
+    ): Result {
         if ($type->isBuiltin()) {
             return Result::fail();
         }
