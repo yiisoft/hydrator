@@ -12,14 +12,12 @@
     },
     "mutators": {
         "@default": true,
+        "global-ignoreSourceCodeByRegex": [
+            ".*PHP_VERSION_ID.*"
+        ],
         "FalseValue": {
             "ignoreSourceCodeByRegex": [
                 ".*\\$hasMutable = false.*"
-            ]
-        },
-        "@global": {
-            "ignoreSourceCodeByRegex": [
-                ".*PHP_VERSION_ID.*"
             ]
         }
     }
