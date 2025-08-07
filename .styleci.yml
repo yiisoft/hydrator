@@ -7,6 +7,7 @@ finder:
   exclude:
     - docs
     - vendor
+  not-name:
     - tests/TestEnvironments/Php84/Hydrator/PublicPrivateSetProperty/Figure.php
 
 enabled:
