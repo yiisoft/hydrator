@@ -2,7 +2,7 @@
 
 ## 1.6.1 under development
 
-- no changes in this release.
+- Bug #110: Support `public private(set)` properties in parent class (@vjik) 
 
 ## 1.6.0 March 14, 2025
 
