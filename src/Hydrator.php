@@ -157,12 +157,14 @@ final class Hydrator implements HydratorInterface
         ReflectionProperty $property,
         string $propertyName,
     ): ReflectionProperty {
+        // It needs for PHP 8.3 and earlier versions.
         if ($property->isReadOnly()) {
             $declaringClass = $property->getDeclaringClass();
             if ($declaringClass !== $class) {
                 return $declaringClass->getProperty($propertyName);
             }
         }
+
         return $property;
     }
 }
