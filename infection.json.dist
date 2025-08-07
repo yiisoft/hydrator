@@ -16,6 +16,11 @@
             "ignoreSourceCodeByRegex": [
                 ".*\\$hasMutable = false.*"
             ]
+        },
+        "@global": {
+            "ignoreSourceCodeByRegex": [
+                ".*PHP_VERSION_ID.*"
+            ]
         }
     }
 }
