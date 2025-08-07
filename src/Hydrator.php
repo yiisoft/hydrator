@@ -152,6 +152,9 @@ final class Hydrator implements HydratorInterface
         }
     }
 
+    /**
+     * @psalm-suppress UndefinedMethod
+     */
     private function preparePropertyToSetValue(
         ReflectionClass $class,
         ReflectionProperty $property,
