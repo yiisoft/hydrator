@@ -1,8 +1,8 @@
 # Yii Hydrator Change Log
 
-## 1.6.1 under development
+## 1.6.1 August 08, 2025
 
-- Bug #110: Support `public private(set)` properties in parent class (@vjik) 
+- Bug #110: Support `public private(set)` properties in parent class (@vjik)
 
 ## 1.6.0 March 14, 2025
 
