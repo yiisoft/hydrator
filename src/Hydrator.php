@@ -145,24 +145,30 @@ final class Hydrator implements HydratorInterface
                 );
                 if ($result->isResolved()) {
                     $this
-                        ->preparePropertyToSetValue($reflectionClass, $property, $propertyName)
+                        ->preparePropertyToSetValue($reflectionClass, $property)
                         ->setValue($object, $result->getValue());
                 }
             }
         }
     }
 
+    /**
+     * @psalm-suppress UndefinedMethod
+     */
     private function preparePropertyToSetValue(
         ReflectionClass $class,
         ReflectionProperty $property,
-        string $propertyName,
     ): ReflectionProperty {
-        if ($property->isReadOnly()) {
+        if (
+            (PHP_VERSION_ID < 80400 && $property->isReadOnly())
+            || (PHP_VERSION_ID >= 80400 && $property->isPrivateSet())
+        ) {
             $declaringClass = $property->getDeclaringClass();
-            if ($declaringClass !== $class) {
-                return $declaringClass->getProperty($propertyName);
-            }
+            return $declaringClass->getName() === $class->getName()
+                ? $property
+                : $declaringClass->getProperty($property->getName());
         }
+
         return $property;
     }
 }

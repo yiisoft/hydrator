@@ -23,8 +23,9 @@
             <exclude>./tests/TestEnvironments</exclude>
         </testsuite>
 
-        <testsuite name="Yii Hydrator PHP 8.2 tests">
+        <testsuite name="Yii Hydrator PHP version specific tests">
             <directory phpVersion="8.2" phpVersionOperator=">=">./tests/TestEnvironments/Php82</directory>
+            <directory phpVersion="8.4" phpVersionOperator=">=">./tests/TestEnvironments/Php84</directory>
         </testsuite>
     </testsuites>
 
