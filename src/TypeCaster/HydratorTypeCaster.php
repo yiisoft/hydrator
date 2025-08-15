@@ -27,7 +27,7 @@ final class HydratorTypeCaster implements TypeCasterInterface
         }
 
         if ($type instanceof ReflectionNamedType) {
-            return $this->castInternal($value, $type, $hydrator);
+            return $this->castInternal($value, $type, $hydrator, $context->useConstructor);
         }
 
         if (!$type instanceof ReflectionUnionType) {
@@ -39,7 +39,7 @@ final class HydratorTypeCaster implements TypeCasterInterface
                 continue;
             }
 
-            $result = $this->castInternal($value, $t, $hydrator);
+            $result = $this->castInternal($value, $t, $hydrator, $context->useConstructor);
             if ($result->isResolved()) {
                 return $result;
             }
@@ -48,8 +48,12 @@ final class HydratorTypeCaster implements TypeCasterInterface
         return Result::fail();
     }
 
-    private function castInternal(array $value, ReflectionNamedType $type, HydratorInterface $hydrator): Result
-    {
+    private function castInternal(
+        array $value,
+        ReflectionNamedType $type,
+        HydratorInterface $hydrator,
+        bool $useConstructor,
+    ): Result {
         if ($type->isBuiltin()) {
             return Result::fail();
         }
@@ -57,7 +61,7 @@ final class HydratorTypeCaster implements TypeCasterInterface
         $class = $type->getName();
 
         try {
-            $object = $hydrator->create($class, $value);
+            $object = $hydrator->create($class, $value, $useConstructor);
         } catch (NonInstantiableException) {
             return Result::fail();
         }

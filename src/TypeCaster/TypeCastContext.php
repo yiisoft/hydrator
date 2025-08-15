@@ -15,8 +15,9 @@ use Yiisoft\Hydrator\HydratorInterface;
 final class TypeCastContext
 {
     public function __construct(
-        private HydratorInterface $hydrator,
-        private ReflectionParameter|ReflectionProperty $reflection,
+        private readonly HydratorInterface $hydrator,
+        private readonly ReflectionParameter|ReflectionProperty $reflection,
+        public readonly bool $useConstructor,
     ) {
     }
 

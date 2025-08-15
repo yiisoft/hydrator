@@ -67,7 +67,7 @@ final class Hydrator implements HydratorInterface
         );
     }
 
-    public function hydrate(object $object, array|DataInterface $data = []): void
+    public function hydrate(object $object, array|DataInterface $data = [], bool $useConstructor = true): void
     {
         if (is_array($data)) {
             $data = new ArrayData($data);
@@ -81,11 +81,12 @@ final class Hydrator implements HydratorInterface
             $object,
             $reflectionClass,
             ReflectionFilter::filterProperties($object, $reflectionClass),
-            $data
+            $data,
+            $useConstructor,
         );
     }
 
-    public function create(string $class, array|DataInterface $data = []): object
+    public function create(string $class, array|DataInterface $data = [], bool $useConstructor = true): object
     {
         if (!class_exists($class)) {
             throw new NonExistClassException($class);
@@ -96,22 +97,25 @@ final class Hydrator implements HydratorInterface
         }
 
         $reflectionClass = new ReflectionClass($class);
-        $constructor = $reflectionClass->getConstructor();
-
         $data = $this->dataAttributesHandler->handle($reflectionClass, $data);
 
-        [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->extract(
-            $constructor,
-            $data,
-        );
-
-        $object = $this->objectFactory->create($reflectionClass, $constructorArguments);
+        if ($useConstructor) {
+            [$excludeProperties, $constructorArguments] = $this->constructorArgumentsExtractor->extract(
+                $reflectionClass->getConstructor(),
+                $data,
+            );
+            $object = $this->objectFactory->create($reflectionClass, $constructorArguments);
+        } else {
+            $object = $reflectionClass->newInstanceWithoutConstructor();
+            $excludeProperties = [];
+        }
 
         $this->hydrateInternal(
             $object,
             $reflectionClass,
             ReflectionFilter::filterProperties($object, $reflectionClass, $excludeProperties),
-            $data
+            $data,
+            $useConstructor,
         );
 
         return $object;
@@ -125,6 +129,7 @@ final class Hydrator implements HydratorInterface
         ReflectionClass $reflectionClass,
         array $reflectionProperties,
         DataInterface $data,
+        bool $useConstructor,
     ): void {
         foreach ($reflectionProperties as $propertyName => $property) {
             $resolveResult = $data->getValue($propertyName);
@@ -141,7 +146,7 @@ final class Hydrator implements HydratorInterface
             if ($resolveResult->isResolved()) {
                 $result = $this->typeCaster->cast(
                     $resolveResult->getValue(),
-                    new TypeCastContext($this, $property),
+                    new TypeCastContext($this, $property, $useConstructor),
                 );
                 if ($result->isResolved()) {
                     $this

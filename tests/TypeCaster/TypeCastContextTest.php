@@ -17,7 +17,7 @@ final class TypeCastContextTest extends TestCase
         $hydrator = new Hydrator();
         $reflection = (new ReflectionFunction(static fn(int $a) => null))->getParameters()[0];
 
-        $context = new TypeCastContext($hydrator, $reflection);
+        $context = new TypeCastContext($hydrator, $reflection, true);
 
         $this->assertSame($reflection, $context->getReflection());
         $this->assertInstanceOf(ReflectionNamedType::class, $context->getReflectionType());
