@@ -8,7 +8,7 @@ finder:
     - docs
     - vendor
   not-path:
-    - tests/TestEnvironments/Php84/Hydrator/PublicPrivateSetProperty/Figure.php
+    - tests/TestEnvironments/Php84/**/*
 
 enabled:
   - alpha_ordered_traits
