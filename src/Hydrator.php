@@ -154,6 +154,9 @@ final class Hydrator implements HydratorInterface
         }
     }
 
+    /**
+     * @psalm-suppress UndefinedMethod
+     */
     private function setPropertyValue(object $object, ReflectionProperty $property, mixed $value): void
     {
         PHP_VERSION_ID >= 80400
