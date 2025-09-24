@@ -13,7 +13,8 @@ final class NoPropertyHookTest extends TestCase
 {
     public function testBase(): void
     {
-        $object = new Hydrator()->create(Book::class, ['title' => 'test']);
+        $hydrator = new Hydrator();
+        $object = $hydrator->create(Book::class, ['title' => 'test']);
 
         assertSame('test', $object->title);
     }
