@@ -144,12 +144,24 @@ final class Hydrator implements HydratorInterface
                     new TypeCastContext($this, $property),
                 );
                 if ($result->isResolved()) {
-                    $this
-                        ->preparePropertyToSetValue($reflectionClass, $property)
-                        ->setValue($object, $result->getValue());
+                    $this->setPropertyValue(
+                        $object,
+                        $this->preparePropertyToSetValue($reflectionClass, $property),
+                        $result->getValue(),
+                    );
                 }
             }
         }
+    }
+
+    /**
+     * @psalm-suppress UndefinedMethod
+     */
+    private function setPropertyValue(object $object, ReflectionProperty $property, mixed $value): void
+    {
+        PHP_VERSION_ID >= 80400
+            ? $property->setRawValue($object, $value)
+            : $property->setValue($object, $value);
     }
 
     /**
