@@ -1,5 +1,9 @@
 # Yii Hydrator Change Log
 
+## 1.6.3 under development
+
+- no changes in this release.
+
 ## 1.6.2 September 25, 2025
 
 - Bug #111: Set property hook is no longer called during object hydration (@vjik)
