@@ -26,7 +26,7 @@
         }
     ],
     "require": {
-        "php": "8.1 - 8.4",
+        "php": "8.1 - 8.5",
         "psr/container": "^2.0",
         "yiisoft/injector": "^1.1",
         "yiisoft/strings": "^2.3"
