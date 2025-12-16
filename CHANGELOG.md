@@ -1,6 +1,6 @@
 # Yii Hydrator Change Log
 
-## 1.6.3 under development
+## 1.6.3 December 16, 2025
 
 - Enh #113: Add PHP 8.5 support (@vjik).
 
