@@ -7,7 +7,6 @@ namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 use ArrayObject;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Yiisoft\Hydrator\Attribute\Parameter\ToArrayOfIntegers;
 use Yiisoft\Hydrator\Attribute\Parameter\ToArrayOfIntegersResolver;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
