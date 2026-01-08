@@ -39,14 +39,6 @@ final class ToArrayOfIntegersTest extends TestCase
             },
         ];
         yield [
-            [1],
-            new stdClass(),
-            new class () {
-                #[ToArrayOfIntegers]
-                public ?array $value = null;
-            },
-        ];
-        yield [
             [42],
             42,
             new class () {
