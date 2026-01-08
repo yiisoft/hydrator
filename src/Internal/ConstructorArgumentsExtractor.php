@@ -58,7 +58,7 @@ final class ConstructorArgumentsExtractor
             if ($resolveResult->isResolved()) {
                 $typeCastedValue = $this->typeCaster->cast(
                     $resolveResult->getValue(),
-                    new TypeCastContext($this->hydrator, $parameter),
+                    new TypeCastContext($this->hydrator, $parameter, true),
                 );
                 if ($typeCastedValue->isResolved()) {
                     $constructorArguments[$parameterName] = $typeCastedValue->getValue();

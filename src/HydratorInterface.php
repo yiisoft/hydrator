@@ -19,7 +19,7 @@ interface HydratorInterface
      *
      * @throws NonInstantiableException
      */
-    public function hydrate(object $object, array|DataInterface $data = []): void;
+    public function hydrate(object $object, array|DataInterface $data = [], bool $useConstructor = true): void;
 
     /**
      * Creates an object and hydrates it with data.
@@ -34,5 +34,5 @@ interface HydratorInterface
      * @psalm-param class-string<T> $class
      * @psalm-return T
      */
-    public function create(string $class, array|DataInterface $data = []): object;
+    public function create(string $class, array|DataInterface $data = [], bool $useConstructor = true): object;
 }
