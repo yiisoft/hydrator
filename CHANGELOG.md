@@ -2,7 +2,7 @@
 
 ## 1.6.4 under development
 
-- no changes in this release.
+- New #116: Add `ToArrayOfIntegers` parameter attribute (@samdark)
 
 ## 1.6.3 December 16, 2025
 
