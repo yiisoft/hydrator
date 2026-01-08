@@ -256,8 +256,7 @@ final class Post
 
 ### `ToArrayOfIntegers`
 
-Используйте атрибут `ToArrayOfIntegers` для приведения значения к массиву
-целых чисел:
+Use `ToArrayOfIntegers` attribute to cast a value to an array of integers:
 
 ```php
 use Yiisoft\Hydrator\Attribute\Parameter\ToArrayOfIntegers;
@@ -269,7 +268,8 @@ final class Post
 }
 ```
 
-Если разрешенное значение является итерируемым, каждый элемент будет приведен к целому числу.
-Например, массив `['1', '2', '3']` будет преобразован в `[1, 2, 3]`. Если разрешенное значение не
-является итерируемым, оно будет приведено к целому числу и обернуто в массив. Например, строка
-`'42'` будет преобразована в `[42]`.
+If the resolved value is iterable, each element will be cast to an
+integer. For example, array `['1', '2', '3']` will be converted to `[1, 2,
+3]`. If the resolved value is not iterable, it will be cast to an integer
+and wrapped in an array.  For example, string `'42'` will be converted to
+`[42]`.
