@@ -26,18 +26,13 @@ final class ToArrayOfIntegersResolver implements ParameterAttributeResolverInter
         $resolvedValue = $context->getResolvedValue();
         if (is_iterable($resolvedValue)) {
             $array = array_map(
-                $this->castValueToInt(...),
+                static fn(mixed $value): int => (int) $value,
                 $resolvedValue instanceof Traversable ? iterator_to_array($resolvedValue) : $resolvedValue
             );
         } else {
-            $array = [$this->castValueToInt($resolvedValue)];
+            $array = [(int) $resolvedValue];
         }
 
         return Result::success($array);
-    }
-
-    private function castValueToInt(mixed $value): int
-    {
-        return (int) $value;
     }
 }
