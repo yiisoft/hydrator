@@ -253,23 +253,3 @@ final class Post
 - `separator` — символ перевода строки (по умолчанию, `\R`). Это часть
   регулярного выражения, поэтому ее следует учитывать или правильно
   экранировать с помощью `preg_quote()`.
-
-### `ToArrayOfIntegers`
-
-Use `ToArrayOfIntegers` attribute to cast a value to an array of integers:
-
-```php
-use Yiisoft\Hydrator\Attribute\Parameter\ToArrayOfIntegers;
-
-final class Post
-{
-    #[ToArrayOfIntegers]
-    public array $ratings = [];    
-}
-```
-
-If the resolved value is iterable, each element will be cast to an
-integer. For example, array `['1', '2', '3']` will be converted to `[1, 2,
-3]`. If the resolved value is not iterable, it will be cast to an integer
-and wrapped in an array.  For example, string `'42'` will be converted to
-`[42]`.

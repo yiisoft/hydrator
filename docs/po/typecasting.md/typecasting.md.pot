@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-01-08 22:42+0000\n"
+"POT-Creation-Date: 2025-06-18 12:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -408,38 +408,4 @@ msgid ""
 "`separator` — the boundary string (default, `\\R`), it's a part of regular "
 "expression so should be taken into account or properly escaped with "
 "`preg_quote()`."
-msgstr ""
-
-#. type: Title ###
-#: guide/en/typecasting.md
-#, no-wrap
-msgid "`ToArrayOfIntegers`"
-msgstr ""
-
-#. type: Plain text
-#: guide/en/typecasting.md
-msgid ""
-"Use `ToArrayOfIntegers` attribute to cast a value to an array of integers:"
-msgstr ""
-
-#. type: Fenced code block (php)
-#: guide/en/typecasting.md
-#, no-wrap
-msgid ""
-"use Yiisoft\\Hydrator\\Attribute\\Parameter\\ToArrayOfIntegers;\n"
-"\n"
-"final class Post\n"
-"{\n"
-"    #[ToArrayOfIntegers]\n"
-"    public array $ratings = [];    \n"
-"}\n"
-msgstr ""
-
-#. type: Plain text
-#: guide/en/typecasting.md
-msgid ""
-"If the resolved value is iterable, each element will be cast to an integer. "
-"For example, array `['1', '2', '3']` will be converted to `[1, 2, 3]`. If "
-"the resolved value is not iterable, it will be cast to an integer and "
-"wrapped in an array.  For example, string `'42'` will be converted to `[42]`."
 msgstr ""
