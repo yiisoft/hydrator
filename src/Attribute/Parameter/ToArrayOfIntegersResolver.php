@@ -39,7 +39,7 @@ final class ToArrayOfIntegersResolver implements ParameterAttributeResolverInter
             $stringArray = $attribute->splitResolvedValue
                 ? preg_split('~' . $attribute->separator . '~u', $value)
                 : [$value];
-            
+
             $array = array_map(
                 static fn(mixed $value): int => (int) $value,
                 $stringArray
