@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
+use Stringable;
 use Traversable;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
@@ -30,9 +31,26 @@ final class ToArrayOfIntegersResolver implements ParameterAttributeResolverInter
                 $resolvedValue instanceof Traversable ? iterator_to_array($resolvedValue) : $resolvedValue
             );
         } else {
-            $array = [(int) $resolvedValue];
+            $value = $this->castValueToString($resolvedValue);
+            /**
+             * @var string[] $stringArray We assume valid regular expression is used here, so `preg_split()` always returns
+             * an array of strings.
+             */
+            $stringArray = $attribute->splitResolvedValue
+                ? preg_split('~' . $attribute->separator . '~u', $value)
+                : [$value];
+            
+            $array = array_map(
+                static fn(mixed $value): int => (int) $value,
+                $stringArray
+            );
         }
 
         return Result::success($array);
+    }
+
+    private function castValueToString(mixed $value): string
+    {
+        return is_scalar($value) || $value instanceof Stringable ? (string) $value : '';
     }
 }

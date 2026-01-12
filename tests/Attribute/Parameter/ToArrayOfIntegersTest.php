@@ -117,6 +117,51 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
+        // Test splitting with default separator (comma)
+        yield [
+            [1, 2, 3],
+            '1,2,3',
+            new class () {
+                #[ToArrayOfIntegers]
+                public ?array $value = null;
+            },
+        ];
+        // Test splitting with spaces
+        yield [
+            [1, 2, 3],
+            '1, 2, 3',
+            new class () {
+                #[ToArrayOfIntegers]
+                public ?array $value = null;
+            },
+        ];
+        // Test custom separator
+        yield [
+            [1, 2, 3],
+            '1;2;3',
+            new class () {
+                #[ToArrayOfIntegers(separator: ';')]
+                public ?array $value = null;
+            },
+        ];
+        // Test splitResolvedValue = false
+        yield [
+            [123],
+            '1,2,3',
+            new class () {
+                #[ToArrayOfIntegers(splitResolvedValue: false)]
+                public ?array $value = null;
+            },
+        ];
+        // Test split with mixed types
+        yield [
+            [1, 2, 3, 4],
+            '1,2.5,3,4.9',
+            new class () {
+                #[ToArrayOfIntegers]
+                public ?array $value = null;
+            },
+        ];
     }
 
     #[DataProvider('dataBase')]
