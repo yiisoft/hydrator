@@ -32,13 +32,17 @@ final class ToArrayOfIntegersResolver implements ParameterAttributeResolverInter
             );
         } else {
             $value = $this->castValueToString($resolvedValue);
-            /**
-             * @var string[] $stringArray We assume valid regular expression is used here, so `preg_split()` always returns
-             * an array of strings.
-             */
-            $stringArray = $attribute->splitResolvedValue
-                ? preg_split('~' . $attribute->separator . '~u', $value)
-                : [$value];
+            if ($attribute->splitResolvedValue) {
+                /**
+                 * @var string[] $stringArray We assume valid regular expression is used here, so `preg_split()` always returns
+                 * an array of strings.
+                 */
+                $stringArray = preg_split('~' . $attribute->separator . '~u', $value);
+            } else {
+                // Remove separator from the string before casting to integer
+                $value = preg_replace('~' . $attribute->separator . '~u', '', $value);
+                $stringArray = [$value];
+            }
 
             $array = array_map(
                 static fn(mixed $value): int => (int) $value,
