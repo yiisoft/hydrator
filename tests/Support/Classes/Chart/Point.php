@@ -9,6 +9,5 @@ final class Point
     public function __construct(
         private Coordinates $coordinates,
         private array $rgb,
-    ) {
-    }
+    ) {}
 }

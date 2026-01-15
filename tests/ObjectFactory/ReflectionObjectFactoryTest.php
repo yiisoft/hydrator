@@ -19,7 +19,7 @@ final class ReflectionObjectFactoryTest extends TestCase
 
         $this->expectException(WrongConstructorArgumentsCountException::class);
         $this->expectExceptionMessage(
-            'Class "' . StringableObject::class . '" cannot be instantiated because it has 1 required parameters in constructor, but passed only 0.'
+            'Class "' . StringableObject::class . '" cannot be instantiated because it has 1 required parameters in constructor, but passed only 0.',
         );
         $factory->create($reflection, []);
     }

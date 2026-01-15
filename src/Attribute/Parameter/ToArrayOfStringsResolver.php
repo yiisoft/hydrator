@@ -10,11 +10,13 @@ use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
+use function is_scalar;
+
 final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterface
 {
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
-        ParameterAttributeResolveContext $context
+        ParameterAttributeResolveContext $context,
     ): Result {
         if (!$attribute instanceof ToArrayOfStrings) {
             throw new UnexpectedAttributeException(ToArrayOfStrings::class, $attribute);
@@ -28,7 +30,7 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
         if (is_iterable($resolvedValue)) {
             $array = array_map(
                 $this->castValueToString(...),
-                $resolvedValue instanceof Traversable ? iterator_to_array($resolvedValue) : $resolvedValue
+                $resolvedValue instanceof Traversable ? iterator_to_array($resolvedValue) : $resolvedValue,
             );
         } else {
             $value = $this->castValueToString($resolvedValue);

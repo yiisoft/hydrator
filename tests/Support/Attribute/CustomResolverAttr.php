@@ -10,9 +10,8 @@ use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 final class CustomResolverAttr implements ParameterAttributeInterface
 {
     public function __construct(
-        private string|ParameterAttributeResolverInterface $resolver
-    ) {
-    }
+        private string|ParameterAttributeResolverInterface $resolver,
+    ) {}
 
     public function getResolver(): string|ParameterAttributeResolverInterface
     {

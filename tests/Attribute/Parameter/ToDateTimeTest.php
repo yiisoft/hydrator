@@ -87,7 +87,7 @@ final class ToDateTimeTest extends TestCase
     public function testWithHydrator(): void
     {
         $hydrator = new Hydrator();
-        $object = new class () {
+        $object = new class {
             #[ToDateTime(format: 'php:d.m.Y')]
             public ?DateTimeImmutable $a = null;
         };
@@ -109,7 +109,7 @@ final class ToDateTimeTest extends TestCase
     public function testNotResolvePhpFormat(mixed $value): void
     {
         $hydrator = new Hydrator();
-        $object = new class () {
+        $object = new class {
             #[ToDateTime(format: 'php:d.m.Y')]
             public ?DateTimeImmutable $a = null;
         };
@@ -123,7 +123,7 @@ final class ToDateTimeTest extends TestCase
     public function testNotResolveIntlFormat(mixed $value): void
     {
         $hydrator = new Hydrator();
-        $object = new class () {
+        $object = new class {
             #[ToDateTime(format: 'dd.MM.yyyy')]
             public ?DateTimeImmutable $a = null;
         };
@@ -136,7 +136,7 @@ final class ToDateTimeTest extends TestCase
     public function testNotResolvedValue(): void
     {
         $hydrator = new Hydrator();
-        $object = new class () {
+        $object = new class {
             #[ToDateTime(format: 'php:d.m.Y')]
             public ?DateTimeImmutable $a = null;
         };
@@ -155,7 +155,7 @@ final class ToDateTimeTest extends TestCase
                 ]),
             ),
         );
-        $object = new class () {
+        $object = new class {
             #[ToDateTime]
             public ?DateTimeImmutable $a = null;
         };
@@ -174,7 +174,7 @@ final class ToDateTimeTest extends TestCase
                 ]),
             ),
         );
-        $object = new class () {
+        $object = new class {
             #[ToDateTime(locale: 'ru', timeZone: 'UTC')]
             public ?DateTimeImmutable $a = null;
         };
@@ -193,7 +193,7 @@ final class ToDateTimeTest extends TestCase
                 ]),
             ),
         );
-        $object = new class () {
+        $object = new class {
             #[ToDateTime(locale: 'ru')]
             public ?DateTimeImmutable $a = null;
         };
@@ -212,7 +212,7 @@ final class ToDateTimeTest extends TestCase
                 ]),
             ),
         );
-        $object = new class () {
+        $object = new class {
             #[ToDateTime(format: 'php:d.m.Y')]
             public ?DateTimeImmutable $a = null;
         };
@@ -235,7 +235,7 @@ final class ToDateTimeTest extends TestCase
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage(
-            'Expected "' . ToDateTime::class . '", but "' . Counter::class . '" given.'
+            'Expected "' . ToDateTime::class . '", but "' . Counter::class . '" given.',
         );
         $hydrator->hydrate($object);
     }

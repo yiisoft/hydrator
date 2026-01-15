@@ -18,8 +18,7 @@ final class NullTypeCaster implements TypeCasterInterface
         private bool $null = true,
         private bool $emptyString = false,
         private bool $emptyArray = false,
-    ) {
-    }
+    ) {}
 
     public function cast(mixed $value, TypeCastContext $context): Result
     {

@@ -15,6 +15,9 @@ use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
+use function is_int;
+use function is_string;
+
 /**
  * @psalm-import-type IntlDateFormatterFormat from ToDateTime
  */
@@ -31,12 +34,11 @@ final class ToDateTimeResolver implements ParameterAttributeResolverInterface
         private readonly int $timeType = IntlDateFormatter::SHORT,
         private readonly ?string $timeZone = null,
         private readonly ?string $locale = null,
-    ) {
-    }
+    ) {}
 
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
-        ParameterAttributeResolveContext $context
+        ParameterAttributeResolveContext $context,
     ): Result {
         if (!$attribute instanceof ToDateTime) {
             throw new UnexpectedAttributeException(ToDateTime::class, $attribute);
@@ -60,7 +62,7 @@ final class ToDateTimeResolver implements ParameterAttributeResolverInterface
 
         if (is_int($resolvedValue)) {
             return Result::success(
-                $this->makeDateTimeFromTimestamp($resolvedValue, $timeZone, $shouldBeMutable)
+                $this->makeDateTimeFromTimestamp($resolvedValue, $timeZone, $shouldBeMutable),
             );
         }
 
@@ -133,7 +135,7 @@ final class ToDateTimeResolver implements ParameterAttributeResolverInterface
                 IntlDateFormatter::NONE,
                 IntlDateFormatter::NONE,
                 $timeZone,
-                pattern: $format
+                pattern: $format,
             );
         $formatter->setLenient(false);
         $timestamp = $formatter->parse($resolvedValue);
@@ -145,7 +147,7 @@ final class ToDateTimeResolver implements ParameterAttributeResolverInterface
     private function makeDateTimeFromTimestamp(
         int $timestamp,
         ?DateTimeZone $timeZone,
-        bool $shouldBeMutable
+        bool $shouldBeMutable,
     ): DateTimeInterface {
         /**
          * @psalm-suppress InvalidNamedArgument Psalm bug: https://github.com/vimeo/psalm/issues/10872
@@ -159,11 +161,11 @@ final class ToDateTimeResolver implements ParameterAttributeResolverInterface
     {
         if ($shouldBeMutable) {
             return Result::success(
-                $date instanceof DateTime ? $date : DateTime::createFromInterface($date)
+                $date instanceof DateTime ? $date : DateTime::createFromInterface($date),
             );
         }
         return Result::success(
-            $date instanceof DateTimeImmutable ? $date : DateTimeImmutable::createFromInterface($date)
+            $date instanceof DateTimeImmutable ? $date : DateTimeImmutable::createFromInterface($date),
         );
     }
 

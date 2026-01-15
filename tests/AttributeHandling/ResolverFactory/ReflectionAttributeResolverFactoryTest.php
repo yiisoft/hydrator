@@ -65,7 +65,7 @@ final class ReflectionAttributeResolverFactoryTest extends TestCase
 
         $this->expectException(AttributeResolverNonInstantiableException::class);
         $this->expectExceptionMessage(
-            'Class "' . PrivateConstructorResolver::class . '" is not instantiable because of non-public constructor.'
+            'Class "' . PrivateConstructorResolver::class . '" is not instantiable because of non-public constructor.',
         );
         $factory->create($attribute);
     }
@@ -77,7 +77,7 @@ final class ReflectionAttributeResolverFactoryTest extends TestCase
 
         $this->expectException(AttributeResolverNonInstantiableException::class);
         $this->expectExceptionMessage(
-            'Class "' . ParameterizedResolver::class . '" cannot be instantiated because it has 1 required parameters in constructor.'
+            'Class "' . ParameterizedResolver::class . '" cannot be instantiated because it has 1 required parameters in constructor.',
         );
         $factory->create($attribute);
     }

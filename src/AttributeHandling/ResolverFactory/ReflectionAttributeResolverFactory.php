@@ -10,6 +10,7 @@ use Yiisoft\Hydrator\AttributeHandling\Exception\AttributeResolverNonInstantiabl
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
 use function is_string;
+use function sprintf;
 
 /**
  * A factory for attribute resolvers that are instantiable via reflection.
@@ -59,7 +60,7 @@ final class ReflectionAttributeResolverFactory implements AttributeResolverFacto
                         'Class "%s" cannot be instantiated because it has %d required parameters in constructor.',
                         $constructor->getDeclaringClass()->getName(),
                         $constructor->getNumberOfRequiredParameters(),
-                    )
+                    ),
                 );
             }
         }

@@ -9,7 +9,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\Di;
 final class DiSingleWithoutTypeConstructor
 {
     public function __construct(
-        #[Di] public $engine
-    ) {
-    }
+        #[Di]
+        public $engine,
+    ) {}
 }

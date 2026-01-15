@@ -16,8 +16,7 @@ final class Result
     private function __construct(
         private bool $isResolved,
         private mixed $value = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates instance of `Result` with resolved value.

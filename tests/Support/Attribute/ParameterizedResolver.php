@@ -13,12 +13,11 @@ final class ParameterizedResolver implements ParameterAttributeResolverInterface
 {
     public function __construct(
         private string $result,
-    ) {
-    }
+    ) {}
 
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
-        ParameterAttributeResolveContext $context
+        ParameterAttributeResolveContext $context,
     ): Result {
         return Result::success($this->result);
     }

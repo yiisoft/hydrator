@@ -12,6 +12,8 @@ use Yiisoft\Hydrator\Attribute\Data\DataAttributeInterface;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\DataInterface;
 
+use function sprintf;
+
 /**
  * Handles data attributes that implement {@see DataAttributeInterface}.
  *
@@ -21,8 +23,7 @@ final class DataAttributesHandler
 {
     public function __construct(
         private AttributeResolverFactoryInterface $attributeResolverFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * Handle data attributes.
@@ -36,7 +37,7 @@ final class DataAttributesHandler
     {
         $reflectionAttributes = $reflectionClass->getAttributes(
             DataAttributeInterface::class,
-            ReflectionAttribute::IS_INSTANCEOF
+            ReflectionAttribute::IS_INSTANCEOF,
         );
 
         foreach ($reflectionAttributes as $reflectionAttribute) {

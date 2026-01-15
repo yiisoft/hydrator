@@ -19,9 +19,8 @@ final class ObjectMap
      * @psalm-param MapType $map
      */
     public function __construct(
-        public readonly array $map
-    ) {
-    }
+        public readonly array $map,
+    ) {}
 
     /**
      * Returns a path for a given property name or null if mapping dosen't exist.

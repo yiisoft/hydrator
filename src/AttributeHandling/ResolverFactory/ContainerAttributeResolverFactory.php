@@ -11,6 +11,7 @@ use Yiisoft\Hydrator\AttributeHandling\Exception\AttributeResolverNonInstantiabl
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 
 use function is_string;
+use function sprintf;
 
 /**
  * A factory for attribute resolvers that are instantiable by a container.
@@ -22,8 +23,7 @@ final class ContainerAttributeResolverFactory implements AttributeResolverFactor
      */
     public function __construct(
         private ContainerInterface $container,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ContainerExceptionInterface

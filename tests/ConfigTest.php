@@ -19,7 +19,7 @@ final class ConfigTest extends TestCase
     public function testBase(): void
     {
         $container = new Container(
-            ContainerConfig::create()->withDefinitions($this->getContainerDefinitions())
+            ContainerConfig::create()->withDefinitions($this->getContainerDefinitions()),
         );
 
         $hydrator = $container->get(HydratorInterface::class);

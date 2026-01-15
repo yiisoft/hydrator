@@ -17,12 +17,11 @@ final class Data implements ParameterAttributeInterface, ParameterAttributeResol
 {
     public function __construct(
         private string $name,
-    ) {
-    }
+    ) {}
 
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
-        ParameterAttributeResolveContext $context
+        ParameterAttributeResolveContext $context,
     ): Result {
         if (!$attribute instanceof self) {
             throw new UnexpectedAttributeException(self::class, $attribute);

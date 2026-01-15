@@ -6,6 +6,8 @@ namespace Yiisoft\Hydrator\Exception;
 
 use ReflectionMethod;
 
+use function sprintf;
+
 /**
  * Thrown when a class is not instantiable because of wrong constructor arguments count.
  */
@@ -19,7 +21,7 @@ final class WrongConstructorArgumentsCountException extends NonInstantiableExcep
                 $constructor->getDeclaringClass()->getName(),
                 $constructor->getNumberOfRequiredParameters(),
                 $countArguments,
-            )
+            ),
         );
     }
 }

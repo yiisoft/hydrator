@@ -14,7 +14,7 @@ final class RandomIntResolver implements ParameterAttributeResolverInterface
 {
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
-        ParameterAttributeResolveContext $context
+        ParameterAttributeResolveContext $context,
     ): Result {
         if (!$attribute instanceof RandomInt) {
             throw new UnexpectedAttributeException(RandomInt::class, $attribute);

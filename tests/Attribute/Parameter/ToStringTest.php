@@ -57,7 +57,7 @@ final class ToStringTest extends TestCase
     {
         $hydrator = new Hydrator();
 
-        $object = new class () {
+        $object = new class {
             #[ToString]
             public string $a = '...';
         };
@@ -71,7 +71,7 @@ final class ToStringTest extends TestCase
     {
         $hydrator = new Hydrator();
 
-        $object = new class () {
+        $object = new class {
             #[ToString]
             public string $a = '...';
         };

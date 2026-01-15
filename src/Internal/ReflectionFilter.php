@@ -22,7 +22,7 @@ final class ReflectionFilter
     public static function filterProperties(
         object $object,
         ReflectionClass $reflectionClass,
-        array $propertyNamesToFilter = []
+        array $propertyNamesToFilter = [],
     ): array {
         $result = [];
 

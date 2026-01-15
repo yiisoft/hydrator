@@ -21,8 +21,7 @@ final class ConstructorArgumentsExtractor
         private Hydrator $hydrator,
         private ParameterAttributesHandler $parameterAttributesHandler,
         private TypeCasterInterface $typeCaster,
-    ) {
-    }
+    ) {}
 
     /**
      * @psalm-return array{0:list<string>,1:array<string,mixed>}

@@ -11,8 +11,7 @@ final class PostCategory
     public function __construct(
         #[Collection(Post::class)]
         private array $posts = [],
-    ) {
-    }
+    ) {}
 
     public function getPosts(): array
     {

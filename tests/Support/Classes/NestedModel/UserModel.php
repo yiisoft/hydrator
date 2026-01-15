@@ -7,9 +7,8 @@ namespace Yiisoft\Hydrator\Tests\Support\Classes\NestedModel;
 final class UserModel
 {
     public function __construct(
-        private Name $name
-    ) {
-    }
+        private Name $name,
+    ) {}
 
     public function getName(): string
     {

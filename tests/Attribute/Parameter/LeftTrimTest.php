@@ -50,7 +50,7 @@ final class LeftTrimTest extends TestCase
     public function testWithHydrator(): void
     {
         $hydrator = new Hydrator();
-        $object = new class () {
+        $object = new class {
             #[LeftTrim]
             public ?string $a = null;
         };
@@ -63,7 +63,7 @@ final class LeftTrimTest extends TestCase
     public function testNotResolve(): void
     {
         $hydrator = new Hydrator();
-        $object = new class () {
+        $object = new class {
             #[LeftTrim]
             public ?string $a = null;
         };
@@ -76,7 +76,7 @@ final class LeftTrimTest extends TestCase
     public function testNotResolvedValue(): void
     {
         $hydrator = new Hydrator();
-        $object = new class () {
+        $object = new class {
             #[LeftTrim]
             public ?string $a = null;
         };
@@ -99,7 +99,7 @@ final class LeftTrimTest extends TestCase
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage(
-            'Expected "' . LeftTrim::class . '", but "' . Counter::class . '" given.'
+            'Expected "' . LeftTrim::class . '", but "' . Counter::class . '" given.',
         );
         $hydrator->hydrate($object);
     }
@@ -113,7 +113,7 @@ final class LeftTrimTest extends TestCase
                 ]),
             ),
         );
-        $object = new class () {
+        $object = new class {
             #[LeftTrim(characters: '*')]
             public ?string $a = null;
         };

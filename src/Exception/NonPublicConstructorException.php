@@ -7,6 +7,8 @@ namespace Yiisoft\Hydrator\Exception;
 use LogicException;
 use ReflectionMethod;
 
+use function sprintf;
+
 /**
  * Thrown when a class is not instantiable because of non-public constructor.
  */
@@ -34,7 +36,7 @@ final class NonPublicConstructorException extends NonInstantiableException
         }
 
         throw new LogicException(
-            'Exception "NonPublicConstructorException" can be used only for non-public constructors.'
+            'Exception "NonPublicConstructorException" can be used only for non-public constructors.',
         );
     }
 }

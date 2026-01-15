@@ -27,8 +27,7 @@ final class ParameterAttributeResolveContext
         private Result $resolveResult,
         private DataInterface $data,
         private ?HydratorInterface $hydrator = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Get resolved parameter or property reflection.

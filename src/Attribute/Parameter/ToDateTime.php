@@ -26,8 +26,7 @@ final class ToDateTime implements ParameterAttributeInterface
         public readonly ?int $timeType = null,
         public readonly ?string $timeZone = null,
         public readonly ?string $locale = null,
-    ) {
-    }
+    ) {}
 
     public function getResolver(): string
     {
