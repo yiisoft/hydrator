@@ -9,11 +9,14 @@ use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
+use function is_scalar;
+use function is_string;
+
 final class ToArrayOfIntegersResolver implements ParameterAttributeResolverInterface
 {
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
-        ParameterAttributeResolveContext $context
+        ParameterAttributeResolveContext $context,
     ): Result {
         if (!$attribute instanceof ToArrayOfIntegers) {
             throw new UnexpectedAttributeException(ToArrayOfIntegers::class, $attribute);

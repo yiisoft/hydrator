@@ -21,8 +21,7 @@ final class ToArrayOfIntegers implements ParameterAttributeInterface
     public function __construct(
         public readonly bool $splitResolvedValue = true,
         public readonly string $separator = ',',
-    ) {
-    }
+    ) {}
 
     public function getResolver(): string
     {
