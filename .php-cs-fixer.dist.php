@@ -10,6 +10,9 @@ $finder = (new Finder())->in([
     __DIR__ . '/config',
     __DIR__ . '/src',
     __DIR__ . '/tests',
+])->exclude([
+    'Php82',
+    'Php84',
 ]);
 
 return (new Config())
