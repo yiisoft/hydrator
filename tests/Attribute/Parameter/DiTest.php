@@ -50,7 +50,7 @@ final class DiTest extends TestCase
 
         $this->expectException(DiNotFoundException::class);
         $this->expectExceptionMessage(
-            'Class property "' . DiSingleWithoutType::class . '::$engine" without type not resolved.'
+            'Class property "' . DiSingleWithoutType::class . '::$engine" without type not resolved.',
         );
         $hydrator->create(DiSingleWithoutType::class);
     }
@@ -63,7 +63,7 @@ final class DiTest extends TestCase
         $this->expectExceptionMessage(
             'Constructor parameter "engine" of class "'
             . DiSingleWithoutTypeConstructor::class
-            . '" without type not resolved.'
+            . '" without type not resolved.',
         );
         $hydrator->create(DiSingleWithoutTypeConstructor::class);
     }
@@ -82,7 +82,7 @@ final class DiTest extends TestCase
         $this->assertInstanceOf(DiNotFoundException::class, $exception);
         $this->assertSame(
             'Class property "' . DiSingle::class . '::$engine" with type "' . EngineInterface::class . '" not resolved.',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
         $this->assertInstanceOf(NotFoundExceptionInterface::class, $exception->getPrevious());
     }
@@ -101,7 +101,7 @@ final class DiTest extends TestCase
         $this->assertInstanceOf(DiNotFoundException::class, $exception);
         $this->assertSame(
             'Class property "' . DiNonExists::class . '::$engine" without type not resolved.',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
         $this->assertInstanceOf(NotFoundExceptionInterface::class, $exception->getPrevious());
     }
@@ -126,7 +126,7 @@ final class DiTest extends TestCase
             . DiSingleConstructor::class
             . '" with type "'
             . EngineInterface::class
-            . '" not resolved.'
+            . '" not resolved.',
         );
         $hydrator->create(DiSingleConstructor::class);
     }
@@ -184,8 +184,8 @@ final class DiTest extends TestCase
 
         $this->expectException(DiNotFoundException::class);
         $this->expectExceptionMessage(
-            'Class property "' . DiUnion::class . '::$engine1" with type "' .
-            EngineInterface::class . '|string" not resolved.'
+            'Class property "' . DiUnion::class . '::$engine1" with type "'
+            . EngineInterface::class . '|string" not resolved.',
         );
         $hydrator->create(DiUnion::class);
     }
@@ -224,7 +224,7 @@ final class DiTest extends TestCase
     {
         $hydrator = $this->createHydrator();
 
-        $object = new class () {
+        $object = new class {
             #[Di('non-exists-id')]
             public EngineInterface $engine;
         };
@@ -253,12 +253,12 @@ final class DiTest extends TestCase
     {
         $container = new SimpleContainer([
             DiResolver::class => new DiResolver(
-                new SimpleContainer($definitions)
+                new SimpleContainer($definitions),
             ),
         ]);
         return new Hydrator(
             attributeResolverFactory: new ContainerAttributeResolverFactory($container),
-            objectFactory: new ContainerObjectFactory(new Injector($container))
+            objectFactory: new ContainerObjectFactory(new Injector($container)),
         );
     }
 }

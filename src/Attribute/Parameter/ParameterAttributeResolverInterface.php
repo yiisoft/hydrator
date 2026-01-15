@@ -22,6 +22,6 @@ interface ParameterAttributeResolverInterface
      */
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
-        ParameterAttributeResolveContext $context
+        ParameterAttributeResolveContext $context,
     ): Result;
 }

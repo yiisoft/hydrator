@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Exception;
 
+use function sprintf;
+
 /**
  * Thrown when a class is attempted to be instantiated but does not exist.
  */
@@ -14,7 +16,7 @@ final class NonExistClassException extends NonInstantiableException
         parent::__construct(
             sprintf(
                 'Class "%s" not exist.',
-                $class
+                $class,
             ),
         );
     }

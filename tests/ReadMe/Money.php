@@ -12,8 +12,7 @@ final class Money
         #[ToString]
         private string $value,
         private string $currency,
-    ) {
-    }
+    ) {}
 
     public function getValue(): string
     {

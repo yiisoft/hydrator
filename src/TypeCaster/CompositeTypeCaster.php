@@ -20,7 +20,7 @@ final class CompositeTypeCaster implements TypeCasterInterface
      * @param TypeCasterInterface ...$typeCasters Type casters to use.
      */
     public function __construct(
-        TypeCasterInterface ...$typeCasters
+        TypeCasterInterface ...$typeCasters,
     ) {
         $this->typeCasters = $typeCasters;
     }

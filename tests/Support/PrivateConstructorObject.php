@@ -6,7 +6,5 @@ namespace Yiisoft\Hydrator\Tests\Support;
 
 final class PrivateConstructorObject
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 }

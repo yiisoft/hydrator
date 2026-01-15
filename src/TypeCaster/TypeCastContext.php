@@ -17,8 +17,7 @@ final class TypeCastContext
     public function __construct(
         private HydratorInterface $hydrator,
         private ReflectionParameter|ReflectionProperty $reflection,
-    ) {
-    }
+    ) {}
 
     public function getReflection(): ReflectionParameter|ReflectionProperty
     {

@@ -10,6 +10,5 @@ final class Engine
 
     public function __construct(
         public string $name,
-    ) {
-    }
+    ) {}
 }

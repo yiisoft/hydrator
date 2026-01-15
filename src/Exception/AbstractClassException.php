@@ -6,6 +6,8 @@ namespace Yiisoft\Hydrator\Exception;
 
 use ReflectionClass;
 
+use function sprintf;
+
 /**
  * Thrown when an abstract class is attempted to be instantiated.
  */

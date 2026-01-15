@@ -9,8 +9,7 @@ final class Car
     public function __construct(
         private string $name,
         private Engine $engine,
-    ) {
-    }
+    ) {}
 
     public function getName(): string
     {

@@ -23,6 +23,8 @@ use Yiisoft\Hydrator\TypeCaster\TypeCasterInterface;
 
 use function is_array;
 
+use const PHP_VERSION_ID;
+
 /**
  * Creates or hydrate objects from a set of raw data.
  */
@@ -81,7 +83,7 @@ final class Hydrator implements HydratorInterface
             $object,
             $reflectionClass,
             ReflectionFilter::filterProperties($object, $reflectionClass),
-            $data
+            $data,
         );
     }
 
@@ -111,7 +113,7 @@ final class Hydrator implements HydratorInterface
             $object,
             $reflectionClass,
             ReflectionFilter::filterProperties($object, $reflectionClass, $excludeProperties),
-            $data
+            $data,
         );
 
         return $object;

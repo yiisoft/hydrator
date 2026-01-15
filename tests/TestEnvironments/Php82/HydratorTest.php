@@ -34,14 +34,14 @@ final class HydratorTest extends TestCase
             [
                 'unionIntersection' => '.',
             ],
-            $expectedValues
+            $expectedValues,
         );
 
         $this->assertSame(
             $expectedValues,
             [
                 'unionIntersection' => (string) $object->unionIntersection,
-            ]
+            ],
         );
     }
 

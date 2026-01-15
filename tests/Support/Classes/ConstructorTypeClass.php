@@ -8,6 +8,5 @@ final class ConstructorTypeClass
 {
     public function __construct(
         public int $int = -1,
-    ) {
-    }
+    ) {}
 }

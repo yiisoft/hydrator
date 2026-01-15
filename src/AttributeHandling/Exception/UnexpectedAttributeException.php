@@ -7,6 +7,8 @@ namespace Yiisoft\Hydrator\AttributeHandling\Exception;
 use InvalidArgumentException;
 use Throwable;
 
+use function sprintf;
+
 /**
  * Thrown when an attribute isn't of the expected class. Used in data and parameter attribute handlers.
  */
@@ -28,7 +30,7 @@ final class UnexpectedAttributeException extends InvalidArgumentException
             sprintf(
                 'Expected "%s", but "%s" given.',
                 $expectedClassName,
-                $actualObject::class
+                $actualObject::class,
             ),
             $code,
             $previous,

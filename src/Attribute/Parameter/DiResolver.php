@@ -23,8 +23,7 @@ final class DiResolver implements ParameterAttributeResolverInterface
      */
     public function __construct(
         private ContainerInterface $container,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ContainerExceptionInterface
@@ -42,7 +41,7 @@ final class DiResolver implements ParameterAttributeResolverInterface
         if ($id !== null) {
             try {
                 return Result::success(
-                    $this->container->get($id)
+                    $this->container->get($id),
                 );
             } catch (NotFoundExceptionInterface $e) {
                 throw new DiNotFoundException($parameter, $e);
@@ -54,7 +53,7 @@ final class DiResolver implements ParameterAttributeResolverInterface
             if (!$type->isBuiltin()) {
                 try {
                     return Result::success(
-                        $this->container->get($type->getName())
+                        $this->container->get($type->getName()),
                     );
                 } catch (NotFoundExceptionInterface $e) {
                     throw new DiNotFoundException($parameter, $e);
@@ -66,7 +65,7 @@ final class DiResolver implements ParameterAttributeResolverInterface
                 if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                     try {
                         return Result::success(
-                            $this->container->get($type->getName())
+                            $this->container->get($type->getName()),
                         );
                     } catch (NotFoundExceptionInterface) {
                     }

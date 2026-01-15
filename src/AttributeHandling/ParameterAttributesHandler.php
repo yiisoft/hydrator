@@ -17,6 +17,8 @@ use Yiisoft\Hydrator\DataInterface;
 use Yiisoft\Hydrator\HydratorInterface;
 use Yiisoft\Hydrator\Result;
 
+use function sprintf;
+
 /**
  * Handles parameters' attributes that implement {@see ParameterAttributeInterface}.
  */
@@ -25,8 +27,7 @@ final class ParameterAttributesHandler
     public function __construct(
         private AttributeResolverFactoryInterface $attributeResolverFactory,
         private ?HydratorInterface $hydrator = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Handle parameters' attributes of passed parameter.
@@ -41,7 +42,7 @@ final class ParameterAttributesHandler
     public function handle(
         ReflectionParameter|ReflectionProperty $parameter,
         ?Result $resolveResult = null,
-        ?DataInterface $data = null
+        ?DataInterface $data = null,
     ): Result {
         if ($this->hydrator === null) {
             throw new LogicException('Hydrator is not set in parameter attributes handler.');

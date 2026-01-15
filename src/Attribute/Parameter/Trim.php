@@ -20,8 +20,7 @@ final class Trim implements ParameterAttributeInterface
      */
     public function __construct(
         public readonly ?string $characters = null,
-    ) {
-    }
+    ) {}
 
     public function getResolver(): string
     {

@@ -7,6 +7,4 @@ namespace Yiisoft\Hydrator\Tests\Support\Classes;
 use Yiisoft\Hydrator\Tests\Support\Attribute\InvalidDataResolver;
 
 #[InvalidDataResolver]
-final class InvalidDataResolverClass
-{
-}
+final class InvalidDataResolverClass {}

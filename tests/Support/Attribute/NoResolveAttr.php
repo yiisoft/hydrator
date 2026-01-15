@@ -20,7 +20,7 @@ final class NoResolveAttr implements ParameterAttributeInterface, ParameterAttri
 
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
-        ParameterAttributeResolveContext $context
+        ParameterAttributeResolveContext $context,
     ): Result {
         return Result::fail();
     }

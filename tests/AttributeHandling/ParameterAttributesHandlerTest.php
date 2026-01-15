@@ -27,7 +27,7 @@ final class ParameterAttributesHandlerTest extends TestCase
             new ContainerAttributeResolverFactory(
                 new SimpleContainer([
                     ContextViewerResolver::class => $contextViewerResolver,
-                ])
+                ]),
             ),
             new Hydrator(),
         );
@@ -58,13 +58,13 @@ final class ParameterAttributesHandlerTest extends TestCase
         $handler = new ParameterAttributesHandler(new ReflectionAttributeResolverFactory(), new Hydrator());
 
         $parameter = TestHelper::getFirstParameter(
-            static function(
+            static function (
                 #[CustomValue('42')]
                 #[NoResolveAttr]
-                int $a
+                int $a,
             ) {
                 return null;
-            }
+            },
         );
 
         $result = $handler->handle($parameter);

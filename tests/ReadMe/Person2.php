@@ -13,8 +13,7 @@ final class Person2
         private string $firstName,
         #[Data('last_name')]
         private string $lastName,
-    ) {
-    }
+    ) {}
 
     public function getFirstName(): string
     {

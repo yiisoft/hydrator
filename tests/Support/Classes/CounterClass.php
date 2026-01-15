@@ -17,6 +17,5 @@ final class CounterClass
         private string $b = '.',
         #[Counter('c')]
         string $c = '.',
-    ) {
-    }
+    ) {}
 }

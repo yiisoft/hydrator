@@ -45,7 +45,7 @@ final class CollectionTest extends TestCase
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage(
-            'Expected "' . Collection::class . '", but "' . Counter::class . '" given.'
+            'Expected "' . Collection::class . '", but "' . Counter::class . '" given.',
         );
         $hydrator->hydrate($object);
     }
@@ -170,7 +170,7 @@ final class CollectionTest extends TestCase
             new Collection(Post::class),
             [
                 ['name' => 'Post 1'],
-                new class () implements DataInterface {
+                new class implements DataInterface {
                     public function getValue(string $name): Result
                     {
                         $value = $name === 'name' ? 'Post 2' : 'Description for post 2';

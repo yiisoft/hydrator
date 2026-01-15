@@ -12,13 +12,11 @@ use Yiisoft\Hydrator\Result;
 
 final class PrivateConstructorResolver implements ParameterAttributeResolverInterface
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
-        ParameterAttributeResolveContext $context
+        ParameterAttributeResolveContext $context,
     ): Result {
         throw new LogicException('Not implemented.');
     }

@@ -6,7 +6,5 @@ namespace Yiisoft\Hydrator\Tests\Support;
 
 final class ProtectedConstructor
 {
-    protected function __construct()
-    {
-    }
+    protected function __construct() {}
 }
