@@ -32,6 +32,7 @@
         "yiisoft/strings": "^2.3"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.92",
         "maglnet/composer-require-checker": "^4.7.1",
         "phpunit/phpunit": "^10.5.48",
         "rector/rector": "^2.1.2",
