@@ -39,8 +39,6 @@ final class ToArrayOfIntegersResolver implements ParameterAttributeResolverInter
                  */
                 $stringArray = preg_split('~' . $attribute->separator . '~u', $value);
             } else {
-                // Remove separator from the string before casting to integer
-                $value = preg_replace('~' . $attribute->separator . '~u', '', $value);
                 $stringArray = [$value];
             }
 

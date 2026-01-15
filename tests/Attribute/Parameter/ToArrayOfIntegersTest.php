@@ -21,7 +21,7 @@ final class ToArrayOfIntegersTest extends TestCase
 {
     public static function dataBase(): iterable
     {
-        yield [
+        yield 'empty array' => [
             'expectedValue' => [],
             'value' => [],
             'object' => new class () {
@@ -29,7 +29,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        yield [
+        yield 'empty string' => [
             'expectedValue' => [0],
             'value' => '',
             'object' => new class () {
@@ -37,7 +37,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        yield [
+        yield 'integer' => [
             'expectedValue' => [42],
             'value' => 42,
             'object' => new class () {
@@ -45,7 +45,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        yield [
+        yield 'numeric string' => [
             'expectedValue' => [42],
             'value' => '42',
             'object' => new class () {
@@ -53,15 +53,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        yield [
-            'expectedValue' => [42],
-            'value' => [42],
-            'object' => new class () {
-                #[ToArrayOfIntegers]
-                public ?array $value = null;
-            },
-        ];
-        yield [
+        yield 'array of integers' => [
             'expectedValue' => [1, 2, 3],
             'value' => [1, 2, 3],
             'object' => new class () {
@@ -69,7 +61,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        yield [
+        yield 'array of numeric strings' => [
             'expectedValue' => [1, 2, 3],
             'value' => ['1', '2', '3'],
             'object' => new class () {
@@ -77,7 +69,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        yield [
+        yield 'array of mixed types' => [
             'expectedValue' => [1, 42, 1, 2],
             'value' => ['1', 42, true, 2.4],
             'object' => new class () {
@@ -85,7 +77,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        yield [
+        yield 'SPL array object' => [
             'expectedValue' => [1, 2, 3],
             'value' => new ArrayObject([1, 2, 3]),
             'object' => new class () {
@@ -93,7 +85,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        yield [
+        yield 'array of mixed types with false' => [
             'expectedValue' => [1, 0, 2],
             'value' => [1, false, 2],
             'object' => new class () {
@@ -101,7 +93,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        yield [
+        yield 'array of mixed types with null' => [
             'expectedValue' => [1, 0, 2],
             'value' => [1, null, 2],
             'object' => new class () {
@@ -109,7 +101,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        yield [
+        yield 'array of mixed types with float' => [
             'expectedValue' => [10, 20, 30],
             'value' => ['10.5', '20.9', '30.1'],
             'object' => new class () {
@@ -117,8 +109,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        // Test splitting with default separator (comma)
-        yield [
+        yield 'splitting with default separator (comma)' => [
             'expectedValue' => [1, 2, 3],
             'value' => '1,2,3',
             'object' => new class () {
@@ -126,8 +117,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        // Test splitting with spaces
-        yield [
+        yield 'splitting with spaces' => [
             'expectedValue' => [1, 2, 3],
             'value' => '1, 2, 3',
             'object' => new class () {
@@ -135,8 +125,7 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        // Test custom separator
-        yield [
+        yield 'custom separator' => [
             'expectedValue' => [1, 2, 3],
             'value' => '1;2;3',
             'object' => new class () {
@@ -144,17 +133,15 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
-        // Test splitResolvedValue = false
-        yield [
-            'expectedValue' => [123],
+        yield 'splitResolvedValue = false' => [
+            'expectedValue' => [1],
             'value' => '1,2,3',
             'object' => new class () {
                 #[ToArrayOfIntegers(splitResolvedValue: false)]
                 public ?array $value = null;
             },
         ];
-        // Test split with mixed types
-        yield [
+        yield 'split with mixed types' => [
             'expectedValue' => [1, 2, 3, 4],
             'value' => '1,2.5,3,4.9',
             'object' => new class () {
