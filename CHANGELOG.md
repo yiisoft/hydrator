@@ -2,7 +2,7 @@
 
 ## 1.6.4 under development
 
-- no changes in this release.
+- Enh #117: Explicitly import functions in "use" section (@mspirkov)
 
 ## 1.6.3 December 16, 2025
 
