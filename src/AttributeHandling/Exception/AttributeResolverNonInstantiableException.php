@@ -9,6 +9,4 @@ use LogicException;
 /**
  * Thrown when an attribute resolver is not instantiable.
  */
-final class AttributeResolverNonInstantiableException extends LogicException
-{
-}
+final class AttributeResolverNonInstantiableException extends LogicException {}

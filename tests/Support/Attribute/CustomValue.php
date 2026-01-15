@@ -15,8 +15,7 @@ final class CustomValue implements ParameterAttributeInterface, ParameterAttribu
 {
     public function __construct(
         private mixed $value,
-    ) {
-    }
+    ) {}
 
     public function getParameterValue(ParameterAttributeInterface $attribute, ParameterAttributeResolveContext $context): Result
     {

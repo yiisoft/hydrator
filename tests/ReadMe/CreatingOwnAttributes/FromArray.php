@@ -16,8 +16,7 @@ final class FromArray implements DataAttributeInterface, DataAttributeResolverIn
 {
     public function __construct(
         private array $data,
-    ) {
-    }
+    ) {}
 
     public function getData(): array
     {

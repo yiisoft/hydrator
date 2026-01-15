@@ -50,7 +50,7 @@ final class RightTrimTest extends TestCase
     public function testWithHydrator(): void
     {
         $hydrator = new Hydrator();
-        $object = new class () {
+        $object = new class {
             #[RightTrim]
             public ?string $a = null;
         };
@@ -63,7 +63,7 @@ final class RightTrimTest extends TestCase
     public function testNotResolve(): void
     {
         $hydrator = new Hydrator();
-        $object = new class () {
+        $object = new class {
             #[RightTrim]
             public ?string $a = null;
         };
@@ -76,7 +76,7 @@ final class RightTrimTest extends TestCase
     public function testNotResolvedValue(): void
     {
         $hydrator = new Hydrator();
-        $object = new class () {
+        $object = new class {
             #[RightTrim]
             public ?string $a = null;
         };
@@ -99,7 +99,7 @@ final class RightTrimTest extends TestCase
 
         $this->expectException(UnexpectedAttributeException::class);
         $this->expectExceptionMessage(
-            'Expected "' . RightTrim::class . '", but "' . Counter::class . '" given.'
+            'Expected "' . RightTrim::class . '", but "' . Counter::class . '" given.',
         );
         $hydrator->hydrate($object);
     }
@@ -113,7 +113,7 @@ final class RightTrimTest extends TestCase
                 ]),
             ),
         );
-        $object = new class () {
+        $object = new class {
             #[RightTrim(characters: '*')]
             public ?string $a = null;
         };

@@ -16,9 +16,8 @@ final class Di implements ParameterAttributeInterface
      * @param string|null $id Container ID to obtain instance from.
      */
     public function __construct(
-        private ?string $id = null
-    ) {
-    }
+        private ?string $id = null,
+    ) {}
 
     /**
      * Get container ID to obtain instance from.

@@ -12,9 +12,8 @@ use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeInterface;
 final class FromPredefinedArray implements ParameterAttributeInterface, DataAttributeInterface
 {
     public function __construct(
-        private ?string $key = null
-    ) {
-    }
+        private ?string $key = null,
+    ) {}
 
     public function getKey(): ?string
     {

@@ -16,8 +16,7 @@ final class ContainerObjectFactory implements ObjectFactoryInterface
 {
     public function __construct(
         private Injector $injector,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ContainerExceptionInterface

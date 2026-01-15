@@ -9,8 +9,9 @@ use Yiisoft\Hydrator\Attribute\Parameter\Di;
 final class DiUnionWithDefaultConstructor
 {
     public function __construct(
-        #[Di] public EngineInterface|string $engine1 = '',
-        #[Di] public string|EngineInterface $engine2 = '',
-    ) {
-    }
+        #[Di]
+        public EngineInterface|string $engine1 = '',
+        #[Di]
+        public string|EngineInterface $engine2 = '',
+    ) {}
 }

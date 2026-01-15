@@ -18,8 +18,7 @@ final class Collection implements ParameterAttributeInterface
      */
     public function __construct(
         public readonly string $className,
-    ) {
-    }
+    ) {}
 
     public function getResolver(): string
     {

@@ -13,8 +13,7 @@ final class RandomInt implements ParameterAttributeInterface
     public function __construct(
         private int $min = 0,
         private int $max = 99,
-    ) {
-    }
+    ) {}
 
     public function getMin(): int
     {

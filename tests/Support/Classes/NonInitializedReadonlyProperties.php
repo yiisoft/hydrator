@@ -10,6 +10,5 @@ final class NonInitializedReadonlyProperties
 
     public function __construct(
         public readonly string $b,
-    ) {
-    }
+    ) {}
 }

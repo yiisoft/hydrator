@@ -21,7 +21,7 @@ final class DataTest extends TestCase
     {
         $hydrator = new Hydrator();
 
-        $object = new class () {
+        $object = new class {
             #[Data('a')]
             public ?int $x = null;
 
@@ -47,7 +47,7 @@ final class DataTest extends TestCase
     {
         $hydrator = new Hydrator();
 
-        $object = new class () {
+        $object = new class {
             #[Data('nested.n')]
             public ?int $y = null;
 
@@ -75,7 +75,7 @@ final class DataTest extends TestCase
     {
         $hydrator = new Hydrator();
 
-        $object = new class () {
+        $object = new class {
             #[Data('a')]
             public ?int $x = null;
 

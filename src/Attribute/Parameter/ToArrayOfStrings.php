@@ -24,8 +24,7 @@ final class ToArrayOfStrings implements ParameterAttributeInterface
         public readonly bool $removeEmpty = false,
         public readonly bool $splitResolvedValue = true,
         public readonly string $separator = '\R',
-    ) {
-    }
+    ) {}
 
     public function getResolver(): string
     {

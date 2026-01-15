@@ -12,6 +12,8 @@ final class SkipHydrationClass
     public ?int $a = null;
     public ?int $b = null;
 
+    public ?int $e = null;
+
     public function __construct(
         #[SkipHydration]
         public ?int $c = null,
@@ -21,6 +23,4 @@ final class SkipHydrationClass
             $this->d += 100;
         }
     }
-
-    public ?int $e = null;
 }

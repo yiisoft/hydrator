@@ -8,16 +8,17 @@ use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
+use function is_string;
+
 final class TrimResolver implements ParameterAttributeResolverInterface
 {
     public function __construct(
         private readonly ?string $characters = null,
-    ) {
-    }
+    ) {}
 
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
-        ParameterAttributeResolveContext $context
+        ParameterAttributeResolveContext $context,
     ): Result {
         if (!$attribute instanceof Trim) {
             throw new UnexpectedAttributeException(Trim::class, $attribute);
@@ -35,7 +36,7 @@ final class TrimResolver implements ParameterAttributeResolverInterface
         $characters = $attribute->characters ?? $this->characters;
 
         return Result::success(
-            $characters === null ? trim($resolvedValue) : trim($resolvedValue, $characters)
+            $characters === null ? trim($resolvedValue) : trim($resolvedValue, $characters),
         );
     }
 }

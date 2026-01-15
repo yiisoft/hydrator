@@ -10,6 +10,8 @@ use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 
+use function is_scalar;
+
 /**
  * Converts the resolved value to string. Non-resolved values are skipped.
  */

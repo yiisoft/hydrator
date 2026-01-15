@@ -175,7 +175,7 @@ final class HydratorTest extends TestCase
 
         $object = $hydrator->create(
             UserModel::class,
-            ['name.first' => 'Mike', 'name' => ['last' => 'Li']]
+            ['name.first' => 'Mike', 'name' => ['last' => 'Li']],
         );
 
         $this->assertSame('Mike Li', $object->getName());
@@ -439,7 +439,7 @@ final class HydratorTest extends TestCase
                 'intString' => -1,
                 'intersection' => 'red car',
             ],
-            $expectedValues
+            $expectedValues,
         );
 
         $this->assertSame(
@@ -456,7 +456,7 @@ final class HydratorTest extends TestCase
                 'arrayOrString' => $object->arrayOrString,
                 'intString' => $object->intString,
                 'intersection' => (string) $object->intersection,
-            ]
+            ],
         );
     }
 
@@ -480,14 +480,14 @@ final class HydratorTest extends TestCase
             [
                 'int' => -1,
             ],
-            $expectedValues
+            $expectedValues,
         );
 
         $this->assertSame(
             $expectedValues,
             [
                 'int' => $object->int,
-            ]
+            ],
         );
     }
 
@@ -501,7 +501,7 @@ final class HydratorTest extends TestCase
         $hydrator = new Hydrator(
             $typeCaster,
             new ContainerAttributeResolverFactory($container),
-            new ContainerObjectFactory(new Injector($container))
+            new ContainerObjectFactory(new Injector($container)),
         );
 
         $object = new TypeClass();
@@ -521,7 +521,7 @@ final class HydratorTest extends TestCase
         $hydrator = new Hydrator(
             $typeCaster,
             new ContainerAttributeResolverFactory($container),
-            new ContainerObjectFactory(new Injector($container))
+            new ContainerObjectFactory(new Injector($container)),
         );
 
         $object = new TypeClass();
@@ -540,10 +540,10 @@ final class HydratorTest extends TestCase
                 new SimpleContainer([
                     FromPredefinedArrayResolver::class => $resolver,
                 ]),
-            )
+            ),
         );
 
-        $object = new class () {
+        $object = new class {
             #[FromPredefinedArray('number')]
             #[ToString]
             public string $a;
@@ -565,7 +565,7 @@ final class HydratorTest extends TestCase
                 new SimpleContainer([
                     FromPredefinedArrayResolver::class => $resolver,
                 ]),
-            )
+            ),
         );
 
         $object = new FromPredefinedArrayClass();
@@ -584,7 +584,7 @@ final class HydratorTest extends TestCase
             new ContainerAttributeResolverFactory(
                 new SimpleContainer([
                     DiResolver::class => new DiResolver(
-                        new SimpleContainer(['stringable42' => new StringableObject('42')])
+                        new SimpleContainer(['stringable42' => new StringableObject('42')]),
                     ),
                 ]),
             ),
@@ -600,15 +600,14 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator();
 
-        $object = new class () {
+        $object = new class {
             #[Data('a')]
             public ?string $x = null;
 
             public function __construct(
                 #[Data('b')]
                 public ?string $y = null,
-            ) {
-            }
+            ) {}
         };
 
         $hydrator->hydrate(
@@ -631,7 +630,7 @@ final class HydratorTest extends TestCase
         ]);
         $hydrator = new Hydrator(
             attributeResolverFactory: new ContainerAttributeResolverFactory($container),
-            objectFactory: new ContainerObjectFactory(new Injector($container))
+            objectFactory: new ContainerObjectFactory(new Injector($container)),
         );
         $hydrator->create(CounterClass::class);
 
@@ -653,7 +652,7 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator();
 
-        $object = new class () {
+        $object = new class {
             public ?int $value = null;
         };
         $hydrator->hydrate($object, new ArrayData(['a' => ['b' => 23]], ['value' => 'a.b.c']));
@@ -665,17 +664,17 @@ final class HydratorTest extends TestCase
     {
         $hydrator = new Hydrator();
 
-        $object = new class () {
+        $object = new class {
             #[InvalidParameterResolver]
             public int $value;
         };
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Parameter attribute resolver "' .
-            NotResolver::class .
-            '" must implement "' .
-            ParameterAttributeResolverInterface::class . '".'
+            'Parameter attribute resolver "'
+            . NotResolver::class
+            . '" must implement "'
+            . ParameterAttributeResolverInterface::class . '".',
         );
         $hydrator->hydrate($object);
     }
@@ -686,10 +685,10 @@ final class HydratorTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Data attribute resolver "' .
-            NotResolver::class .
-            '" must implement "' .
-            DataAttributeResolverInterface::class . '".'
+            'Data attribute resolver "'
+            . NotResolver::class
+            . '" must implement "'
+            . DataAttributeResolverInterface::class . '".',
         );
         $hydrator->create(InvalidDataResolverClass::class);
     }
@@ -783,7 +782,7 @@ final class HydratorTest extends TestCase
                 'color' => 'Red',
                 'id' => 'x7',
                 'radius' => 17,
-            ]
+            ],
         );
 
         $this->assertSame(17, $object->radius);
@@ -802,7 +801,7 @@ final class HydratorTest extends TestCase
                 'src' => '/images/slide.jpg',
                 'width' => 200,
                 'height' => 300,
-            ]
+            ],
         );
 
         $this->assertSame('/images/slide.jpg', $object->src);
