@@ -30,7 +30,7 @@ final class ToArrayOfIntegersTest extends TestCase
             },
         ];
         yield 'empty string' => [
-            'expectedValue' => [0],
+            'expectedValue' => [],
             'value' => '',
             'object' => new class () {
                 #[ToArrayOfIntegers]
@@ -77,6 +77,14 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
+        yield 'array with empty strings' => [
+            'expectedValue' => [1],
+            'value' => ['1', ''],
+            'object' => new class () {
+                #[ToArrayOfIntegers]
+                public ?array $value = null;
+            },
+        ];
         yield 'SPL array object' => [
             'expectedValue' => [1, 2, 3],
             'value' => new ArrayObject([1, 2, 3]),
@@ -117,6 +125,14 @@ final class ToArrayOfIntegersTest extends TestCase
                 public ?array $value = null;
             },
         ];
+        yield 'splitting with empty values' => [
+            'expectedValue' => [1, 2],
+            'value' => '1,   ,2',
+            'object' => new class () {
+                #[ToArrayOfIntegers]
+                public ?array $value = null;
+            },
+        ];
         yield 'splitting with spaces' => [
             'expectedValue' => [1, 2, 3],
             'value' => '1, 2, 3',
@@ -136,6 +152,14 @@ final class ToArrayOfIntegersTest extends TestCase
         yield 'splitResolvedValue = false' => [
             'expectedValue' => [1],
             'value' => '1,2,3',
+            'object' => new class () {
+                #[ToArrayOfIntegers(splitResolvedValue: false)]
+                public ?array $value = null;
+            },
+        ];
+        yield 'splitResolvedValue = false with empty value' => [
+            'expectedValue' => [],
+            'value' => '',
             'object' => new class () {
                 #[ToArrayOfIntegers(splitResolvedValue: false)]
                 public ?array $value = null;

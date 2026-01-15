@@ -26,26 +26,38 @@ final class ToArrayOfIntegersResolver implements ParameterAttributeResolverInter
 
         $resolvedValue = $context->getResolvedValue();
         if (is_iterable($resolvedValue)) {
-            $array = array_map(
-                static fn(mixed $value): int => (int) $value,
-                $resolvedValue instanceof Traversable ? iterator_to_array($resolvedValue) : $resolvedValue
-            );
+            $array = [];
+            foreach ($resolvedValue as $value) {
+                if (is_string($value) && trim($value) === '') {
+                    continue;
+                }
+
+                $array[] = (int) $value;
+            }
         } else {
             $value = $this->castValueToString($resolvedValue);
             if ($attribute->splitResolvedValue) {
-                /**
-                 * @var string[] $stringArray We assume valid regular expression is used here, so `preg_split()` always returns
-                 * an array of strings.
-                 */
-                $stringArray = preg_split('~' . $attribute->separator . '~u', $value);
-            } else {
-                $stringArray = [$value];
-            }
+                $array = [];
+                if (trim($value) !== '') {
+                    /**
+                     * @var string[] $stringArray We assume valid regular expression is used here, so `preg_split()` always returns
+                     * an array of strings.
+                     */
+                    $stringArray = preg_split('~' . $attribute->separator . '~u', $value);
 
-            $array = array_map(
-                static fn(mixed $value): int => (int) $value,
-                $stringArray
-            );
+                    foreach ($stringArray as $item) {
+                        if (trim($item) === '') {
+                            continue;
+                        }
+
+                        $array[] = (int) $item;
+                    }
+                }
+            } elseif (trim($value) === '') {
+                $array = [];
+            } else {
+                $array = [(int) $value];
+            }
         }
 
         return Result::success($array);
