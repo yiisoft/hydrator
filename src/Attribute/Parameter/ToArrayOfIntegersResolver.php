@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
 use Stringable;
-use Traversable;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
