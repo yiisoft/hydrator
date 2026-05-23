@@ -30,10 +30,6 @@ final class ToArrayOfIntegersResolver implements ParameterAttributeResolverInter
         if (is_iterable($resolvedValue)) {
             $array = [];
             foreach ($resolvedValue as $value) {
-                if (is_string($value) && trim($value) === '') {
-                    continue;
-                }
-
                 $array[] = (int) $value;
             }
         } else {
@@ -48,10 +44,6 @@ final class ToArrayOfIntegersResolver implements ParameterAttributeResolverInter
                     $stringArray = preg_split('~' . $attribute->separator . '~u', $value);
 
                     foreach ($stringArray as $item) {
-                        if (trim($item) === '') {
-                            continue;
-                        }
-
                         $array[] = (int) $item;
                     }
                 }

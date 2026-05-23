@@ -78,7 +78,7 @@ final class ToArrayOfIntegersTest extends TestCase
             },
         ];
         yield 'array with empty strings' => [
-            'expectedValue' => [1],
+            'expectedValue' => [1, 0],
             'value' => ['1', ''],
             'object' => new class {
                 #[ToArrayOfIntegers]
@@ -126,7 +126,7 @@ final class ToArrayOfIntegersTest extends TestCase
             },
         ];
         yield 'splitting with empty values' => [
-            'expectedValue' => [1, 2],
+            'expectedValue' => [1, 0, 2],
             'value' => '1,   ,2',
             'object' => new class {
                 #[ToArrayOfIntegers]
