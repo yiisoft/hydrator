@@ -28,5 +28,6 @@ return static function (RectorConfig $rectorConfig): void {
         NewInInitializerRector::class,
         ReadOnlyPropertyRector::class,
         __DIR__ . '/tests/Support/Classes/SimpleClass.php',
+        __DIR__ . '/tests/TestEnvironments/Php84/Hydrator/PublicPrivateSetProperty/Figure.php'
     ]);
 };

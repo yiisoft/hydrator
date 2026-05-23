@@ -240,3 +240,29 @@ Attribute parameters:
 - `splitResolvedValue` — split resolved value by separator (boolean, default `true`);
 - `separator` — the boundary string (default, `\R`), it's a part of regular expression so should be taken into account 
   or properly escaped with `preg_quote()`.
+
+### `ToArrayOfIntegers`
+
+Use `ToArrayOfIntegers` attribute to cast a value to an array of integers:
+
+```php
+use Yiisoft\Hydrator\Attribute\Parameter\ToArrayOfIntegers;
+
+final class Post
+{
+    #[ToArrayOfIntegers]
+    public array $ratings = [];    
+}
+```
+
+If the resolved value is iterable, each element will be cast to an integer. For example, array `['1', '2', '3']` will be
+converted to `[1, 2, 3]`.
+
+If the resolved value is not iterable, it will be cast to a string, split by separator, and then each element will be
+cast to an integer. For example, string `'1,2,3'` will be converted to `[1, 2, 3]`.
+
+Attribute parameters:
+
+- `splitResolvedValue` — split non-array resolved value by separator (boolean, default `true`);
+- `separator` — the boundary string (default `,`), it's a part of regular expression so should be taken into account 
+  or properly escaped with `preg_quote()`.

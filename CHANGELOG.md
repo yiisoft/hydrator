@@ -2,6 +2,7 @@
 
 ## 1.6.4 under development
 
+- New #116: Add `ToArrayOfIntegers` parameter attribute (@samdark)
 - Enh #117: Explicitly import functions and constants in "use" section (@mspirkov)
 
 ## 1.6.3 December 16, 2025
