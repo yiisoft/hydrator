@@ -1,33 +1,40 @@
 name: Update docs translation
 
 on:
-  pull_request_target:
+  pull_request:
     paths:
       - 'docs/**'
 
+permissions:
+  contents: write
 jobs:
   update-docs:
     name: Update docs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           token: ${{ secrets.YIISOFT_GITHUB_TOKEN || github.token }}
           ref: ${{ github.head_ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
+          persist-credentials: false
 
       - name: Use po4a
-        uses: addnab/docker-run-action@v3
-        with:
-            image: arduanovdanil/po4a-fork:v0.73
-            options: -v ${{ github.workspace }}:/src
-            run: |
-                cd docs
-                po4a po4a.cfg
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/src" \
+            -w /src \
+            arduanovdanil/po4a-fork:v0.73 \
+            sh -c "cd docs && po4a po4a.cfg"
+
+      - name: Configure Git credentials
+        env:
+          GH_TOKEN: ${{ secrets.YIISOFT_GITHUB_TOKEN || github.token }}
+        run: git config --global credential.helper '!f() { echo username=x-access-token; echo password=$GH_TOKEN; }; f'
 
       - name: Commit changed files
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403
         with:
           commit_message: Update docs translation
           file_pattern: 'docs'
