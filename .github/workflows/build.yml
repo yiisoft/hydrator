@@ -30,7 +30,7 @@ jobs:
     secrets:
       codecovToken: ${{ secrets.CODECOV_TOKEN }}
     with:
-      ini-values: pcov.directory=${{ github.workspace }}, pcov.exclude=#^(?!(${{ github.workspace }}/config/|${{ github.workspace }}/src/)).*#
+      ini-values: pcov.directory=/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}, pcov.exclude=#^(?!(/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/config/|/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/src/)).*#
       extensions: intl
       os: >-
         ['ubuntu-latest', 'windows-latest']
