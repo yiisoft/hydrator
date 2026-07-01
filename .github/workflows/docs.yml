@@ -1,33 +1,50 @@
 name: Update docs translation
 
 on:
-  pull_request_target:
+  pull_request:
     paths:
       - 'docs/**'
 
+concurrency:
+  group: docs-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 jobs:
   update-docs:
     name: Update docs
+    permissions:
+      contents: write # Required to push generated docs translation updates back to the PR branch.
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           token: ${{ secrets.YIISOFT_GITHUB_TOKEN || github.token }}
           ref: ${{ github.head_ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
+          persist-credentials: false
 
       - name: Use po4a
-        uses: addnab/docker-run-action@v3
-        with:
-            image: arduanovdanil/po4a-fork:v0.73
-            options: -v ${{ github.workspace }}:/src
-            run: |
-                cd docs
-                po4a po4a.cfg
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/src" \
+            -w /src \
+            arduanovdanil/po4a-fork:v0.73 \
+            sh -c "cd docs && po4a po4a.cfg"
 
       - name: Commit changed files
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: Update docs translation
-          file_pattern: 'docs'
+        env:
+          GH_TOKEN: ${{ secrets.YIISOFT_GITHUB_TOKEN || github.token }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          if [ -z "$(git status --porcelain -- docs)" ]; then
+            exit 0
+          fi
+
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs
+          git commit -m "Update docs translation"
+          git -c "credential.helper=!f() { echo username=x-access-token; echo password=\$GH_TOKEN; }; f" push origin "HEAD:$HEAD_REF"

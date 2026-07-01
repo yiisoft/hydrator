@@ -22,13 +22,15 @@ on:
 
 name: build
 
+permissions:
+  contents: read
 jobs:
   phpunit:
     uses: yiisoft/actions/.github/workflows/phpunit.yml@master
     secrets:
       codecovToken: ${{ secrets.CODECOV_TOKEN }}
     with:
-      ini-values: pcov.directory=$GITHUB_WORKSPACE, pcov.exclude=#^(?!($GITHUB_WORKSPACE/config/|$GITHUB_WORKSPACE/src/)).*#
+      ini-values: pcov.directory=/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}, pcov.exclude=#^(?!(/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/config/|/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/src/)).*#
       extensions: intl
       os: >-
         ['ubuntu-latest', 'windows-latest']
