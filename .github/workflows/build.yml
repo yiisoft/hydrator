@@ -1,34 +1,30 @@
+name: build
+
 on:
   pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'infection.json.dist'
-      - 'psalm.xml'
-
+    paths: &paths
+      - 'config/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'phpunit.xml.dist'
+      - 'composer.json'
+      - '.github/workflows/build.yml'
   push:
     branches: ['master']
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'infection.json.dist'
-      - 'psalm.xml'
-
-name: build
+    paths: *paths
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   phpunit:
     uses: yiisoft/actions/.github/workflows/phpunit.yml@master
     secrets:
-      codecovToken: ${{ secrets.CODECOV_TOKEN }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     with:
       ini-values: pcov.directory=/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}, pcov.exclude=#^(?!(/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/config/|/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/src/)).*#
       extensions: intl
