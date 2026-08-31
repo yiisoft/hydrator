@@ -313,6 +313,22 @@ final class HydratorTest extends TestCase
                 ['bool' => true],
                 ['bool' => '1'],
             ],
+            'string-false-to-bool' => [
+                ['bool' => false],
+                ['bool' => 'false'],
+            ],
+            'string-true-to-bool' => [
+                ['bool' => true],
+                ['bool' => 'true'],
+            ],
+            'string-zero-to-bool' => [
+                ['bool' => false],
+                ['bool' => '0'],
+            ],
+            'stringable-false-to-bool' => [
+                ['bool' => false],
+                ['bool' => new StringableObject('false')],
+            ],
             'array-to-bool' => [
                 ['bool' => true],
                 ['bool' => [1, 2, 3]],

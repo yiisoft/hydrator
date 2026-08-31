@@ -42,6 +42,36 @@ final class PhpNativeTypeCasterTest extends TestCase
                 '42',
                 static fn(StringableObject|int $a) => null,
             ],
+            'string false to bool' => [
+                Result::success(false),
+                'false',
+                static fn(bool $a) => null,
+            ],
+            'string true to bool' => [
+                Result::success(true),
+                'true',
+                static fn(bool $a) => null,
+            ],
+            'string zero to bool' => [
+                Result::success(false),
+                '0',
+                static fn(bool $a) => null,
+            ],
+            'string one to bool' => [
+                Result::success(true),
+                '1',
+                static fn(bool $a) => null,
+            ],
+            'stringable false to bool' => [
+                Result::success(false),
+                new StringableObject('false'),
+                static fn(bool $a) => null,
+            ],
+            'invalid string to bool' => [
+                Result::fail(),
+                'foo',
+                static fn(bool $a) => null,
+            ],
         ];
     }
 

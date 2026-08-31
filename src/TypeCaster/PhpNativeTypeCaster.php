@@ -123,6 +123,13 @@ final class PhpNativeTypeCaster implements TypeCasterInterface
                     break;
 
                 case 'bool':
+                    if ($value instanceof Stringable || is_string($value)) {
+                        $parsed = filter_var((string) $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                        if ($parsed !== null) {
+                            return Result::success($parsed);
+                        }
+                        break;
+                    }
                     if (is_scalar($value) || $value === null || is_array($value) || is_object($value)) {
                         return Result::success((bool) $value);
                     }
