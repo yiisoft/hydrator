@@ -16,8 +16,9 @@ use function is_bool;
 use function is_float;
 use function is_int;
 use function is_object;
-use function is_string;
 use function is_scalar;
+use function is_string;
+use function strtolower;
 
 /**
  * Casts value to a type obtained from {@see ReflectionType} passed.
@@ -124,7 +125,7 @@ final class PhpNativeTypeCaster implements TypeCasterInterface
 
                 case 'bool':
                     if ($value instanceof Stringable || is_string($value)) {
-                        $parsed = filter_var((string) $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                        $parsed = self::parseBoolString((string) $value);
                         if ($parsed !== null) {
                             return Result::success($parsed);
                         }
@@ -138,5 +139,17 @@ final class PhpNativeTypeCaster implements TypeCasterInterface
         }
 
         return Result::fail();
+    }
+
+    /**
+     * @return bool|null Parsed value, or `null` when the string is not a known boolean representation.
+     */
+    private static function parseBoolString(string $value): ?bool
+    {
+        return match (strtolower($value)) {
+            '1', 'true', 'on', 'yes' => true,
+            '0', 'false', 'off', 'no', '' => false,
+            default => null,
+        };
     }
 }

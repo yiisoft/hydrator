@@ -2,6 +2,7 @@
 
 ## 1.6.4 under development
 
+- Bug #127: Fix bool casting for string `"false"`, `"true"`, `"0"`, and `"1"` in `PhpNativeTypeCaster` (@Sakanweb)
 - Enh #117: Explicitly import functions and constants in "use" section (@mspirkov)
 
 ## 1.6.3 December 16, 2025

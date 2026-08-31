@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
-use Rector\Php81\Rector\ClassMethod\NewInInitializerRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Set\ValueObject\LevelSetList;
 
@@ -25,7 +24,6 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->skip([
         ClosureToArrowFunctionRector::class,
-        NewInInitializerRector::class,
         ReadOnlyPropertyRector::class,
         __DIR__ . '/tests/Support/Classes/SimpleClass.php',
         __DIR__ . '/tests/TestEnvironments/Php84',
