@@ -38,13 +38,16 @@
         "roave/infection-static-analysis-plugin": "^1.35",
         "shipmonk/composer-dependency-analyser": "^1.8",
         "spatie/phpunit-watcher": "^1.24",
+        "symfony/polyfill-mbstring": "^1.31",
         "vimeo/psalm": "^5.26.1 || ^6.13.1",
         "yiisoft/di": "^1.4",
         "yiisoft/dummy-provider": "^1.1.0",
         "yiisoft/test-support": "^3.0.2"
     },
     "suggest": {
-        "ext-intl": "Allows using `ToDateTime` parameter attribute"
+        "ext-intl": "Allows using `ToDateTime` parameter attribute",
+        "ext-mbstring": "Allows using `MultibyteTrim`, `MultibyteLeftTrim`, `MultibyteRightTrim` attributes and multibyte mode of `ToArrayOfStrings` attribute on PHP 8.4 or later",
+        "symfony/polyfill-mbstring": "Allows using `MultibyteTrim`, `MultibyteLeftTrim`, `MultibyteRightTrim` attributes and multibyte mode of `ToArrayOfStrings` attribute on PHP versions earlier than 8.4"
     },
     "autoload": {
         "psr-4": {

@@ -13,7 +13,8 @@ use Attribute;
 final class ToArrayOfStrings implements ParameterAttributeInterface
 {
     /**
-     * @param bool $trim Trim each string of array.
+     * @param bool $trim Trim each string of array. Multibyte-aware trimming can be enabled via `$multibyte`
+     * parameter of {@see ToArrayOfStringsResolver}.
      * @param bool $removeEmpty Remove empty strings from array.
      * @param bool $splitResolvedValue Split non-array resolved value to array of strings by {@see $separator}.
      * @param string $separator The boundary string. It is a part of regular expression

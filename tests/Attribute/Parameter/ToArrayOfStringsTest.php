@@ -79,6 +79,14 @@ final class ToArrayOfStringsTest extends TestCase
             },
         ];
         yield [
+            ["hello\u{2003}"],
+            " hello\u{2003} ",
+            new class {
+                #[ToArrayOfStrings(trim: true)]
+                public ?array $value = null;
+            },
+        ];
+        yield [
             ['hello', 'world'],
             "hello\nworld",
             new class {
@@ -196,5 +204,24 @@ final class ToArrayOfStringsTest extends TestCase
             'Expected "' . ToArrayOfStrings::class . '", but "' . Counter::class . '" given.',
         );
         $hydrator->hydrate($object);
+    }
+
+    public function testMultibyteTrim(): void
+    {
+        $hydrator = new Hydrator(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    ToArrayOfStringsResolver::class => new ToArrayOfStringsResolver(multibyte: true),
+                ]),
+            ),
+        );
+        $object = new class {
+            #[ToArrayOfStrings(trim: true, separator: ',')]
+            public ?array $value = null;
+        };
+
+        $hydrator->hydrate($object, ['value' => "\u{A0}hello\u{2003},\u{2002}world "]);
+
+        $this->assertSame(['hello', 'world'], $object->value);
     }
 }
