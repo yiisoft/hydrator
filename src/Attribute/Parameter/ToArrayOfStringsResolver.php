@@ -25,9 +25,11 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
         private readonly bool $multibyte = false,
     ) {
         if ($multibyte && !function_exists('mb_trim')) {
+            // @codeCoverageIgnoreStart
             throw new LogicException(
                 'Multibyte mode requires "mb_trim()" function that is provided by "mbstring" extension since PHP 8.4 or by "symfony/polyfill-mbstring" package.',
             );
+            // @codeCoverageIgnoreEnd
         }
     }
 

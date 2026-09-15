@@ -26,9 +26,11 @@ final class MultibyteRightTrimResolver implements ParameterAttributeResolverInte
         private readonly ?string $characters = null,
     ) {
         if (!function_exists('mb_rtrim')) {
+            // @codeCoverageIgnoreStart
             throw new LogicException(
                 'MultibyteRightTrim attribute requires "mb_rtrim()" function that is provided by "mbstring" extension since PHP 8.4 or by "symfony/polyfill-mbstring" package.',
             );
+            // @codeCoverageIgnoreEnd
         }
     }
 
