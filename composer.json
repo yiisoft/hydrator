@@ -34,12 +34,13 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.92",
         "phpunit/phpunit": "^10.5.48",
-        "rector/rector": "^2.1.2",
+        "rector/rector": "^2.6.7",
         "roave/infection-static-analysis-plugin": "^1.35",
         "shipmonk/composer-dependency-analyser": "^1.8",
         "spatie/phpunit-watcher": "^1.24",
         "symfony/polyfill-mbstring": "^1.31",
-        "vimeo/psalm": "^5.26.1 || ^6.13.1",
+        "vimeo/psalm": "^5.26.1 || ^6.17.2",
+        "yiisoft/code-style": "^1.1",
         "yiisoft/di": "^1.4",
         "yiisoft/dummy-provider": "^1.1.0",
         "yiisoft/test-support": "^3.0.2"
@@ -75,7 +76,9 @@
         }
     },
     "scripts": {
+        "cs-fix": "php-cs-fixer fix",
         "dependency-analyser": "composer-dependency-analyser",
+        "rector": "rector",
         "test": "phpunit --testdox --no-interaction",
         "test-watch": "phpunit-watcher watch"
     }

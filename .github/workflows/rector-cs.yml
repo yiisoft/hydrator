@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  rector:
+  rector-cs:
     permissions:
       contents: write # Required to push PHP CS Fixer and Rector changes back to the branch.
     uses: yiisoft/actions/.github/workflows/rector-cs.yml@master
