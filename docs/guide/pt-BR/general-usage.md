@@ -18,7 +18,8 @@ $hydrator = new Hydrator();
 $object = $hydrator->create(MyClass::class, $data);
 ```
 
-Para passar argumentos para o construtor de um objeto aninhado, use array aninhado ou notação de ponto:
+Para passar argumentos para o construtor de um objeto aninhado, use array
+aninhado ou notação de ponto:
 
 ```php
 final class Engine
@@ -51,5 +52,6 @@ $object = $hydrator->create(Car::class, [
 ]);
 ```
 
-Isso passaria o argumento construtor `name` do objeto `Car` e criaria um novo objeto `Engine` para `engine`
-passando o argumento `V8` como o argumento `name` para seu construtor.
+Isso passaria o argumento construtor `name` do objeto `Car` e criaria um
+novo objeto `Engine` para `engine` passando o argumento `V8` como o
+argumento `name` para seu construtor.

@@ -1,0 +1,329 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2025-03-01 21:45+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. type: Title #
+#: guide/en/mapping.md
+#, no-wrap
+msgid "Mapping"
+msgstr "Mapeamento"
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "In many cases, class attribute names differ from data keys you fill and/or create objects of the class with.  For example, we have a blog post class:"
+msgstr "Em muitos casos, os nomes dos atributos de classe diferem das chaves de dados com as quais você preenche e/ou cria objetos da classe. Por exemplo, temos uma classe de postagem de blog:"
+
+#. type: Fenced code block (php)
+#: guide/en/mapping.md
+#, no-wrap
+msgid ""
+"final class Post\n"
+"{\n"
+"    public function __construct(\n"
+"        private string $title,\n"
+"        private string $body,\n"
+"    ) {        \n"
+"    }\n"
+"\n"
+"    public function getTitle(): string\n"
+"    {\n"
+"        return $this->title;\n"
+"    }\n"
+"\n"
+"    public function getBody(): string\n"
+"    {\n"
+"        return $this->body;\n"
+"    }\n"
+"}\n"
+msgstr ""
+"final class Post\n"
+"{\n"
+"    public function __construct(\n"
+"        private string $title,\n"
+"        private string $body,\n"
+"        ) {\n"
+"    }\n"
+"\n"
+"    public function getTitle(): string\n"
+"    {\n"
+"        return $this->title;\n"
+"    }\n"
+"\n"
+"    public function getBody(): string\n"
+"    {\n"
+"        return $this->body;\n"
+"    }\n"
+"}\n"
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "But the data you have has differently named keys:"
+msgstr "Mas os dados que você possui têm chaves com nomes diferentes:"
+
+#. type: Fenced code block (php)
+#: guide/en/mapping.md
+#, no-wrap
+msgid "$data = ['header' => 'First post', 'text' => 'Hello, world!'];\n"
+msgstr "$data = ['header' => 'First post', 'text' => 'Hello, world!'];\n"
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "Hydrator allows you to map data:"
+msgstr "O Hydrator permite mapear os dados:"
+
+#. type: Fenced code block (php)
+#: guide/en/mapping.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\Hydrator;\n"
+"use Yiisoft\\Hydrator\\ArrayData;\n"
+"\n"
+"$hydrator = new Hydrator();\n"
+"\n"
+"$map = ['title' => 'header', 'body' => 'text'];\n"
+"$post = $hydrator->create(Post::class, new ArrayData($data, $map));\n"
+msgstr ""
+"use Yiisoft\\Hydrator\\Hydrator;\n"
+"use Yiisoft\\Hydrator\\ArrayData;\n"
+"\n"
+"$hydrator = new Hydrator();\n"
+"\n"
+"$map = ['title' => 'header', 'body' => 'text'];\n"
+"$post = $hydrator->create(Post::class, new ArrayData($data, $map));\n"
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "This way we take `header` key for `title` and `text` key for `body`."
+msgstr "Desta forma, pegamos a chave `header` para `title` e a chave `text` para `body`."
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "For nested objects mapping you can use `ObjectMap` class:"
+msgstr "Para mapeamento de objetos aninhados, você pode usar a classe `ObjectMap`:"
+
+#. type: Fenced code block (php)
+#: guide/en/mapping.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\ArrayData;\n"
+"use Yiisoft\\Hydrator\\Hydrator;\n"
+"use Yiisoft\\Hydrator\\ObjectMap;\n"
+"\n"
+"final class Message {\n"
+"    public string $subject = '';\n"
+"    public ?Body $body = null;\n"
+"}\n"
+"\n"
+"final class Body {\n"
+"    public string $text = '';\n"
+"    public string $html = '';\n"
+"}\n"
+"\n"
+"$hydrator = new Hydrator();\n"
+"\n"
+"$data = [\n"
+"    'title' => 'Hello, World!',\n"
+"    'textBody' => 'Nice to meet you.',\n"
+"    'htmlBody' => '<h1>Nice to meet you.</h1>',\n"
+"];\n"
+"$map = [\n"
+"    'subject' => 'title',\n"
+"    'body' => new ObjectMap([\n"
+"        'text' => 'textBody',\n"
+"        'html' => 'htmlBody',    \n"
+"    ]), \n"
+"];\n"
+"$message = $hydrator->create(Message::class, new ArrayData($data, $map));\n"
+msgstr ""
+"use Yiisoft\\Hydrator\\ArrayData;\n"
+"use Yiisoft\\Hydrator\\Hydrator;\n"
+"use Yiisoft\\Hydrator\\ObjectMap;\n"
+"\n"
+"final class Message {\n"
+"    public string $subject = '';\n"
+"    public ?Body $body = null;\n"
+"}\n"
+"\n"
+"final class Body {\n"
+"    public string $text = '';\n"
+"    public string $html = '';\n"
+"}\n"
+"\n"
+"$hydrator = new Hydrator();\n"
+"\n"
+"$data = [\n"
+"    'title' => 'Hello, World!',\n"
+"    'textBody' => 'Nice to meet you.',\n"
+"    'htmlBody' => '<h1>Nice to meet you.</h1>',\n"
+"];\n"
+"$map = [\n"
+"    'subject' => 'title',\n"
+"    'body' => new ObjectMap([\n"
+"        'text' => 'textBody',\n"
+"        'html' => 'htmlBody',    \n"
+"    ]), \n"
+"];\n"
+"$message = $hydrator->create(Message::class, new ArrayData($data, $map));\n"
+
+#. type: Title ##
+#: guide/en/mapping.md
+#, no-wrap
+msgid "Strict mode"
+msgstr "Strict mode (Modo estrito)"
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "You can enable strict mode by passing `true` as a third argument of `ArrayData`:"
+msgstr "Você pode ativar o modo estrito passando `true` como terceiro argumento de `ArrayData`:"
+
+#. type: Fenced code block (php)
+#: guide/en/mapping.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\Hydrator;\n"
+"use Yiisoft\\Hydrator\\ArrayData;\n"
+"\n"
+"$hydrator = new Hydrator();\n"
+"\n"
+"$map = ['title' => 'header', 'body' => 'text'];\n"
+"$post = $hydrator->create(Post::class, new ArrayData($data, $map, true));\n"
+msgstr ""
+"use Yiisoft\\Hydrator\\Hydrator;\n"
+"use Yiisoft\\Hydrator\\ArrayData;\n"
+"\n"
+"$hydrator = new Hydrator();\n"
+"\n"
+"$map = ['title' => 'header', 'body' => 'text'],;\n"
+"$post = $hydrator->create(Post::class, new ArrayData($data, $map, true));\n"
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "In this case, keys absent from the map are ignored so everything should be mapped explicitly."
+msgstr "Neste caso, as chaves ausentes do mapa são ignoradas, portanto tudo deve ser mapeado explicitamente."
+
+#. type: Title ##
+#: guide/en/mapping.md guide/en/typecasting.md
+#, no-wrap
+msgid "Using attributes"
+msgstr "Usando atributos"
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "Alternatively to specifying mapping as an array, you can use `Data` attribute to define mapping inline:"
+msgstr "Alternativamente à especificação do mapeamento como um array, você pode usar o atributo `Data` para definir o mapeamento inline:"
+
+#. type: Fenced code block (php)
+#: guide/en/mapping.md
+#, no-wrap
+msgid ""
+"use \\Yiisoft\\Hydrator\\Attribute\\Parameter\\Data;\n"
+"\n"
+"final class Person\n"
+"{\n"
+"    public function __construct(\n"
+"        #[Data('first_name')]\n"
+"        private string $firstName,\n"
+"        #[Data('last_name')]\n"
+"        private string $lastName,\n"
+"    ) {}\n"
+"}\n"
+"\n"
+"$person = $hydrator->create(Person::class, [\n"
+"    'first_name' => 'John',\n"
+"    'last_name' => 'Doe',\n"
+"]);\n"
+msgstr ""
+"use \\Yiisoft\\Hydrator\\Attribute\\Parameter\\Data;\n"
+"\n"
+"final class Person\n"
+"{\n"
+"    public function __construct(\n"
+"        #[Data('first_name')]\n"
+"        private string $firstName,\n"
+"        #[Data('last_name')]\n"
+"        private string $lastName,\n"
+"    ) {}\n"
+"}\n"
+"\n"
+"$person = $hydrator->create(Person::class, [\n"
+"    'first_name' => 'John',\n"
+"    'last_name' => 'Doe',\n"
+"]);\n"
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "To skip hydration of a specific property, use `SkipHydration` attribute:"
+msgstr "Para pular a hidratação de uma propriedade específica, use o atributo `SkipHydration`:"
+
+#. type: Fenced code block (php)
+#: guide/en/mapping.md
+#, no-wrap
+msgid ""
+"use \\Yiisoft\\Hydrator\\Attribute\\SkipHydration;\n"
+"\n"
+"class MyClass\n"
+"{\n"
+"    #[SkipHydration]\n"
+"    private $property;\n"
+"}\n"
+msgstr ""
+"use \\Yiisoft\\Hydrator\\Attribute\\SkipHydration;\n"
+"\n"
+"class MyClass\n"
+"{\n"
+"    #[SkipHydration]\n"
+"    private $property;\n"
+"}\n"
+
+#. type: Title ##
+#: guide/en/mapping.md
+#, no-wrap
+msgid "Resolving dependencies"
+msgstr "Resolvendo dependências"
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "To resolve dependencies by specific ID using DI container, use `Di` attribute:"
+msgstr "Para resolver dependências por ID específico usando o contêiner DI, use o atributo `Di`:"
+
+#. type: Fenced code block (php)
+#: guide/en/mapping.md
+#, no-wrap
+msgid ""
+"use \\Yiisoft\\Hydrator\\Attribute\\Parameter\\Di;\n"
+"\n"
+"class MyClass\n"
+"{\n"
+"    public function __construct(\n"
+"        #[Di(id: 'importConnection')]\n"
+"        private ConnectionInterface $connection,\n"
+"    ) {}\n"
+"}\n"
+msgstr ""
+"use \\Yiisoft\\Hydrator\\Attribute\\Parameter\\Di;\n"
+"\n"
+"class MyClass\n"
+"{\n"
+"    public function __construct(\n"
+"        #[Di(id: 'importConnection')]\n"
+"        private ConnectionInterface $connection,\n"
+"    ) {}\n"
+"}\n"
+
+#. type: Plain text
+#: guide/en/mapping.md
+msgid "The annotation will instruct hydrator to get `$connection` from DI container by `importConnection` ID."
+msgstr "A anotação instruirá o hydrator a obter `$connection` do contêiner DI pelo ID `importConnection`."

@@ -1,7 +1,8 @@
 # Mapeamento
 
-Em muitos casos, os nomes dos atributos de classe diferem das chaves de dados com as quais você preenche e/ou cria objetos da classe.
-Por exemplo, temos uma classe de postagem de blog:
+Em muitos casos, os nomes dos atributos de classe diferem das chaves de
+dados com as quais você preenche e/ou cria objetos da classe. Por exemplo,
+temos uma classe de postagem de blog:
 
 ```php
 final class Post
@@ -42,7 +43,8 @@ $map = ['title' => 'header', 'body' => 'text'];
 $post = $hydrator->create(Post::class, new ArrayData($data, $map));
 ```
 
-Desta forma, pegamos a chave `header` para `title` e a chave `text` para `body`.
+Desta forma, pegamos a chave `header` para `title` e a chave `text` para
+`body`.
 
 Para mapeamento de objetos aninhados, você pode usar a classe `ObjectMap`:
 
@@ -80,7 +82,8 @@ $message = $hydrator->create(Message::class, new ArrayData($data, $map));
 
 ## Strict mode (Modo estrito)
 
-Você pode ativar o modo estrito passando `true` como terceiro argumento de `ArrayData`:
+Você pode ativar o modo estrito passando `true` como terceiro argumento de
+`ArrayData`:
 
 ```php
 use Yiisoft\Hydrator\Hydrator;
@@ -92,11 +95,13 @@ $map = ['title' => 'header', 'body' => 'text'],;
 $post = $hydrator->create(Post::class, new ArrayData($data, $map, true));
 ```
 
-Neste caso, as chaves ausentes do mapa são ignoradas, portanto tudo deve ser mapeado explicitamente.
+Neste caso, as chaves ausentes do mapa são ignoradas, portanto tudo deve ser
+mapeado explicitamente.
 
 ## Usando atributos
 
-Alternativamente à especificação do mapeamento como um array, você pode usar o atributo `Data` para definir o mapeamento inline:
+Alternativamente à especificação do mapeamento como um array, você pode usar
+o atributo `Data` para definir o mapeamento inline:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\Parameter\Data;
@@ -117,7 +122,8 @@ $person = $hydrator->create(Person::class, [
 ]);
 ```
 
-Para pular a hidratação de uma propriedade específica, use o atributo `SkipHydration`:
+Para pular a hidratação de uma propriedade específica, use o atributo
+`SkipHydration`:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\SkipHydration;
@@ -131,7 +137,8 @@ class MyClass
 
 ## Resolvendo dependências
 
-Para resolver dependências por ID específico usando o contêiner DI, use o atributo `Di`:
+Para resolver dependências por ID específico usando o contêiner DI, use o
+atributo `Di`:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\Parameter\Di;
@@ -145,4 +152,5 @@ class MyClass
 }
 ```
 
-A anotação instruirá o hydrator a obter `$connection` do contêiner DI pelo ID `importConnection`.
+A anotação instruirá o hydrator a obter `$connection` do contêiner DI pelo
+ID `importConnection`.
