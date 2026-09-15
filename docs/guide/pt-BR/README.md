@@ -1,6 +1,7 @@
 # Yii Hydrator
 
-O pacote fornece uma maneira de criar e hidratar objetos a partir de um conjunto de dados brutos.
+O pacote fornece uma maneira de criar e hidratar objetos a partir de um
+conjunto de dados brutos.
 
 - [Uso geral](general-usage.md)
 - [Conversão de tipo](typecasting.md)

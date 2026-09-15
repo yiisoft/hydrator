@@ -1,6 +1,7 @@
 # Typecasting
 
-Quando os tipos PHP são definidos na classe, a conversão de tipo acontece automaticamente na criação ou hidratação do objeto:
+Quando os tipos PHP são definidos na classe, a conversão de tipo acontece
+automaticamente na criação ou hidratação do objeto:
 
 ```php
 final class Lock
@@ -17,13 +18,14 @@ $lock = $hydrator->create(Lock::class, ['name' => 'The lock', 'isLocked' => 1]);
 
 ## Ajustando a conversão de tipos
 
-Você pode ajustar a conversão de tipo passando um type-caster para o hidratador:
+Você pode ajustar a conversão de tipo passando um type-caster para o
+hidratador:
 
 ```php
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\TypeCaster\CompositeTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster;
-use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster
+use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 
 $typeCaster = new CompositeTypeCaster(
     new PhpNativeTypeCaster(),
@@ -39,7 +41,9 @@ Fora da caixa, os seguintes type-casters estão disponíveis:
 - `CompositeTypeCaster` permite combinar vários type-casters
 - `PhpNativeTypeCaster` baseados em tipos PHP definidos na classe
 - `HydratorTypeCaster` converte arrays em objetos
-- `NullTypeCaster` type-casters configurável para converter `null`, string vazia e array vazio para `null`
+- `EnumTypeCaster` converte valores em enumerações
+- `NullTypeCaster` type-casters configurável para converter `null`, string
+  vazia e array vazio para `null`
 - `NoTypeCaster` não faça nada
 
 ## Sua própria conversão de tipo
@@ -120,7 +124,10 @@ echo $post->getAuthor()->getNickName();
 
 ## Usando atributos
 
-Para converter um valor para string explicitamente, você pode usar o atributo `ToString`:
+### `ToString`
+
+Para converter um valor para string explicitamente, você pode usar o
+atributo `ToString`:
 
 ```php
 use \Yiisoft\Hydrator\Attribute\Parameter\ToString;
@@ -140,7 +147,31 @@ $money = $hydrator->create(Money::class, [
 ]);
 ```
 
-Para converter um valor para o objeto `DateTimeImmutable` ou `DateTime` explicitamente, você pode usar o atributo `ToDateTime`:
+### `Trim` / `LeftTrim` / `RightTrim`
+
+Para remover espaços em branco (ou outros caracteres) do início e/ou final
+de um valor de string resolvido, você pode usar os atributos `Trim`,
+`LeftTrim` ou `RightTrim`:
+
+```php
+use DateTimeImmutable;
+use Yiisoft\Hydrator\Attribute\Parameter\Trim;
+
+class Person
+{
+    public function __construct(
+        #[Trim] // '  John ' → 'John'
+        private ?string $name = null, 
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, ['name' => '  John ']);
+```
+
+### `ToDatetime`
+
+Para converter um valor para o objeto `DateTimeImmutable` ou `DateTime`
+explicitamente, você pode usar o atributo `ToDateTime`:
 
 ```php
 use DateTimeImmutable;
@@ -157,20 +188,68 @@ class Person
 $person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
 ```
 
-Para remover espaços em branco (ou outros caracteres) do início e/ou final de um valor de string resolvido, você pode usar os atributos
-`Trim`, `LeftTrim` ou `RightTrim`:
+### `Collection`
+
+O hydrator suporta coleções através do atributo `Collection`. O nome da
+classe da coleção relacionada deve ser especificado:
 
 ```php
-use DateTimeImmutable;
-use Yiisoft\Hydrator\Attribute\Parameter\Trim;
-
-class Person
+final class PostCategory
 {
     public function __construct(
-        #[Trim] // '  John ' → 'John'
-        private ?string $name = null, 
-    ) {}
+        #[Collection(Post::class)]
+        private array $posts = [],
+    ) {
+    }
 }
 
-$person = $hydrator->create(Person::class, ['name' => '  John ']);
+final class Post
+{
+    public function __construct(
+        private string $name,
+        private string $description = '',
+    ) {
+    }
+}
+
+$category = $hydrator->create(
+    PostCategory::class,
+    [
+        'posts' => [
+            ['name' => 'Post 1'],
+            ['name' => 'Post 2', 'description' => 'Description for post 2'],
+        ],
+    ],
+);
 ```
+
+### `ToArrayOfStrings`
+
+Use o atributo `ToArrayOfStrings` para converter um valor em um array de
+strings:
+
+```php
+use Yiisoft\Hydrator\Attribute\Parameter\ToArrayOfStrings;
+
+final class Post
+{
+    #[ToArrayOfStrings(separator: ',')]
+    public array $tags = [];    
+}
+```
+
+O valor de `tags` será convertido em um array de strings dividindo-o por
+`,`. Por exemplo, a string `news,city,hot` será convertida no array
+`['news', 'city', 'hot']`.
+
+Parâmetros do atributo:
+
+- `trim` — remove os espaços em branco do início e do final de cada string
+  do array (booleano, padrão `false`);
+- `removeEmpty` — remove as strings vazias do array (booleano, padrão
+  `false`);
+- `splitResolvedValue` — divide o valor resolvido pelo separador (booleano,
+  padrão `true`);
+- `separator` — a string delimitadora (padrão, `\R`), faz parte de uma
+  expressão regular, portanto deve ser levada em conta ou devidamente
+  escapada com `preg_quote()`.
