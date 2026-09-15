@@ -3,6 +3,7 @@
 ## 1.6.4 under development
 
 - Enh #117: Explicitly import functions and constants in "use" section (@mspirkov)
+- Enh #132: Exclude development files from the distribution archive (@vjik)
 
 ## 1.6.3 December 16, 2025
 
