@@ -184,7 +184,7 @@ $person = $hydrator->create(Person::class, ['birthday' => '27.01.1986']);
 
 ### `Collection`
 
-Hydrator supports collections via `Collection` attribute. The class name of related collection must be specified:                                
+Hydrator supports collections via `Collection` attribute. The class name of related collection must be specified:
 
 ```php
 final class PostCategory

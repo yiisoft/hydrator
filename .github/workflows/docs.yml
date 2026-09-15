@@ -2,42 +2,71 @@ name: Update docs translation
 
 on:
   pull_request:
-    paths:
+    paths: &paths
+      - '.github/workflows/docs.yml'
       - 'docs/**'
-
-concurrency:
-  group: docs-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  push:
+    branches: [ "master" ]
+    paths: *paths
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  check-docs:
+    name: Check docs
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Prepare po4a configuration
+        run: docs/prepare-config.sh
+
+      - name: Use po4a
+        run: |
+          docker run --rm \
+            --entrypoint sh \
+            -v "$GITHUB_WORKSPACE:/src" \
+            -w /src/docs \
+            ghcr.io/yiisoft-contrib/po4a:0.74 \
+            -c "po4a po4a.conf && po4a po4a.conf"
+
   update-docs:
     name: Update docs
+    if: github.event_name == 'push'
     permissions:
-      contents: write # Required to push generated docs translation updates back to the PR branch.
+      contents: write # Required to push generated docs translation updates.
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ secrets.YIISOFT_GITHUB_TOKEN || github.token }}
-          ref: ${{ github.head_ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
           persist-credentials: false
+
+      - name: Prepare po4a configuration
+        run: docs/prepare-config.sh
 
       - name: Use po4a
         run: |
           docker run --rm \
+            --entrypoint sh \
             -v "$GITHUB_WORKSPACE:/src" \
-            -w /src \
-            arduanovdanil/po4a-fork:v0.73 \
-            sh -c "cd docs && po4a po4a.cfg"
+            -w /src/docs \
+            ghcr.io/yiisoft-contrib/po4a:0.74 \
+            -c "po4a po4a.conf && po4a po4a.conf"
 
       - name: Commit changed files
         env:
           GH_TOKEN: ${{ secrets.YIISOFT_GITHUB_TOKEN || github.token }}
-          HEAD_REF: ${{ github.head_ref }}
         run: |
           if [ -z "$(git status --porcelain -- docs)" ]; then
             exit 0
@@ -47,4 +76,4 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add docs
           git commit -m "Update docs translation"
-          git -c "credential.helper=!f() { echo username=x-access-token; echo password=\$GH_TOKEN; }; f" push origin "HEAD:$HEAD_REF"
+          git -c "credential.helper=!f() { echo username=x-access-token; echo password=\$GH_TOKEN; }; f" push origin HEAD:master

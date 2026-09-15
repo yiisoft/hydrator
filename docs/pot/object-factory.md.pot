@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-03-01 21:49+0500\n"
+"POT-Creation-Date: 2026-09-15 20:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,9 +43,9 @@ msgstr ""
 #: guide/en/object-factory.md
 msgid ""
 "`ContainerObjectFactory`. Uses [Yii Injector](https://github.com/yiisoft/"
-"injector) to create object that allow to use [PSR-11](https://www.php-fig."
-"org/psr/psr-11/) compatible DI container to resolve constructor argument not "
-"resolved by the hydrator."
+"injector) to create object that allow to use [PSR-11](https://www.php-"
+"fig.org/psr/psr-11/) compatible DI container to resolve constructor argument "
+"not resolved by the hydrator."
 msgstr ""
 
 #. type: Title ##
