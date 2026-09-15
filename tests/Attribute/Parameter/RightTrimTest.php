@@ -28,6 +28,7 @@ final class RightTrimTest extends TestCase
         yield [' test', new RightTrim(), ' test '];
         yield [' test ', new RightTrim('t'), ' test '];
         yield ['tes', new RightTrim('t'), 'test'];
+        yield [" \u{A0}test\u{2003}", new RightTrim(), " \u{A0}test\u{2003} "];
     }
 
     #[DataProvider('dataBase')]

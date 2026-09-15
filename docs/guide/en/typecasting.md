@@ -163,6 +163,33 @@ class Person
 $person = $hydrator->create(Person::class, ['name' => '  John ']);
 ```
 
+### `MultibyteTrim` / `MultibyteLeftTrim` / `MultibyteRightTrim`
+
+`Trim`, `LeftTrim` and `RightTrim` are not multibyte-aware, so Unicode whitespace characters, such as `U+00A0`
+(no-break space) or `U+2003` (em space), are kept. To strip them as well, use `MultibyteTrim`, `MultibyteLeftTrim`
+or `MultibyteRightTrim` attributes:
+
+```php
+use Yiisoft\Hydrator\Attribute\Parameter\MultibyteTrim;
+
+class Person
+{
+    public function __construct(
+        #[MultibyteTrim] // "\u{A0}John\u{2003}" → 'John'
+        private ?string $name = null,
+    ) {}
+}
+
+$person = $hydrator->create(Person::class, ['name' => "\u{A0}John\u{2003}"]);
+```
+
+These attributes use `mb_trim()`, `mb_ltrim()` and `mb_rtrim()` functions that are provided by `mbstring` PHP
+extension since PHP 8.4. To use them with an earlier PHP version, install
+[symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring) package.
+
+Note that, unlike `Trim`, `LeftTrim` and `RightTrim`, the `characters` parameter doesn't support the `..` range syntax:
+every character is treated literally.
+
 ### `ToDatetime`
 
 To cast a value to `DateTimeImmutable` or `DateTime` object explicitly, you can use `ToDateTime` attribute:
@@ -235,7 +262,8 @@ converted to array `['news', 'city', 'hot']`.
 
 Attribute parameters:
 
-- `trim` — trim each string of array (boolean, default `false`);
+- `trim` — trim each string of array (boolean, default `false`), multibyte-aware trimming can be enabled via
+  `multibyte` parameter of `ToArrayOfStringsResolver`;
 - `removeEmpty` — remove empty strings from array (boolean, default `false`);
 - `splitResolvedValue` — split resolved value by separator (boolean, default `true`);
 - `separator` — the boundary string (default, `\R`), it's a part of regular expression so should be taken into account 

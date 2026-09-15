@@ -28,6 +28,7 @@ final class TrimTest extends TestCase
         yield ['test', new Trim(), ' test '];
         yield [' test ', new Trim('t'), ' test '];
         yield ['es', new Trim('t'), 'test'];
+        yield ["\u{A0}test\u{2003}", new Trim(), " \u{A0}test\u{2003} "];
     }
 
     #[DataProvider('dataBase')]

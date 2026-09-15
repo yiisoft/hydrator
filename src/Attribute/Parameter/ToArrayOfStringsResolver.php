@@ -4,16 +4,35 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
+use LogicException;
 use Stringable;
 use Traversable;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
+use function function_exists;
 use function is_scalar;
 
 final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterface
 {
+    /**
+     * @param bool $multibyte Whether to use multibyte-aware trimming that strips Unicode whitespace characters
+     * such as `U+00A0` (no-break space) as well. Requires PHP 8.4 or later with `mbstring` extension, or
+     * `symfony/polyfill-mbstring` package.
+     */
+    public function __construct(
+        private readonly bool $multibyte = false,
+    ) {
+        if ($multibyte && !function_exists('mb_trim')) {
+            // @codeCoverageIgnoreStart
+            throw new LogicException(
+                'Multibyte mode requires "mb_trim()" function that is provided by "mbstring" extension since PHP 8.4 or by "symfony/polyfill-mbstring" package.',
+            );
+            // @codeCoverageIgnoreEnd
+        }
+    }
+
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
         ParameterAttributeResolveContext $context,
@@ -44,7 +63,7 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
         }
 
         if ($attribute->trim) {
-            $array = array_map(trim(...), $array);
+            $array = array_map($this->multibyte ? mb_trim(...) : trim(...), $array);
         }
 
         if ($attribute->removeEmpty) {

@@ -2,6 +2,8 @@
 
 ## 1.6.4 under development
 
+- New #131: Add `MultibyteTrim`, `MultibyteLeftTrim` and `MultibyteRightTrim` parameter attributes (@vjik)
+- New #131: Add multibyte mode to `ToArrayOfStrings` attribute resolver (@vjik)
 - Enh #117: Explicitly import functions and constants in "use" section (@mspirkov)
 - Enh #132: Exclude development files from the distribution archive (@vjik)
 
