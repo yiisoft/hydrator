@@ -38,7 +38,7 @@
         "roave/infection-static-analysis-plugin": "^1.35",
         "shipmonk/composer-dependency-analyser": "^1.8",
         "spatie/phpunit-watcher": "^1.24",
-        "vimeo/psalm": "^5.26.1 || ^6.13.1",
+        "vimeo/psalm": "^5.26.1 || ^6.17.2",
         "yiisoft/code-style": "^1.1",
         "yiisoft/di": "^1.4",
         "yiisoft/dummy-provider": "^1.1.0",

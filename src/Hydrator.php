@@ -87,6 +87,10 @@ final class Hydrator implements HydratorInterface
         );
     }
 
+    /**
+     * @psalm-suppress InvalidReturnType, InvalidReturnStatement Psalm 6.17 loses the `T` template argument of
+     * `ReflectionClass<T>` created from a `class-string<T>`, see https://github.com/vimeo/psalm/issues/11963
+     */
     public function create(string $class, array|DataInterface $data = []): object
     {
         if (!class_exists($class)) {
