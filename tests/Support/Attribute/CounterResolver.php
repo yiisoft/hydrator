@@ -27,9 +27,7 @@ final class CounterResolver implements ParameterAttributeResolverInterface
 
         $key = $attribute->getKey();
 
-        if (!isset($this->data[$key])) {
-            $this->data[$key] = 0;
-        }
+        $this->data[$key] ??= 0;
 
         $this->data[$key]++;
 

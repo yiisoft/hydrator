@@ -26,12 +26,9 @@ composer.phar
 phpunit.phar
 # local phpunit config
 /phpunit.xml
-# phpunit cache
-/.phpunit.cache
 
 # po4a .mo files
 *.mo
 
 # PHP CS Fixer
-/.php-cs-fixer.cache
 /.php-cs-fixer.php
