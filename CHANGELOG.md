@@ -2,7 +2,7 @@
 
 ## 1.6.4 under development
 
-`- New #131: Add `multibyte` and `encoding` parameters to `Trim`, `LeftTrim`, `RightTrim` and `ToArrayOfStrings`
+- New #131: Add `multibyte` and `encoding` parameters to `Trim`, `LeftTrim`, `RightTrim` and `ToArrayOfStrings`
   attributes and their resolvers (@vjik)
 - Chg #131: Deprecate the `..` range syntax in the `characters` parameter of `Trim`, `LeftTrim` and `RightTrim`
   attributes (@vjik)
