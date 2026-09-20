@@ -33,7 +33,7 @@ final class LeftTrimTest extends TestCase
         yield ['test ', new LeftTrim(), ' test '];
         yield [' test ', new LeftTrim('t'), ' test '];
         yield ['est', new LeftTrim('t'), 'test'];
-        yield ["test\u{2003} ", new LeftTrim(), " \u{A0}test\u{2003} "];
+        yield ["\u{A0}test\u{2003} ", new LeftTrim(), " \u{A0}test\u{2003} "];
 
         yield ["test\u{2003} ", new LeftTrim(multibyte: true), "\u{A0}\u{2002}test\u{2003} "];
         yield [' test ', new LeftTrim('t', multibyte: true), ' test '];
@@ -253,7 +253,7 @@ final class LeftTrimTest extends TestCase
 
     public function testRangeInNonMultibyteModeRegression(): void
     {
-        $resolver = new LeftTrimResolver(multibyte: false);
+        $resolver = new LeftTrimResolver();
         $context = new ParameterAttributeResolveContext(
             TestHelper::getFirstParameter(static fn(?string $a) => null),
             Result::success('xyztest123'),

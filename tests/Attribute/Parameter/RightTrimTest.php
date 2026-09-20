@@ -33,7 +33,7 @@ final class RightTrimTest extends TestCase
         yield [' test', new RightTrim(), ' test '];
         yield [' test ', new RightTrim('t'), ' test '];
         yield ['tes', new RightTrim('t'), 'test'];
-        yield [" \u{A0}test", new RightTrim(), " \u{A0}test\u{2003} "];
+        yield [" \u{A0}test\u{2003}", new RightTrim(), " \u{A0}test\u{2003} "];
 
         yield ["\u{A0}\u{2002}test", new RightTrim(multibyte: true), "\u{A0}\u{2002}test\u{2003} "];
         yield [' test ', new RightTrim('t', multibyte: true), ' test '];
@@ -253,7 +253,7 @@ final class RightTrimTest extends TestCase
 
     public function testRangeInNonMultibyteModeRegression(): void
     {
-        $resolver = new RightTrimResolver(multibyte: false);
+        $resolver = new RightTrimResolver();
         $context = new ParameterAttributeResolveContext(
             TestHelper::getFirstParameter(static fn(?string $a) => null),
             Result::success('xyztest123'),

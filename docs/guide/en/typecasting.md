@@ -163,10 +163,8 @@ class Person
 $person = $hydrator->create(Person::class, ['name' => '  John ']);
 ```
 
-By default, `multibyte` mode is enabled automatically when the required `mb_*` functions are available (see below);
-otherwise, the non-multibyte mode is used. In multibyte mode, Unicode whitespace characters, such as `U+00A0`
-(no-break space) or `U+2003` (em space), are stripped as well, not just ASCII ones. You can force a specific mode
-with the `multibyte` parameter:
+By default, these attributes are not multibyte-aware, so Unicode whitespace characters, such as `U+00A0` (no-break
+space) or `U+2003` (em space), are kept. To strip them as well, enable the `multibyte` parameter:
 
 ```php
 use Yiisoft\Hydrator\Attribute\Parameter\Trim;
@@ -174,7 +172,7 @@ use Yiisoft\Hydrator\Attribute\Parameter\Trim;
 class Person
 {
     public function __construct(
-        #[Trim(multibyte: false)] // "\u{A0}John\u{2003}" → "\u{A0}John\u{2003}"
+        #[Trim(multibyte: true)] // "\u{A0}John\u{2003}" → 'John'
         private ?string $name = null,
     ) {}
 }
@@ -184,9 +182,8 @@ $person = $hydrator->create(Person::class, ['name' => "\u{A0}John\u{2003}"]);
 
 Multibyte mode uses `mb_trim()`, `mb_ltrim()` and `mb_rtrim()` functions that are provided by `mbstring` PHP extension
 since PHP 8.4. To use it with an earlier PHP version, install
-[symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring) package. When these functions are not
-available, `multibyte` defaults to `false`. The `encoding` parameter selects the encoding used in multibyte mode;
-`null` (default) means using `mb_internal_encoding()`.
+[symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring) package. The `encoding` parameter selects
+the encoding used in multibyte mode; `null` (default) means using `mb_internal_encoding()`.
 
 With `..` you can specify a range of characters in the `characters` parameter, for example, `а..я`. It works both in
 the default and in the multibyte mode. This syntax is deprecated and will be removed in the next major version, so

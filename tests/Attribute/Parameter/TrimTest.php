@@ -33,7 +33,7 @@ final class TrimTest extends TestCase
         yield ['test', new Trim(), ' test '];
         yield [' test ', new Trim('t'), ' test '];
         yield ['es', new Trim('t'), 'test'];
-        yield ['test', new Trim(), " \u{A0}test\u{2003} "];
+        yield ["\u{A0}test\u{2003}", new Trim(), " \u{A0}test\u{2003} "];
 
         yield ['test', new Trim(multibyte: true), "\u{A0}\u{2002}test\u{2003} "];
         yield [' test ', new Trim('t', multibyte: true), ' test '];
@@ -253,7 +253,7 @@ final class TrimTest extends TestCase
 
     public function testRangeInNonMultibyteModeRegression(): void
     {
-        $resolver = new TrimResolver(multibyte: false);
+        $resolver = new TrimResolver();
         $context = new ParameterAttributeResolveContext(
             TestHelper::getFirstParameter(static fn(?string $a) => null),
             Result::success('xyztest123'),
