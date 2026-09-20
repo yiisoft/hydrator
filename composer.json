@@ -32,12 +32,14 @@
         "yiisoft/strings": "^2.3"
     },
     "require-dev": {
+        "ext-iconv": "*",
         "friendsofphp/php-cs-fixer": "^3.92",
         "phpunit/phpunit": "^10.5.48",
         "rector/rector": "^2.6.7",
         "roave/infection-static-analysis-plugin": "^1.35",
         "shipmonk/composer-dependency-analyser": "^1.8",
         "spatie/phpunit-watcher": "^1.24",
+        "symfony/polyfill-mbstring": "^1.31",
         "vimeo/psalm": "^5.26.1 || ^6.17.2",
         "yiisoft/code-style": "^1.1",
         "yiisoft/di": "^1.4",
@@ -45,7 +47,9 @@
         "yiisoft/test-support": "^3.0.2"
     },
     "suggest": {
-        "ext-intl": "Allows using `ToDateTime` parameter attribute"
+        "ext-intl": "Allows using `ToDateTime` parameter attribute",
+        "ext-mbstring": "Allows using multibyte mode of `Trim`, `LeftTrim`, `RightTrim` and `ToArrayOfStrings` attributes on PHP 8.4 or later",
+        "symfony/polyfill-mbstring": "Allows using multibyte mode of `Trim`, `LeftTrim`, `RightTrim` and `ToArrayOfStrings` attributes on PHP versions earlier than 8.4"
     },
     "autoload": {
         "psr-4": {

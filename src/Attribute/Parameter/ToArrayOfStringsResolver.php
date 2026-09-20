@@ -14,6 +14,19 @@ use function is_scalar;
 
 final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterface
 {
+    /**
+     * @param bool $multibyte Whether to use multibyte-aware trimming that strips Unicode whitespace characters
+     * such as `U+00A0` (no-break space) as well, when it is not specified in the attribute. Requires PHP 8.4 or
+     * later with `mbstring` extension, or `symfony/polyfill-mbstring` package.
+     * @param string|null $encoding The encoding to use in multibyte mode when it is not specified in the attribute.
+     */
+    public function __construct(
+        private readonly bool $multibyte = false,
+        private readonly ?string $encoding = null,
+    ) {
+        TrimCharacters::checkMultibyteFunctionsExist($multibyte);
+    }
+
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
         ParameterAttributeResolveContext $context,
@@ -44,7 +57,13 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
         }
 
         if ($attribute->trim) {
-            $array = array_map(trim(...), $array);
+            $multibyte = $attribute->multibyte ?? $this->multibyte;
+            $encoding = $attribute->encoding ?? $this->encoding;
+
+            $array = array_map(
+                $multibyte ? static fn(string $value): string => mb_trim($value, null, $encoding) : trim(...),
+                $array,
+            );
         }
 
         if ($attribute->removeEmpty) {
