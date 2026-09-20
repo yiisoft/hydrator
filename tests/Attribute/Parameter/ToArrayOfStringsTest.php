@@ -224,4 +224,58 @@ final class ToArrayOfStringsTest extends TestCase
 
         $this->assertSame(['hello', 'world'], $object->value);
     }
+
+    public function testAttributeMultibyteTrim(): void
+    {
+        $hydrator = new Hydrator();
+        $object = new class {
+            #[ToArrayOfStrings(trim: true, separator: ',', multibyte: true)]
+            public ?array $value = null;
+        };
+
+        $hydrator->hydrate($object, ['value' => "\u{A0}hello\u{2003},\u{2002}world "]);
+
+        $this->assertSame(['hello', 'world'], $object->value);
+    }
+
+    public function testAttributeMultibyteOverridesResolverDefault(): void
+    {
+        $hydrator = new Hydrator(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    ToArrayOfStringsResolver::class => new ToArrayOfStringsResolver(multibyte: true),
+                ]),
+            ),
+        );
+        $object = new class {
+            #[ToArrayOfStrings(trim: true, separator: ',', multibyte: false)]
+            public ?array $value = null;
+        };
+
+        $hydrator->hydrate($object, ['value' => "\u{A0}hello\u{2003},\u{2002}world "]);
+
+        $this->assertSame(["\u{A0}hello\u{2003}", "\u{2002}world"], $object->value);
+    }
+
+    public function testAttributeEncodingOverridesResolverDefault(): void
+    {
+        $value = iconv('UTF-8', 'Windows-1251', "  привет  ");
+        $expected = iconv('UTF-8', 'Windows-1251', 'привет');
+
+        $hydrator = new Hydrator(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    ToArrayOfStringsResolver::class => new ToArrayOfStringsResolver(multibyte: true, encoding: 'UTF-8'),
+                ]),
+            ),
+        );
+        $object = new class {
+            #[ToArrayOfStrings(trim: true, splitResolvedValue: false, encoding: 'Windows-1251')]
+            public ?array $value = null;
+        };
+
+        $hydrator->hydrate($object, ['value' => $value]);
+
+        $this->assertSame([$expected], $object->value);
+    }
 }

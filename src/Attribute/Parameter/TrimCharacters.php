@@ -1,0 +1,92 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Yiisoft\Hydrator\Attribute\Parameter;
+
+use function count;
+use function mb_chr;
+use function mb_ord;
+use function mb_str_split;
+use function str_contains;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
+use const E_USER_WARNING;
+
+/**
+ * @internal Helper for handling the `characters` parameter of `Trim`, `LeftTrim` and `RightTrim` attributes and
+ * resolvers.
+ */
+final class TrimCharacters
+{
+    public static function checkDeprecatedRanges(?string $characters): void
+    {
+        if ($characters !== null && str_contains($characters, '..')) {
+            trigger_error(
+                'The ".." range syntax of the "characters" parameter is deprecated and will be removed in the next major version.',
+                E_USER_DEPRECATED,
+            );
+        }
+    }
+
+    /**
+     * Expands `..` ranges in {@see $characters} into an explicit, range-free character list, mirroring the
+     * range parsing of native {@see trim()} (see `php_charmask()` in `ext/standard/string.c`), including its
+     * `E_WARNING` messages and literal fallback for malformed ranges.
+     */
+    public static function expandRanges(string $characters, ?string $encoding): string
+    {
+        /** @var list<string> $chars */
+        $chars = mb_str_split($characters, 1, $encoding);
+        $count = count($chars);
+        $result = '';
+
+        for ($i = 0; $i < $count; $i++) {
+            $char = $chars[$i];
+
+            if ($i + 3 < $count && $chars[$i + 1] === '.' && $chars[$i + 2] === '.') {
+                $startOrd = mb_ord($char, $encoding);
+                $endOrd = mb_ord($chars[$i + 3], $encoding);
+
+                if ($startOrd !== false && $endOrd !== false && $endOrd >= $startOrd) {
+                    for ($ord = $startOrd; $ord <= $endOrd; $ord++) {
+                        $rangeChar = mb_chr($ord, $encoding);
+                        if ($rangeChar !== false) {
+                            $result .= $rangeChar;
+                        }
+                    }
+                    $i += 3;
+                    continue;
+                }
+            }
+
+            if ($i + 1 < $count && $char === '.' && $chars[$i + 1] === '.') {
+                if ($i === 0) {
+                    trigger_error("Invalid '..'-range, no character to the left of '..'", E_USER_WARNING);
+                    continue;
+                }
+
+                if ($i + 2 >= $count) {
+                    trigger_error("Invalid '..'-range, no character to the right of '..'", E_USER_WARNING);
+                    continue;
+                }
+
+                $leftOrd = mb_ord($chars[$i - 1], $encoding);
+                $rightOrd = mb_ord($chars[$i + 2], $encoding);
+
+                if ($leftOrd !== false && $rightOrd !== false && $leftOrd > $rightOrd) {
+                    trigger_error("Invalid '..'-range, '..'-range needs to be incrementing", E_USER_WARNING);
+                    continue;
+                }
+
+                trigger_error("Invalid '..'-range", E_USER_WARNING);
+                continue;
+            }
+
+            $result .= $char;
+        }
+
+        return $result;
+    }
+}

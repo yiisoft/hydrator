@@ -4,17 +4,33 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
+use LogicException;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
+use function function_exists;
 use function is_string;
 
+/**
+ * Resolver for {@see LeftTrim} attribute.
+ */
 final class LeftTrimResolver implements ParameterAttributeResolverInterface
 {
+    /**
+     * @param string|null $characters The list of characters to strip when it is not specified in the attribute.
+     * With `..` you can specify a range of characters, both in the default and in the multibyte mode. This syntax
+     * is deprecated and will be removed in the next major version.
+     * @param bool $multibyte Whether to use multibyte-aware trimming when it is not specified in the attribute.
+     * @param string|null $encoding The encoding to use in multibyte mode when it is not specified in the attribute.
+     */
     public function __construct(
         private readonly ?string $characters = null,
-    ) {}
+        private readonly bool $multibyte = false,
+        private readonly ?string $encoding = null,
+    ) {
+        TrimCharacters::checkDeprecatedRanges($characters);
+    }
 
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
@@ -34,9 +50,29 @@ final class LeftTrimResolver implements ParameterAttributeResolverInterface
         }
 
         $characters = $attribute->characters ?? $this->characters;
+        $multibyte = $attribute->multibyte ?? $this->multibyte;
+        $encoding = $attribute->encoding ?? $this->encoding;
+
+        if (!$multibyte) {
+            return Result::success(
+                $characters === null ? ltrim($resolvedValue) : ltrim($resolvedValue, $characters),
+            );
+        }
+
+        if (!function_exists('mb_ltrim')) {
+            // @codeCoverageIgnoreStart
+            throw new LogicException(
+                'The "multibyte" parameter requires "mb_ltrim()" function that is provided by "mbstring" extension since PHP 8.4 or by "symfony/polyfill-mbstring" package.',
+            );
+            // @codeCoverageIgnoreEnd
+        }
 
         return Result::success(
-            $characters === null ? ltrim($resolvedValue) : ltrim($resolvedValue, $characters),
+            mb_ltrim(
+                $resolvedValue,
+                $characters === null ? null : TrimCharacters::expandRanges($characters, $encoding),
+                $encoding,
+            ),
         );
     }
 }

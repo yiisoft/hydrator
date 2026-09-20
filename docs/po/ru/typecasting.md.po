@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-09-15 20:44+0000\n"
+"POT-Creation-Date: 2026-09-20 10:41+0000\n"
 "PO-Revision-Date: 2025-03-01 15:15+0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -380,6 +380,49 @@ msgstr ""
 "\n"
 "$person = $hydrator->create(Person::class, ['name' => '  John ']);\n"
 
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid "By default, these attributes are not multibyte-aware, so Unicode whitespace characters, such as `U+00A0` (no-break space) or `U+2003` (em space), are kept. To strip them as well, enable the `multibyte` parameter:"
+msgstr "По умолчанию эти атрибуты не поддерживают многобайтовые кодировки, поэтому символы юникод-пробелов, такие как `U+00A0` (неразрывный пробел) или `U+2003` (широкий пробел), не удаляются. Чтобы удалять и их, включите параметр `multibyte`:"
+
+#. type: Fenced code block (php)
+#: guide/en/typecasting.md
+#, no-wrap
+msgid ""
+"use Yiisoft\\Hydrator\\Attribute\\Parameter\\Trim;\n"
+"\n"
+"class Person\n"
+"{\n"
+"    public function __construct(\n"
+"        #[Trim(multibyte: true)] // \"\\u{A0}John\\u{2003}\" → 'John'\n"
+"        private ?string $name = null,\n"
+"    ) {}\n"
+"}\n"
+"\n"
+"$person = $hydrator->create(Person::class, ['name' => \"\\u{A0}John\\u{2003}\"]);\n"
+msgstr ""
+"use Yiisoft\\Hydrator\\Attribute\\Parameter\\Trim;\n"
+"\n"
+"class Person\n"
+"{\n"
+"    public function __construct(\n"
+"        #[Trim(multibyte: true)] // \"\\u{A0}John\\u{2003}\" → 'John'\n"
+"        private ?string $name = null,\n"
+"    ) {}\n"
+"}\n"
+"\n"
+"$person = $hydrator->create(Person::class, ['name' => \"\\u{A0}John\\u{2003}\"]);\n"
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid "Multibyte mode uses `mb_trim()`, `mb_ltrim()` and `mb_rtrim()` functions that are provided by `mbstring` PHP extension since PHP 8.4. To use it with an earlier PHP version, install [symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring) package. The `encoding` parameter selects the encoding used in multibyte mode; `null` (default) means using `mb_internal_encoding()`."
+msgstr "Режим многобайтовой обработки использует функции `mb_trim()`, `mb_ltrim()` и `mb_rtrim()`, которые предоставляются расширением PHP `mbstring`, начиная с PHP 8.4. Чтобы использовать его на более ранних версиях PHP, установите пакет [symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring). Параметр `encoding` задаёт кодировку, используемую в многобайтовом режиме; значение `null` (по умолчанию) означает использование `mb_internal_encoding()`."
+
+#. type: Plain text
+#: guide/en/typecasting.md
+msgid "With `..` you can specify a range of characters in the `characters` parameter, for example, `а..я`. It works both in the default and in the multibyte mode. This syntax is deprecated and will be removed in the next major version, so avoid it in new code."
+msgstr "С помощью `..` можно указать диапазон символов в параметре `characters`, например, `а..я`. Это работает как в обычном, так и в многобайтовом режиме. Этот синтаксис устарел и будет удалён в следующей мажорной версии, поэтому не используйте его в новом коде."
+
 #. type: Title ###
 #: guide/en/typecasting.md
 #, no-wrap
@@ -550,5 +593,15 @@ msgstr "`splitResolvedValue` — разделить значения по раз
 
 #. type: Bullet: '- '
 #: guide/en/typecasting.md
-msgid "`separator` — the boundary string (default, `\\R`), it's a part of regular expression so should be taken into account or properly escaped with `preg_quote()`."
-msgstr "`separator` — символ перевода строки (по умолчанию, `\\R`). Это часть регулярного выражения, поэтому ее следует учитывать или правильно экранировать с помощью `preg_quote()`."
+msgid "`separator` — the boundary string (default, `\\R`), it's a part of regular expression so should be taken into account or properly escaped with `preg_quote()`;"
+msgstr "`separator` — символ перевода строки (по умолчанию, `\\R`), это часть регулярного выражения, поэтому его следует учитывать или правильно экранировать с помощью `preg_quote()`;"
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid "`multibyte` — whether to use multibyte-aware trimming when `trim` is enabled (nullable boolean, default `null` meaning the resolver default is used); requires the `mb_trim()` function provided by `mbstring` PHP extension since PHP 8.4, or by [symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring) package on earlier versions;"
+msgstr "`multibyte` — использовать ли многобайтовую обработку при включённом `trim` (необязательное логическое значение, по умолчанию `null`, что означает использование значения по умолчанию из резолвера); требует функцию `mb_trim()`, предоставляемую расширением PHP `mbstring`, начиная с PHP 8.4, либо пакет [symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring) на более ранних версиях;"
+
+#. type: Bullet: '- '
+#: guide/en/typecasting.md
+msgid "`encoding` — the encoding to use in multibyte mode (nullable string, default `null` meaning the resolver default is used)."
+msgstr "`encoding` — кодировка, используемая в многобайтовом режиме (необязательная строка, по умолчанию `null`, что означает использование значения по умолчанию из резолвера)."

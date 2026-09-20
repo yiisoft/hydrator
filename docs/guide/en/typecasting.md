@@ -163,19 +163,16 @@ class Person
 $person = $hydrator->create(Person::class, ['name' => '  John ']);
 ```
 
-### `MultibyteTrim` / `MultibyteLeftTrim` / `MultibyteRightTrim`
-
-`Trim`, `LeftTrim` and `RightTrim` are not multibyte-aware, so Unicode whitespace characters, such as `U+00A0`
-(no-break space) or `U+2003` (em space), are kept. To strip them as well, use `MultibyteTrim`, `MultibyteLeftTrim`
-or `MultibyteRightTrim` attributes:
+By default, these attributes are not multibyte-aware, so Unicode whitespace characters, such as `U+00A0` (no-break
+space) or `U+2003` (em space), are kept. To strip them as well, enable the `multibyte` parameter:
 
 ```php
-use Yiisoft\Hydrator\Attribute\Parameter\MultibyteTrim;
+use Yiisoft\Hydrator\Attribute\Parameter\Trim;
 
 class Person
 {
     public function __construct(
-        #[MultibyteTrim] // "\u{A0}John\u{2003}" → 'John'
+        #[Trim(multibyte: true)] // "\u{A0}John\u{2003}" → 'John'
         private ?string $name = null,
     ) {}
 }
@@ -183,12 +180,14 @@ class Person
 $person = $hydrator->create(Person::class, ['name' => "\u{A0}John\u{2003}"]);
 ```
 
-These attributes use `mb_trim()`, `mb_ltrim()` and `mb_rtrim()` functions that are provided by `mbstring` PHP
-extension since PHP 8.4. To use them with an earlier PHP version, install
-[symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring) package.
+Multibyte mode uses `mb_trim()`, `mb_ltrim()` and `mb_rtrim()` functions that are provided by `mbstring` PHP extension
+since PHP 8.4. To use it with an earlier PHP version, install
+[symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring) package. The `encoding` parameter selects
+the encoding used in multibyte mode; `null` (default) means using `mb_internal_encoding()`.
 
-Note that, unlike `Trim`, `LeftTrim` and `RightTrim`, the `characters` parameter doesn't support the `..` range syntax:
-every character is treated literally.
+With `..` you can specify a range of characters in the `characters` parameter, for example, `а..я`. It works both in
+the default and in the multibyte mode. This syntax is deprecated and will be removed in the next major version, so
+avoid it in new code.
 
 ### `ToDatetime`
 
@@ -262,9 +261,14 @@ converted to array `['news', 'city', 'hot']`.
 
 Attribute parameters:
 
-- `trim` — trim each string of array (boolean, default `false`), multibyte-aware trimming can be enabled via
-  `multibyte` parameter of `ToArrayOfStringsResolver`;
+- `trim` — trim each string of array (boolean, default `false`);
 - `removeEmpty` — remove empty strings from array (boolean, default `false`);
 - `splitResolvedValue` — split resolved value by separator (boolean, default `true`);
 - `separator` — the boundary string (default, `\R`), it's a part of regular expression so should be taken into account 
-  or properly escaped with `preg_quote()`.
+  or properly escaped with `preg_quote()`;
+- `multibyte` — whether to use multibyte-aware trimming when `trim` is enabled (nullable boolean, default `null`
+  meaning the resolver default is used); requires the `mb_trim()` function provided by `mbstring` PHP extension
+  since PHP 8.4, or by [symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring) package on earlier
+  versions;
+- `encoding` — the encoding to use in multibyte mode (nullable string, default `null` meaning the resolver default
+  is used).

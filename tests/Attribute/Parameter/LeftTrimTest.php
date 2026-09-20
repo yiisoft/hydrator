@@ -21,6 +21,9 @@ use Yiisoft\Hydrator\Tests\Support\Classes\CounterClass;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 
+use const E_USER_DEPRECATED;
+use const E_USER_WARNING;
+
 final class LeftTrimTest extends TestCase
 {
     public static function dataBase(): iterable
@@ -29,6 +32,15 @@ final class LeftTrimTest extends TestCase
         yield [' test ', new LeftTrim('t'), ' test '];
         yield ['est', new LeftTrim('t'), 'test'];
         yield ["\u{A0}test\u{2003} ", new LeftTrim(), " \u{A0}test\u{2003} "];
+
+        yield ["test\u{2003} ", new LeftTrim(multibyte: true), "\u{A0}\u{2002}test\u{2003} "];
+        yield [' test ', new LeftTrim('t', multibyte: true), ' test '];
+        yield ["b\u{44F}", new LeftTrim("\u{430}\u{44F}", multibyte: true), "\u{430}b\u{44F}"];
+
+        $characters = iconv('UTF-8', 'Windows-1251', 'а');
+        $value = iconv('UTF-8', 'Windows-1251', 'атеста');
+        $expected = iconv('UTF-8', 'Windows-1251', 'теста');
+        yield [$expected, new LeftTrim($characters, multibyte: true, encoding: 'Windows-1251'), $value];
     }
 
     #[DataProvider('dataBase')]
@@ -122,5 +134,258 @@ final class LeftTrimTest extends TestCase
         $hydrator->hydrate($object, ['a' => '*test*']);
 
         $this->assertSame('test*', $object->a);
+    }
+
+    public function testDefaultMultibyteFromResolver(): void
+    {
+        $hydrator = new Hydrator(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    LeftTrimResolver::class => new LeftTrimResolver(multibyte: true),
+                ]),
+            ),
+        );
+        $object = new class {
+            #[LeftTrim]
+            public ?string $a = null;
+        };
+
+        $hydrator->hydrate($object, ['a' => "\u{A0}test\u{2003}"]);
+
+        $this->assertSame("test\u{2003}", $object->a);
+    }
+
+    public function testOverrideMultibyteFalse(): void
+    {
+        $hydrator = new Hydrator(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    LeftTrimResolver::class => new LeftTrimResolver(multibyte: true),
+                ]),
+            ),
+        );
+        $object = new class {
+            #[LeftTrim(multibyte: false)]
+            public ?string $a = null;
+        };
+
+        $hydrator->hydrate($object, ['a' => "\u{A0}test\u{2003}"]);
+
+        $this->assertSame("\u{A0}test\u{2003}", $object->a);
+    }
+
+    public function testDefaultEncodingFromResolver(): void
+    {
+        $characters = iconv('UTF-8', 'Windows-1251', 'а');
+        $value = iconv('UTF-8', 'Windows-1251', 'атеста');
+        $expected = iconv('UTF-8', 'Windows-1251', 'теста');
+
+        $hydrator = new Hydrator(
+            attributeResolverFactory: new ContainerAttributeResolverFactory(
+                new SimpleContainer([
+                    LeftTrimResolver::class => new LeftTrimResolver(characters: $characters, multibyte: true, encoding: 'Windows-1251'),
+                ]),
+            ),
+        );
+        $object = new class {
+            #[LeftTrim]
+            public ?string $a = null;
+        };
+
+        $hydrator->hydrate($object, ['a' => $value]);
+
+        $this->assertSame($expected, $object->a);
+    }
+
+    public function testOverrideEncoding(): void
+    {
+        $characters = iconv('UTF-8', 'Windows-1251', 'а');
+        $value = iconv('UTF-8', 'Windows-1251', 'атеста');
+        $expected = iconv('UTF-8', 'Windows-1251', 'теста');
+
+        $resolver = new LeftTrimResolver(multibyte: true, encoding: 'UTF-8');
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success($value),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        $result = $resolver->getParameterValue(new LeftTrim($characters, encoding: 'Windows-1251'), $context);
+
+        $this->assertSame($expected, $result->getValue());
+    }
+
+    public function testDeprecationNoticeFromAttributeForRangeCharacters(): void
+    {
+        $errors = TestHelper::captureErrors(static function (): void {
+            new LeftTrim('a..z');
+        });
+
+        $this->assertCount(1, $errors);
+        $this->assertSame(E_USER_DEPRECATED, $errors[0][0]);
+        $this->assertSame(
+            'The ".." range syntax of the "characters" parameter is deprecated and will be removed in the next major version.',
+            $errors[0][1],
+        );
+    }
+
+    public function testDeprecationNoticeFromResolverForRangeCharacters(): void
+    {
+        $errors = TestHelper::captureErrors(static function (): void {
+            new LeftTrimResolver(characters: 'a..z');
+        });
+
+        $this->assertCount(1, $errors);
+        $this->assertSame(E_USER_DEPRECATED, $errors[0][0]);
+        $this->assertSame(
+            'The ".." range syntax of the "characters" parameter is deprecated and will be removed in the next major version.',
+            $errors[0][1],
+        );
+    }
+
+    public function testNoDeprecationNoticeForSingleDotOrNullCharacters(): void
+    {
+        $errors = TestHelper::captureErrors(static function (): void {
+            new LeftTrim('a.b');
+            new LeftTrim('.');
+            new LeftTrim(null);
+            new LeftTrimResolver(characters: 'a.b');
+            new LeftTrimResolver(characters: '.');
+            new LeftTrimResolver(characters: null);
+        });
+
+        $this->assertSame([], $errors);
+    }
+
+    public function testRangeInNonMultibyteModeRegression(): void
+    {
+        $resolver = new LeftTrimResolver();
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success('xyztest123'),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
+            $value = $resolver->getParameterValue(new LeftTrim('a..z'), $context)->getValue();
+        });
+
+        $this->assertSame('123', $value);
+    }
+
+    public function testRangeInMultibyteMode(): void
+    {
+        $resolver = new LeftTrimResolver(multibyte: true);
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success("\u{436}Hello\u{44E}"),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
+            $value = $resolver->getParameterValue(new LeftTrim("\u{430}..\u{44F}"), $context)->getValue();
+        });
+
+        $this->assertSame("Hello\u{44E}", $value);
+    }
+
+    public function testCjkRangeInMultibyteMode(): void
+    {
+        $resolver = new LeftTrimResolver(multibyte: true);
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success("\u{4E00}test\u{5341}"),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
+            $value = $resolver->getParameterValue(new LeftTrim("\u{4E00}..\u{5341}"), $context)->getValue();
+        });
+
+        $this->assertSame("test\u{5341}", $value);
+    }
+
+    public function testInvalidRangeNoLeftCharacterInMultibyteMode(): void
+    {
+        $resolver = new LeftTrimResolver(multibyte: true);
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success('.zXz.'),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        $errors = TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
+            $value = $resolver->getParameterValue(new LeftTrim('..z'), $context)->getValue();
+        });
+
+        $warnings = array_filter($errors, static fn(array $error): bool => $error[0] === E_USER_WARNING);
+        $this->assertCount(1, $warnings);
+        $this->assertSame("Invalid '..'-range, no character to the left of '..'", reset($warnings)[1]);
+        $this->assertSame('Xz.', $value);
+    }
+
+    public function testInvalidRangeNoRightCharacterInMultibyteMode(): void
+    {
+        $resolver = new LeftTrimResolver(multibyte: true);
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success('aXa..'),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        $errors = TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
+            $value = $resolver->getParameterValue(new LeftTrim('a..'), $context)->getValue();
+        });
+
+        $warnings = array_filter($errors, static fn(array $error): bool => $error[0] === E_USER_WARNING);
+        $this->assertCount(1, $warnings);
+        $this->assertSame("Invalid '..'-range, no character to the right of '..'", reset($warnings)[1]);
+        $this->assertSame('Xa..', $value);
+    }
+
+    public function testInvalidRangeNotIncrementingInMultibyteMode(): void
+    {
+        $resolver = new LeftTrimResolver(multibyte: true);
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success('caXcac'),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        $errors = TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
+            $value = $resolver->getParameterValue(new LeftTrim('c..a'), $context)->getValue();
+        });
+
+        $warnings = array_filter($errors, static fn(array $error): bool => $error[0] === E_USER_WARNING);
+        $this->assertCount(1, $warnings);
+        $this->assertSame("Invalid '..'-range, '..'-range needs to be incrementing", reset($warnings)[1]);
+        $this->assertSame('Xcac', $value);
+    }
+
+    public function testInvalidRangeAmbiguousInMultibyteMode(): void
+    {
+        $resolver = new LeftTrimResolver(multibyte: true);
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success('abXcba..b..c'),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        $errors = TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
+            $value = $resolver->getParameterValue(new LeftTrim('a..b..c'), $context)->getValue();
+        });
+
+        $warnings = array_filter($errors, static fn(array $error): bool => $error[0] === E_USER_WARNING);
+        $this->assertCount(1, $warnings);
+        $this->assertSame("Invalid '..'-range", reset($warnings)[1]);
+        $this->assertSame('Xcba..b..c', $value);
     }
 }

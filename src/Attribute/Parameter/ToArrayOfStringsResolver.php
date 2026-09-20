@@ -18,20 +18,14 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
 {
     /**
      * @param bool $multibyte Whether to use multibyte-aware trimming that strips Unicode whitespace characters
-     * such as `U+00A0` (no-break space) as well. Requires PHP 8.4 or later with `mbstring` extension, or
-     * `symfony/polyfill-mbstring` package.
+     * such as `U+00A0` (no-break space) as well, when it is not specified in the attribute. Requires PHP 8.4 or
+     * later with `mbstring` extension, or `symfony/polyfill-mbstring` package.
+     * @param string|null $encoding The encoding to use in multibyte mode when it is not specified in the attribute.
      */
     public function __construct(
         private readonly bool $multibyte = false,
-    ) {
-        if ($multibyte && !function_exists('mb_trim')) {
-            // @codeCoverageIgnoreStart
-            throw new LogicException(
-                'Multibyte mode requires "mb_trim()" function that is provided by "mbstring" extension since PHP 8.4 or by "symfony/polyfill-mbstring" package.',
-            );
-            // @codeCoverageIgnoreEnd
-        }
-    }
+        private readonly ?string $encoding = null,
+    ) {}
 
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
@@ -63,7 +57,21 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
         }
 
         if ($attribute->trim) {
-            $array = array_map($this->multibyte ? mb_trim(...) : trim(...), $array);
+            $multibyte = $attribute->multibyte ?? $this->multibyte;
+            $encoding = $attribute->encoding ?? $this->encoding;
+
+            if ($multibyte && !function_exists('mb_trim')) {
+                // @codeCoverageIgnoreStart
+                throw new LogicException(
+                    'The "multibyte" parameter requires "mb_trim()" function that is provided by "mbstring" extension since PHP 8.4 or by "symfony/polyfill-mbstring" package.',
+                );
+                // @codeCoverageIgnoreEnd
+            }
+
+            $array = array_map(
+                $multibyte ? static fn(string $value): string => mb_trim($value, null, $encoding) : trim(...),
+                $array,
+            );
         }
 
         if ($attribute->removeEmpty) {
