@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
+use Closure;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Yiisoft\Hydrator\ArrayData;
@@ -31,7 +33,7 @@ final class RightTrimTest extends TestCase
         yield [' test', new RightTrim(), ' test '];
         yield [' test ', new RightTrim('t'), ' test '];
         yield ['tes', new RightTrim('t'), 'test'];
-        yield [" \u{A0}test\u{2003}", new RightTrim(), " \u{A0}test\u{2003} "];
+        yield [" \u{A0}test", new RightTrim(), " \u{A0}test\u{2003} "];
 
         yield ["\u{A0}\u{2002}test", new RightTrim(multibyte: true), "\u{A0}\u{2002}test\u{2003} "];
         yield [' test ', new RightTrim('t', multibyte: true), ' test '];
@@ -216,25 +218,16 @@ final class RightTrimTest extends TestCase
         $this->assertSame($expected, $result->getValue());
     }
 
-    public function testDeprecationNoticeFromAttributeForRangeCharacters(): void
+    public static function dataDeprecationNoticeForRangeCharacters(): iterable
     {
-        $errors = TestHelper::captureErrors(static function (): void {
-            new RightTrim('a..z');
-        });
-
-        $this->assertCount(1, $errors);
-        $this->assertSame(E_USER_DEPRECATED, $errors[0][0]);
-        $this->assertSame(
-            'The ".." range syntax of the "characters" parameter is deprecated and will be removed in the next major version.',
-            $errors[0][1],
-        );
+        yield 'attribute' => [static fn(): RightTrim => new RightTrim('a..z')];
+        yield 'resolver' => [static fn(): RightTrimResolver => new RightTrimResolver(characters: 'a..z')];
     }
 
-    public function testDeprecationNoticeFromResolverForRangeCharacters(): void
+    #[DataProvider('dataDeprecationNoticeForRangeCharacters')]
+    public function testDeprecationNoticeForRangeCharacters(Closure $create): void
     {
-        $errors = TestHelper::captureErrors(static function (): void {
-            new RightTrimResolver(characters: 'a..z');
-        });
+        $errors = TestHelper::captureErrors($create);
 
         $this->assertCount(1, $errors);
         $this->assertSame(E_USER_DEPRECATED, $errors[0][0]);
@@ -260,7 +253,7 @@ final class RightTrimTest extends TestCase
 
     public function testRangeInNonMultibyteModeRegression(): void
     {
-        $resolver = new RightTrimResolver();
+        $resolver = new RightTrimResolver(multibyte: false);
         $context = new ParameterAttributeResolveContext(
             TestHelper::getFirstParameter(static fn(?string $a) => null),
             Result::success('xyztest123'),
@@ -275,117 +268,37 @@ final class RightTrimTest extends TestCase
         $this->assertSame('xyztest123', $value);
     }
 
-    public function testRangeInMultibyteMode(): void
-    {
+    #[TestWith(["\u{430}..\u{44F}", "\u{436}Hello\u{44E}", "\u{436}Hello", null])]
+    #[TestWith(["\u{4E00}..\u{5341}", "\u{4E00}test\u{5341}", "\u{4E00}test", null])]
+    #[TestWith(['..z', '.zXz.', '.zX', "Invalid '..'-range, no character to the left of '..'"])]
+    #[TestWith(['a..', 'aXa..', 'aX', "Invalid '..'-range, no character to the right of '..'"])]
+    #[TestWith(['c..a', 'caXcac', 'caX', "Invalid '..'-range, '..'-range needs to be incrementing"])]
+    #[TestWith(['a..b..c', 'abXcba..b..c', 'abX', "Invalid '..'-range"])]
+    public function testRangeInMultibyteMode(
+        string $characters,
+        string $value,
+        string $expectedResult,
+        ?string $expectedWarning,
+    ): void {
         $resolver = new RightTrimResolver(multibyte: true);
         $context = new ParameterAttributeResolveContext(
             TestHelper::getFirstParameter(static fn(?string $a) => null),
-            Result::success("\u{436}Hello\u{44E}"),
+            Result::success($value),
             new ArrayData(),
             new Hydrator(),
         );
 
-        TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
-            $value = $resolver->getParameterValue(new RightTrim("\u{430}..\u{44F}"), $context)->getValue();
-        });
-
-        $this->assertSame("\u{436}Hello", $value);
-    }
-
-    public function testCjkRangeInMultibyteMode(): void
-    {
-        $resolver = new RightTrimResolver(multibyte: true);
-        $context = new ParameterAttributeResolveContext(
-            TestHelper::getFirstParameter(static fn(?string $a) => null),
-            Result::success("\u{4E00}test\u{5341}"),
-            new ArrayData(),
-            new Hydrator(),
+        $errors = TestHelper::captureErrors(
+            static function () use ($resolver, $context, $characters, &$result): void {
+                $result = $resolver->getParameterValue(new RightTrim($characters), $context)->getValue();
+            },
         );
 
-        TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
-            $value = $resolver->getParameterValue(new RightTrim("\u{4E00}..\u{5341}"), $context)->getValue();
-        });
-
-        $this->assertSame("\u{4E00}test", $value);
-    }
-
-    public function testInvalidRangeNoLeftCharacterInMultibyteMode(): void
-    {
-        $resolver = new RightTrimResolver(multibyte: true);
-        $context = new ParameterAttributeResolveContext(
-            TestHelper::getFirstParameter(static fn(?string $a) => null),
-            Result::success('.zXz.'),
-            new ArrayData(),
-            new Hydrator(),
-        );
-
-        $errors = TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
-            $value = $resolver->getParameterValue(new RightTrim('..z'), $context)->getValue();
-        });
-
-        $warnings = array_filter($errors, static fn(array $error): bool => $error[0] === E_USER_WARNING);
-        $this->assertCount(1, $warnings);
-        $this->assertSame("Invalid '..'-range, no character to the left of '..'", reset($warnings)[1]);
-        $this->assertSame('.zX', $value);
-    }
-
-    public function testInvalidRangeNoRightCharacterInMultibyteMode(): void
-    {
-        $resolver = new RightTrimResolver(multibyte: true);
-        $context = new ParameterAttributeResolveContext(
-            TestHelper::getFirstParameter(static fn(?string $a) => null),
-            Result::success('aXa..'),
-            new ArrayData(),
-            new Hydrator(),
-        );
-
-        $errors = TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
-            $value = $resolver->getParameterValue(new RightTrim('a..'), $context)->getValue();
-        });
-
-        $warnings = array_filter($errors, static fn(array $error): bool => $error[0] === E_USER_WARNING);
-        $this->assertCount(1, $warnings);
-        $this->assertSame("Invalid '..'-range, no character to the right of '..'", reset($warnings)[1]);
-        $this->assertSame('aX', $value);
-    }
-
-    public function testInvalidRangeNotIncrementingInMultibyteMode(): void
-    {
-        $resolver = new RightTrimResolver(multibyte: true);
-        $context = new ParameterAttributeResolveContext(
-            TestHelper::getFirstParameter(static fn(?string $a) => null),
-            Result::success('caXcac'),
-            new ArrayData(),
-            new Hydrator(),
-        );
-
-        $errors = TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
-            $value = $resolver->getParameterValue(new RightTrim('c..a'), $context)->getValue();
-        });
-
-        $warnings = array_filter($errors, static fn(array $error): bool => $error[0] === E_USER_WARNING);
-        $this->assertCount(1, $warnings);
-        $this->assertSame("Invalid '..'-range, '..'-range needs to be incrementing", reset($warnings)[1]);
-        $this->assertSame('caX', $value);
-    }
-
-    public function testInvalidRangeAmbiguousInMultibyteMode(): void
-    {
-        $resolver = new RightTrimResolver(multibyte: true);
-        $context = new ParameterAttributeResolveContext(
-            TestHelper::getFirstParameter(static fn(?string $a) => null),
-            Result::success('abXcba..b..c'),
-            new ArrayData(),
-            new Hydrator(),
-        );
-
-        $errors = TestHelper::captureErrors(static function () use ($resolver, $context, &$value): void {
-            $value = $resolver->getParameterValue(new RightTrim('a..b..c'), $context)->getValue();
-        });
-
-        $warnings = array_filter($errors, static fn(array $error): bool => $error[0] === E_USER_WARNING);
-        $this->assertCount(1, $warnings);
-        $this->assertSame("Invalid '..'-range", reset($warnings)[1]);
-        $this->assertSame('abX', $value);
+        if ($expectedWarning !== null) {
+            $warnings = array_filter($errors, static fn(array $error): bool => $error[0] === E_USER_WARNING);
+            $this->assertCount(1, $warnings);
+            $this->assertSame($expectedWarning, reset($warnings)[1]);
+        }
+        $this->assertSame($expectedResult, $result);
     }
 }

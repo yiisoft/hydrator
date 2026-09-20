@@ -79,7 +79,7 @@ final class ToArrayOfStringsTest extends TestCase
             },
         ];
         yield [
-            ["hello\u{2003}"],
+            ['hello'],
             " hello\u{2003} ",
             new class {
                 #[ToArrayOfStrings(trim: true)]

@@ -40,22 +40,24 @@ final class TrimCharacters
     }
 
     /**
-     * Checks that all `mb_*` functions used by multibyte mode are available, when {@see $multibyte} is `true`.
+     * Checks whether all `mb_*` functions used by multibyte mode are available.
      */
-    public static function checkMultibyteFunctionsExist(?bool $multibyte): void
+    public static function multibyteFunctionsExist(): bool
     {
-        if ($multibyte !== true) {
-            return;
-        }
-
-        self::$multibyteFunctionsExist ??= function_exists('mb_trim')
+        return self::$multibyteFunctionsExist ??= function_exists('mb_trim')
             && function_exists('mb_ltrim')
             && function_exists('mb_rtrim')
             && function_exists('mb_str_split')
             && function_exists('mb_ord')
             && function_exists('mb_chr');
+    }
 
-        if (self::$multibyteFunctionsExist) {
+    /**
+     * Checks that all `mb_*` functions used by multibyte mode are available, when {@see $multibyte} is `true`.
+     */
+    public static function checkMultibyteFunctionsExist(?bool $multibyte): void
+    {
+        if ($multibyte !== true || self::multibyteFunctionsExist()) {
             return;
         }
 

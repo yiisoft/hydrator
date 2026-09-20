@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Attribute\Parameter\TrimCharacters;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
@@ -13,10 +14,12 @@ use const E_USER_WARNING;
 
 final class TrimCharactersTest extends TestCase
 {
-    public function testCheckDeprecatedRangesTriggersNoticeWhenCharactersContainRange(): void
+    #[TestWith(['a..z'])]
+    #[TestWith(['a..'])]
+    public function testCheckDeprecatedRangesTriggersNotice(string $characters): void
     {
-        $errors = TestHelper::captureErrors(static function (): void {
-            TrimCharacters::checkDeprecatedRanges('a..z');
+        $errors = TestHelper::captureErrors(static function () use ($characters): void {
+            TrimCharacters::checkDeprecatedRanges($characters);
         });
 
         $this->assertCount(1, $errors);
@@ -27,36 +30,25 @@ final class TrimCharactersTest extends TestCase
         );
     }
 
-    public function testCheckDeprecatedRangesTriggersNoticeForMalformedRange(): void
+    #[TestWith([null])]
+    #[TestWith(['abc'])]
+    #[TestWith(['.'])]
+    #[TestWith(['a.b'])]
+    public function testCheckDeprecatedRangesIsSilentForNullOrDotFreeOrSingleDotCharacters(?string $characters): void
     {
-        $errors = TestHelper::captureErrors(static function (): void {
-            TrimCharacters::checkDeprecatedRanges('a..');
-        });
-
-        $this->assertCount(1, $errors);
-        $this->assertSame(E_USER_DEPRECATED, $errors[0][0]);
-    }
-
-    public function testCheckDeprecatedRangesIsSilentForNullOrDotFreeOrSingleDotCharacters(): void
-    {
-        $errors = TestHelper::captureErrors(static function (): void {
-            TrimCharacters::checkDeprecatedRanges(null);
-            TrimCharacters::checkDeprecatedRanges('abc');
-            TrimCharacters::checkDeprecatedRanges('.');
-            TrimCharacters::checkDeprecatedRanges('a.b');
+        $errors = TestHelper::captureErrors(static function () use ($characters): void {
+            TrimCharacters::checkDeprecatedRanges($characters);
         });
 
         $this->assertSame([], $errors);
     }
 
-    public function testExpandRangesExpandsBasicRange(): void
+    #[TestWith(['a..z', 'abcdefghijklmnopqrstuvwxyz'])]
+    #[TestWith(['a..a', 'a'])]
+    #[TestWith(["\u{430}..\u{433}", "\u{430}\u{431}\u{432}\u{433}"])]
+    public function testExpandRangesExpandsRange(string $characters, string $expected): void
     {
-        $this->assertSame('abcdefghijklmnopqrstuvwxyz', TrimCharacters::expandRanges('a..z', null));
-    }
-
-    public function testExpandRangesExpandsSingleCharacterRange(): void
-    {
-        $this->assertSame('a', TrimCharacters::expandRanges('a..a', null));
+        $this->assertSame($expected, TrimCharacters::expandRanges($characters, null));
     }
 
     public function testExpandRangesTreatsSingleDotAsOrdinaryCharacter(): void
@@ -71,14 +63,6 @@ final class TrimCharactersTest extends TestCase
         $this->assertSame('a.b', $twoChars);
     }
 
-    public function testExpandRangesExpandsMultibyteRange(): void
-    {
-        $this->assertSame(
-            "\u{430}\u{431}\u{432}\u{433}",
-            TrimCharacters::expandRanges("\u{430}..\u{433}", null),
-        );
-    }
-
     public function testExpandRangesSkipsCodePointsNotRepresentableInTargetEncoding(): void
     {
         $start = mb_chr(0x40C, 'Windows-1251');
@@ -89,63 +73,24 @@ final class TrimCharactersTest extends TestCase
         $this->assertSame(67, mb_strlen($result, 'Windows-1251'));
     }
 
-    public function testExpandRangesTreatsCharacterWithInvalidByteSequenceLiterally(): void
-    {
-        $errors = TestHelper::captureErrors(static function () use (&$result): void {
-            $result = TrimCharacters::expandRanges("\xFF..z", 'UTF-8');
+    #[TestWith(["\xFF..z", 'UTF-8', "Invalid '..'-range", "\xFF.z"])]
+    #[TestWith(['..z', null, "Invalid '..'-range, no character to the left of '..'", '.z'])]
+    #[TestWith(['a..', null, "Invalid '..'-range, no character to the right of '..'", 'a.'])]
+    #[TestWith(['c..a', null, "Invalid '..'-range, '..'-range needs to be incrementing", 'c.a'])]
+    #[TestWith(['a..b..c', null, "Invalid '..'-range", 'ab.c'])]
+    public function testExpandRangesInvalidRange(
+        string $characters,
+        ?string $encoding,
+        string $expectedWarning,
+        string $expectedResult,
+    ): void {
+        $errors = TestHelper::captureErrors(static function () use ($characters, $encoding, &$result): void {
+            $result = TrimCharacters::expandRanges($characters, $encoding);
         });
 
         $this->assertCount(1, $errors);
         $this->assertSame(E_USER_WARNING, $errors[0][0]);
-        $this->assertSame("Invalid '..'-range", $errors[0][1]);
-        $this->assertSame("\xFF.z", $result);
-    }
-
-    public function testExpandRangesInvalidRangeNoLeftCharacter(): void
-    {
-        $errors = TestHelper::captureErrors(static function () use (&$result): void {
-            $result = TrimCharacters::expandRanges('..z', null);
-        });
-
-        $this->assertCount(1, $errors);
-        $this->assertSame(E_USER_WARNING, $errors[0][0]);
-        $this->assertSame("Invalid '..'-range, no character to the left of '..'", $errors[0][1]);
-        $this->assertSame('.z', $result);
-    }
-
-    public function testExpandRangesInvalidRangeNoRightCharacter(): void
-    {
-        $errors = TestHelper::captureErrors(static function () use (&$result): void {
-            $result = TrimCharacters::expandRanges('a..', null);
-        });
-
-        $this->assertCount(1, $errors);
-        $this->assertSame(E_USER_WARNING, $errors[0][0]);
-        $this->assertSame("Invalid '..'-range, no character to the right of '..'", $errors[0][1]);
-        $this->assertSame('a.', $result);
-    }
-
-    public function testExpandRangesInvalidRangeNotIncrementing(): void
-    {
-        $errors = TestHelper::captureErrors(static function () use (&$result): void {
-            $result = TrimCharacters::expandRanges('c..a', null);
-        });
-
-        $this->assertCount(1, $errors);
-        $this->assertSame(E_USER_WARNING, $errors[0][0]);
-        $this->assertSame("Invalid '..'-range, '..'-range needs to be incrementing", $errors[0][1]);
-        $this->assertSame('c.a', $result);
-    }
-
-    public function testExpandRangesInvalidRangeAmbiguous(): void
-    {
-        $errors = TestHelper::captureErrors(static function () use (&$result): void {
-            $result = TrimCharacters::expandRanges('a..b..c', null);
-        });
-
-        $this->assertCount(1, $errors);
-        $this->assertSame(E_USER_WARNING, $errors[0][0]);
-        $this->assertSame("Invalid '..'-range", $errors[0][1]);
-        $this->assertSame('ab.c', $result);
+        $this->assertSame($expectedWarning, $errors[0][1]);
+        $this->assertSame($expectedResult, $result);
     }
 }

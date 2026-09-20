@@ -19,12 +19,13 @@ final class TrimResolver implements ParameterAttributeResolverInterface
      * @param string|null $characters The list of characters to strip when it is not specified in the attribute.
      * With `..` you can specify a range of characters, both in the default and in the multibyte mode. This syntax
      * is deprecated and will be removed in the next major version.
-     * @param bool $multibyte Whether to use multibyte-aware trimming when it is not specified in the attribute.
+     * @param bool|null $multibyte Whether to use multibyte-aware trimming when it is not specified in the
+     * attribute. `null` means auto-detect: multibyte mode is used when the required `mb_*` functions are available.
      * @param string|null $encoding The encoding to use in multibyte mode when it is not specified in the attribute.
      */
     public function __construct(
         private readonly ?string $characters = null,
-        private readonly bool $multibyte = false,
+        private readonly ?bool $multibyte = null,
         private readonly ?string $encoding = null,
     ) {
         TrimCharacters::checkDeprecatedRanges($characters);
@@ -49,7 +50,7 @@ final class TrimResolver implements ParameterAttributeResolverInterface
         }
 
         $characters = $attribute->characters ?? $this->characters;
-        $multibyte = $attribute->multibyte ?? $this->multibyte;
+        $multibyte = $attribute->multibyte ?? $this->multibyte ?? TrimCharacters::multibyteFunctionsExist();
         $encoding = $attribute->encoding ?? $this->encoding;
 
         if (!$multibyte) {
