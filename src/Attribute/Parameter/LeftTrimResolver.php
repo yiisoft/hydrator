@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
-use LogicException;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
-use function function_exists;
 use function is_string;
 
 /**
@@ -30,6 +28,7 @@ final class LeftTrimResolver implements ParameterAttributeResolverInterface
         private readonly ?string $encoding = null,
     ) {
         TrimCharacters::checkDeprecatedRanges($characters);
+        TrimCharacters::checkMultibyteFunctionsExist($multibyte);
     }
 
     public function getParameterValue(
@@ -57,14 +56,6 @@ final class LeftTrimResolver implements ParameterAttributeResolverInterface
             return Result::success(
                 $characters === null ? ltrim($resolvedValue) : ltrim($resolvedValue, $characters),
             );
-        }
-
-        if (!function_exists('mb_ltrim')) {
-            // @codeCoverageIgnoreStart
-            throw new LogicException(
-                'The "multibyte" parameter requires "mb_ltrim()" function that is provided by "mbstring" extension since PHP 8.4 or by "symfony/polyfill-mbstring" package.',
-            );
-            // @codeCoverageIgnoreEnd
         }
 
         return Result::success(

@@ -29,7 +29,9 @@ final class ToArrayOfStrings implements ParameterAttributeInterface
         public readonly string $separator = '\R',
         public readonly ?bool $multibyte = null,
         public readonly ?string $encoding = null,
-    ) {}
+    ) {
+        TrimCharacters::checkMultibyteFunctionsExist($multibyte);
+    }
 
     public function getResolver(): string
     {

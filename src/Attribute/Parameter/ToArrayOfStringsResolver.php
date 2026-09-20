@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
-use LogicException;
 use Stringable;
 use Traversable;
 use Yiisoft\Hydrator\AttributeHandling\Exception\UnexpectedAttributeException;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributeResolveContext;
 use Yiisoft\Hydrator\Result;
 
-use function function_exists;
 use function is_scalar;
 
 final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterface
@@ -25,7 +23,9 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
     public function __construct(
         private readonly bool $multibyte = false,
         private readonly ?string $encoding = null,
-    ) {}
+    ) {
+        TrimCharacters::checkMultibyteFunctionsExist($multibyte);
+    }
 
     public function getParameterValue(
         ParameterAttributeInterface $attribute,
@@ -59,14 +59,6 @@ final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterf
         if ($attribute->trim) {
             $multibyte = $attribute->multibyte ?? $this->multibyte;
             $encoding = $attribute->encoding ?? $this->encoding;
-
-            if ($multibyte && !function_exists('mb_trim')) {
-                // @codeCoverageIgnoreStart
-                throw new LogicException(
-                    'The "multibyte" parameter requires "mb_trim()" function that is provided by "mbstring" extension since PHP 8.4 or by "symfony/polyfill-mbstring" package.',
-                );
-                // @codeCoverageIgnoreEnd
-            }
 
             $array = array_map(
                 $multibyte ? static fn(string $value): string => mb_trim($value, null, $encoding) : trim(...),

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Attribute\Parameter;
 
+use LogicException;
+
 use function count;
+use function function_exists;
 use function mb_chr;
 use function mb_ord;
 use function mb_str_split;
@@ -20,14 +23,48 @@ use const E_USER_WARNING;
  */
 final class TrimCharacters
 {
+    private static ?bool $multibyteFunctionsExist = null;
+
     public static function checkDeprecatedRanges(?string $characters): void
     {
-        if ($characters !== null && str_contains($characters, '..')) {
+        if ($characters === null) {
+            return;
+        }
+
+        if (str_contains($characters, '..')) {
             trigger_error(
                 'The ".." range syntax of the "characters" parameter is deprecated and will be removed in the next major version.',
                 E_USER_DEPRECATED,
             );
         }
+    }
+
+    /**
+     * Checks that all `mb_*` functions used by multibyte mode are available, when {@see $multibyte} is `true`.
+     */
+    public static function checkMultibyteFunctionsExist(?bool $multibyte): void
+    {
+        if ($multibyte !== true) {
+            return;
+        }
+
+        self::$multibyteFunctionsExist ??= function_exists('mb_trim')
+            && function_exists('mb_ltrim')
+            && function_exists('mb_rtrim')
+            && function_exists('mb_str_split')
+            && function_exists('mb_ord')
+            && function_exists('mb_chr');
+
+        if (self::$multibyteFunctionsExist) {
+            return;
+        }
+
+        // @codeCoverageIgnoreStart
+        throw new LogicException(
+            'The "multibyte" parameter requires "mbstring" extension since PHP 8.4 or "symfony/polyfill-mbstring"'
+            . ' package on earlier versions.',
+        );
+        // @codeCoverageIgnoreEnd
     }
 
     /**
