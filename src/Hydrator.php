@@ -87,6 +87,9 @@ final class Hydrator implements HydratorInterface
         );
     }
 
+    /**
+     * @psalm-suppress InvalidReturnType, InvalidReturnStatement See https://github.com/vimeo/psalm/issues/12026
+     */
     public function create(string $class, array|DataInterface $data = []): object
     {
         if (!class_exists($class)) {
