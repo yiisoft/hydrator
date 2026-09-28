@@ -38,9 +38,6 @@ final class CollectionResolver implements ParameterAttributeResolverInterface
         }
 
         if (is_a($attribute->className, BackedEnum::class, true)) {
-            /**
-             * @psalm-suppress ArgumentTypeCoercion Because class name is backed enumeration name.
-             */
             $collection = $this->createCollectionOfBackedEnums($resolvedValue, $attribute->className);
         } else {
             $collection = $this->createCollectionOfObjects(

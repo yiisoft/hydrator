@@ -21,9 +21,7 @@ final class ReflectionObjectFactory implements ObjectFactoryInterface
      * @throws NonPublicConstructorException
      * @throws WrongConstructorArgumentsCountException
      *
-     * @psalm-template T of object
-     * @psalm-param ReflectionClass<T> $reflectionClass
-     * @psalm-return T
+     * @inheritdoc
      */
     public function create(ReflectionClass $reflectionClass, array $constructorArguments): object
     {

@@ -9,6 +9,7 @@ on:
       - 'phpunit.xml.dist'
       - 'infection.json.dist'
       - 'composer.json'
+      - 'tools/infection/composer.json'
       - '.github/workflows/mutation.yml'
   push:
     branches: ['master']
