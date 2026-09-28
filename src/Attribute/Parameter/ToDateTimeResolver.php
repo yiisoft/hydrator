@@ -149,9 +149,6 @@ final class ToDateTimeResolver implements ParameterAttributeResolverInterface
         ?DateTimeZone $timeZone,
         bool $shouldBeMutable,
     ): DateTimeInterface {
-        /**
-         * @psalm-suppress InvalidNamedArgument Psalm bug: https://github.com/vimeo/psalm/issues/10872
-         */
         return $shouldBeMutable
             ? (new DateTime(timezone: $timeZone))->setTimestamp($timestamp)
             : (new DateTimeImmutable(timezone: $timeZone))->setTimestamp($timestamp);
