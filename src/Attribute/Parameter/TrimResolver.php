@@ -27,7 +27,6 @@ final class TrimResolver implements ParameterAttributeResolverInterface
         private readonly bool $multibyte = false,
         private readonly ?string $encoding = null,
     ) {
-        TrimCharacters::checkDeprecatedRanges($characters);
         TrimCharacters::checkMultibyteFunctionsExist($multibyte);
     }
 
@@ -51,6 +50,8 @@ final class TrimResolver implements ParameterAttributeResolverInterface
         $characters = $attribute->characters ?? $this->characters;
         $multibyte = $attribute->multibyte ?? $this->multibyte;
         $encoding = $attribute->encoding ?? $this->encoding;
+
+        TrimCharacters::checkDeprecatedRanges($characters, $multibyte, $encoding);
 
         if (!$multibyte) {
             return Result::success(

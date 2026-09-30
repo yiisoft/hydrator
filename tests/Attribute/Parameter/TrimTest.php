@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
-use Closure;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
@@ -220,14 +219,32 @@ final class TrimTest extends TestCase
 
     public static function dataDeprecationNoticeForRangeCharacters(): iterable
     {
-        yield 'attribute' => [static fn(): Trim => new Trim('a..z')];
-        yield 'resolver' => [static fn(): TrimResolver => new TrimResolver(characters: 'a..z')];
+        yield 'attribute' => [new Trim('a..z'), new TrimResolver()];
+        yield 'resolver' => [new Trim(), new TrimResolver(characters: 'a..z')];
+        yield 'multibyte' => [new Trim('a..z', multibyte: true), new TrimResolver()];
+        yield 'multibyte-utf-16' => [
+            new Trim(mb_convert_encoding('a..z', 'UTF-16LE', 'UTF-8'), multibyte: true, encoding: 'UTF-16LE'),
+            new TrimResolver(),
+        ];
+        yield 'multibyte-utf-16-from-resolver' => [
+            new Trim(mb_convert_encoding('a..z', 'UTF-16BE', 'UTF-8')),
+            new TrimResolver(multibyte: true, encoding: 'UTF-16BE'),
+        ];
     }
 
     #[DataProvider('dataDeprecationNoticeForRangeCharacters')]
-    public function testDeprecationNoticeForRangeCharacters(Closure $create): void
+    public function testDeprecationNoticeForRangeCharacters(Trim $attribute, TrimResolver $resolver): void
     {
-        $errors = TestHelper::captureErrors($create);
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success(''),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        $errors = TestHelper::captureErrors(static function () use ($resolver, $attribute, $context): void {
+            $resolver->getParameterValue($attribute, $context);
+        });
 
         $this->assertCount(1, $errors);
         $this->assertSame(E_USER_DEPRECATED, $errors[0][0]);
@@ -237,15 +254,44 @@ final class TrimTest extends TestCase
         );
     }
 
-    public function testNoDeprecationNoticeForSingleDotOrNullCharacters(): void
+    public static function dataNoDeprecationNotice(): iterable
+    {
+        yield 'single-dot' => [new Trim('a.b')];
+        yield 'dot' => [new Trim('.')];
+        yield 'null' => [new Trim(null)];
+        yield 'multibyte-single-dot' => [new Trim('a.b', multibyte: true)];
+        yield 'multibyte-utf-16-dot-bytes' => [
+            new Trim(
+                mb_convert_encoding("\u{2E41}\u{412E}", 'UTF-16LE', 'UTF-8'),
+                multibyte: true,
+                encoding: 'UTF-16LE',
+            ),
+        ];
+    }
+
+    #[DataProvider('dataNoDeprecationNotice')]
+    public function testNoDeprecationNotice(Trim $attribute): void
+    {
+        $resolver = new TrimResolver();
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success('test'),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        $errors = TestHelper::captureErrors(static function () use ($resolver, $attribute, $context): void {
+            $resolver->getParameterValue($attribute, $context);
+        });
+
+        $this->assertSame([], $errors);
+    }
+
+    public function testNoDeprecationNoticeOnCreate(): void
     {
         $errors = TestHelper::captureErrors(static function (): void {
-            new Trim('a.b');
-            new Trim('.');
-            new Trim(null);
-            new TrimResolver(characters: 'a.b');
-            new TrimResolver(characters: '.');
-            new TrimResolver(characters: null);
+            new Trim('a..z');
+            new TrimResolver(characters: 'a..z');
         });
 
         $this->assertSame([], $errors);

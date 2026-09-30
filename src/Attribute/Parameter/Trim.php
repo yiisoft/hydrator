@@ -31,7 +31,6 @@ final class Trim implements ParameterAttributeInterface
         public readonly ?bool $multibyte = null,
         public readonly ?string $encoding = null,
     ) {
-        TrimCharacters::checkDeprecatedRanges($characters);
         TrimCharacters::checkMultibyteFunctionsExist($multibyte);
     }
 

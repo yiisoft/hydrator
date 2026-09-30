@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\Attribute\Parameter;
 
-use Closure;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
@@ -220,14 +219,32 @@ final class LeftTrimTest extends TestCase
 
     public static function dataDeprecationNoticeForRangeCharacters(): iterable
     {
-        yield 'attribute' => [static fn(): LeftTrim => new LeftTrim('a..z')];
-        yield 'resolver' => [static fn(): LeftTrimResolver => new LeftTrimResolver(characters: 'a..z')];
+        yield 'attribute' => [new LeftTrim('a..z'), new LeftTrimResolver()];
+        yield 'resolver' => [new LeftTrim(), new LeftTrimResolver(characters: 'a..z')];
+        yield 'multibyte' => [new LeftTrim('a..z', multibyte: true), new LeftTrimResolver()];
+        yield 'multibyte-utf-16' => [
+            new LeftTrim(mb_convert_encoding('a..z', 'UTF-16LE', 'UTF-8'), multibyte: true, encoding: 'UTF-16LE'),
+            new LeftTrimResolver(),
+        ];
+        yield 'multibyte-utf-16-from-resolver' => [
+            new LeftTrim(mb_convert_encoding('a..z', 'UTF-16BE', 'UTF-8')),
+            new LeftTrimResolver(multibyte: true, encoding: 'UTF-16BE'),
+        ];
     }
 
     #[DataProvider('dataDeprecationNoticeForRangeCharacters')]
-    public function testDeprecationNoticeForRangeCharacters(Closure $create): void
+    public function testDeprecationNoticeForRangeCharacters(LeftTrim $attribute, LeftTrimResolver $resolver): void
     {
-        $errors = TestHelper::captureErrors($create);
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success(''),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        $errors = TestHelper::captureErrors(static function () use ($resolver, $attribute, $context): void {
+            $resolver->getParameterValue($attribute, $context);
+        });
 
         $this->assertCount(1, $errors);
         $this->assertSame(E_USER_DEPRECATED, $errors[0][0]);
@@ -237,15 +254,44 @@ final class LeftTrimTest extends TestCase
         );
     }
 
-    public function testNoDeprecationNoticeForSingleDotOrNullCharacters(): void
+    public static function dataNoDeprecationNotice(): iterable
+    {
+        yield 'single-dot' => [new LeftTrim('a.b')];
+        yield 'dot' => [new LeftTrim('.')];
+        yield 'null' => [new LeftTrim(null)];
+        yield 'multibyte-single-dot' => [new LeftTrim('a.b', multibyte: true)];
+        yield 'multibyte-utf-16-dot-bytes' => [
+            new LeftTrim(
+                mb_convert_encoding("\u{2E41}\u{412E}", 'UTF-16LE', 'UTF-8'),
+                multibyte: true,
+                encoding: 'UTF-16LE',
+            ),
+        ];
+    }
+
+    #[DataProvider('dataNoDeprecationNotice')]
+    public function testNoDeprecationNotice(LeftTrim $attribute): void
+    {
+        $resolver = new LeftTrimResolver();
+        $context = new ParameterAttributeResolveContext(
+            TestHelper::getFirstParameter(static fn(?string $a) => null),
+            Result::success('test'),
+            new ArrayData(),
+            new Hydrator(),
+        );
+
+        $errors = TestHelper::captureErrors(static function () use ($resolver, $attribute, $context): void {
+            $resolver->getParameterValue($attribute, $context);
+        });
+
+        $this->assertSame([], $errors);
+    }
+
+    public function testNoDeprecationNoticeOnCreate(): void
     {
         $errors = TestHelper::captureErrors(static function (): void {
-            new LeftTrim('a.b');
-            new LeftTrim('.');
-            new LeftTrim(null);
-            new LeftTrimResolver(characters: 'a.b');
-            new LeftTrimResolver(characters: '.');
-            new LeftTrimResolver(characters: null);
+            new LeftTrim('a..z');
+            new LeftTrimResolver(characters: 'a..z');
         });
 
         $this->assertSame([], $errors);
