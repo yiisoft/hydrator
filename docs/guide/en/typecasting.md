@@ -185,9 +185,10 @@ since PHP 8.4. To use it with an earlier PHP version, install
 [symfony/polyfill-mbstring](https://github.com/symfony/polyfill-mbstring) package. The `encoding` parameter selects
 the encoding used in multibyte mode; `null` (default) means using `mb_internal_encoding()`.
 
-With `..` you can specify a range of characters in the `characters` parameter, for example, `а..я`. It works both in
-the default and in the multibyte mode. This syntax is deprecated and will be removed in the next major version, so
-avoid it in new code.
+With `..` you can specify a range of characters in the `characters` parameter, for example, `a..z`. It works both in
+the default and in the multibyte mode, but in the default mode ranges are byte-based, so a range of non-ASCII
+characters, such as `а..я`, works correctly only in the multibyte mode. This syntax is deprecated and will be removed
+in the next major version, so avoid it in new code.
 
 ### `ToDatetime`
 

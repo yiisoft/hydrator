@@ -38,9 +38,9 @@ final class RightTrimTest extends TestCase
         yield [' test ', new RightTrim('t', multibyte: true), ' test '];
         yield ["\u{430}b", new RightTrim("\u{430}\u{44F}", multibyte: true), "\u{430}b\u{44F}"];
 
-        $characters = iconv('UTF-8', 'Windows-1251', 'а');
-        $value = iconv('UTF-8', 'Windows-1251', 'атеста');
-        $expected = iconv('UTF-8', 'Windows-1251', 'атест');
+        $characters = mb_convert_encoding('а', 'Windows-1251', 'UTF-8');
+        $value = mb_convert_encoding('атеста', 'Windows-1251', 'UTF-8');
+        $expected = mb_convert_encoding('атест', 'Windows-1251', 'UTF-8');
         yield [$expected, new RightTrim($characters, multibyte: true, encoding: 'Windows-1251'), $value];
     }
 
@@ -177,9 +177,9 @@ final class RightTrimTest extends TestCase
 
     public function testDefaultEncodingFromResolver(): void
     {
-        $characters = iconv('UTF-8', 'Windows-1251', 'а');
-        $value = iconv('UTF-8', 'Windows-1251', 'атеста');
-        $expected = iconv('UTF-8', 'Windows-1251', 'атест');
+        $characters = mb_convert_encoding('а', 'Windows-1251', 'UTF-8');
+        $value = mb_convert_encoding('атеста', 'Windows-1251', 'UTF-8');
+        $expected = mb_convert_encoding('атест', 'Windows-1251', 'UTF-8');
 
         $hydrator = new Hydrator(
             attributeResolverFactory: new ContainerAttributeResolverFactory(
@@ -200,9 +200,9 @@ final class RightTrimTest extends TestCase
 
     public function testOverrideEncoding(): void
     {
-        $characters = iconv('UTF-8', 'Windows-1251', 'а');
-        $value = iconv('UTF-8', 'Windows-1251', 'атеста');
-        $expected = iconv('UTF-8', 'Windows-1251', 'атест');
+        $characters = mb_convert_encoding('а', 'Windows-1251', 'UTF-8');
+        $value = mb_convert_encoding('атеста', 'Windows-1251', 'UTF-8');
+        $expected = mb_convert_encoding('атест', 'Windows-1251', 'UTF-8');
 
         $resolver = new RightTrimResolver(multibyte: true, encoding: 'UTF-8');
         $context = new ParameterAttributeResolveContext(

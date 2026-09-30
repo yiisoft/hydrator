@@ -38,9 +38,9 @@ final class TrimTest extends TestCase
         yield [' test ', new Trim('t', multibyte: true), ' test '];
         yield ['b', new Trim("\u{430}\u{44F}", multibyte: true), "\u{430}b\u{44F}"];
 
-        $characters = iconv('UTF-8', 'Windows-1251', 'а');
-        $value = iconv('UTF-8', 'Windows-1251', 'атеста');
-        $expected = iconv('UTF-8', 'Windows-1251', 'тест');
+        $characters = mb_convert_encoding('а', 'Windows-1251', 'UTF-8');
+        $value = mb_convert_encoding('атеста', 'Windows-1251', 'UTF-8');
+        $expected = mb_convert_encoding('тест', 'Windows-1251', 'UTF-8');
         yield [$expected, new Trim($characters, multibyte: true, encoding: 'Windows-1251'), $value];
     }
 
@@ -177,9 +177,9 @@ final class TrimTest extends TestCase
 
     public function testDefaultEncodingFromResolver(): void
     {
-        $characters = iconv('UTF-8', 'Windows-1251', 'а');
-        $value = iconv('UTF-8', 'Windows-1251', 'атеста');
-        $expected = iconv('UTF-8', 'Windows-1251', 'тест');
+        $characters = mb_convert_encoding('а', 'Windows-1251', 'UTF-8');
+        $value = mb_convert_encoding('атеста', 'Windows-1251', 'UTF-8');
+        $expected = mb_convert_encoding('тест', 'Windows-1251', 'UTF-8');
 
         $hydrator = new Hydrator(
             attributeResolverFactory: new ContainerAttributeResolverFactory(
@@ -200,9 +200,9 @@ final class TrimTest extends TestCase
 
     public function testOverrideEncoding(): void
     {
-        $characters = iconv('UTF-8', 'Windows-1251', 'а');
-        $value = iconv('UTF-8', 'Windows-1251', 'атеста');
-        $expected = iconv('UTF-8', 'Windows-1251', 'тест');
+        $characters = mb_convert_encoding('а', 'Windows-1251', 'UTF-8');
+        $value = mb_convert_encoding('атеста', 'Windows-1251', 'UTF-8');
+        $expected = mb_convert_encoding('тест', 'Windows-1251', 'UTF-8');
 
         $resolver = new TrimResolver(multibyte: true, encoding: 'UTF-8');
         $context = new ParameterAttributeResolveContext(

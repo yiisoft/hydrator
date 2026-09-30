@@ -259,8 +259,8 @@ final class ToArrayOfStringsTest extends TestCase
 
     public function testAttributeEncodingOverridesResolverDefault(): void
     {
-        $value = iconv('UTF-8', 'Windows-1251', "  привет  ");
-        $expected = iconv('UTF-8', 'Windows-1251', 'привет');
+        $value = mb_convert_encoding("  привет  ", 'Windows-1251', 'UTF-8');
+        $expected = mb_convert_encoding('привет', 'Windows-1251', 'UTF-8');
 
         $hydrator = new Hydrator(
             attributeResolverFactory: new ContainerAttributeResolverFactory(

@@ -8,6 +8,12 @@ use Attribute;
 
 /**
  * Casts the resolved value to array of strings.
+ *
+ * In multibyte mode, trimming strips Unicode whitespace characters, such as `U+00A0` (no-break space), as well.
+ * It requires the `mb_trim()` function provided by the `mbstring` PHP extension since PHP 8.4, or by the
+ * `symfony/polyfill-mbstring` package on earlier versions.
+ *
+ * @see https://www.php.net/manual/function.mb-trim.php
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
 final class ToArrayOfStrings implements ParameterAttributeInterface

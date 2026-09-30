@@ -12,6 +12,9 @@ use Yiisoft\Hydrator\Result;
 
 use function is_scalar;
 
+/**
+ * Resolver for {@see ToArrayOfStrings} attribute.
+ */
 final class ToArrayOfStringsResolver implements ParameterAttributeResolverInterface
 {
     /**
