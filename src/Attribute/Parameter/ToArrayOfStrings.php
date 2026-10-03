@@ -8,6 +8,12 @@ use Attribute;
 
 /**
  * Casts the resolved value to array of strings.
+ *
+ * In multibyte mode, trimming strips Unicode whitespace characters, such as `U+00A0` (no-break space), as well.
+ * It requires the `mb_trim()` function provided by the `mbstring` PHP extension since PHP 8.4, or by the
+ * `symfony/polyfill-mbstring` package on earlier versions.
+ *
+ * @see https://www.php.net/manual/function.mb-trim.php
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
 final class ToArrayOfStrings implements ParameterAttributeInterface
@@ -18,13 +24,20 @@ final class ToArrayOfStrings implements ParameterAttributeInterface
      * @param bool $splitResolvedValue Split non-array resolved value to array of strings by {@see $separator}.
      * @param string $separator The boundary string. It is a part of regular expression
      * so should be taken into account or properly escaped with {@see preg_quote()}.
+     * @param bool|null $multibyte Whether to use multibyte-aware trimming when {@see $trim} is enabled. `null`
+     * means using the resolver default.
+     * @param string|null $encoding The encoding to use in multibyte mode. `null` means using the resolver default.
      */
     public function __construct(
         public readonly bool $trim = false,
         public readonly bool $removeEmpty = false,
         public readonly bool $splitResolvedValue = true,
         public readonly string $separator = '\R',
-    ) {}
+        public readonly ?bool $multibyte = null,
+        public readonly ?string $encoding = null,
+    ) {
+        TrimCharacters::checkMultibyteFunctionsExist($multibyte);
+    }
 
     public function getResolver(): string
     {
