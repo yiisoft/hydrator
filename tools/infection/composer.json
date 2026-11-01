@@ -1,6 +1,6 @@
 {
     "require-dev": {
-        "roave/infection-static-analysis-plugin": "^1.35"
+        "infection/infection": "^0.29.8 || ^0.35.8"
     },
     "config": {
         "allow-plugins": {
