@@ -6,6 +6,7 @@ namespace Yiisoft\Hydrator\ObjectFactory;
 
 use ReflectionClass;
 use Yiisoft\Hydrator\Exception\AbstractClassException;
+use Yiisoft\Hydrator\Exception\EnumException;
 use Yiisoft\Hydrator\Exception\NonPublicConstructorException;
 use Yiisoft\Hydrator\Exception\WrongConstructorArgumentsCountException;
 
@@ -18,6 +19,7 @@ final class ReflectionObjectFactory implements ObjectFactoryInterface
 {
     /**
      * @throws AbstractClassException
+     * @throws EnumException
      * @throws NonPublicConstructorException
      * @throws WrongConstructorArgumentsCountException
      *
@@ -25,6 +27,10 @@ final class ReflectionObjectFactory implements ObjectFactoryInterface
      */
     public function create(ReflectionClass $reflectionClass, array $constructorArguments): object
     {
+        if ($reflectionClass->isEnum()) {
+            throw new EnumException($reflectionClass);
+        }
+
         if ($reflectionClass->isAbstract()) {
             throw new AbstractClassException($reflectionClass);
         }

@@ -7,6 +7,7 @@ namespace Yiisoft\Hydrator\Tests\TypeCaster;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Hydrator\Result;
+use Yiisoft\Hydrator\Tests\Support\IntegerEnum;
 use Yiisoft\Hydrator\Tests\Support\PrivateConstructorObject;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
@@ -38,6 +39,11 @@ final class HydratorTypeCasterTest extends TestCase
                 ['string' => 'hello'],
                 TestHelper::createTypeCastContext(static fn(StringableObject $object) => null),
             ],
+            'array to enum' => [
+                Result::fail(),
+                [],
+                TestHelper::createTypeCastContext(static fn(IntegerEnum $value) => null),
+            ],
             'array to union type object|int' => [
                 Result::success(new StringableObject('hello')),
                 ['string' => 'hello'],
@@ -47,6 +53,11 @@ final class HydratorTypeCasterTest extends TestCase
                 Result::success(new StringableObject('hello')),
                 ['string' => 'hello'],
                 TestHelper::createTypeCastContext(static fn(int|StringableObject $object) => null),
+            ],
+            'array to union type enum|string' => [
+                Result::fail(),
+                [],
+                TestHelper::createTypeCastContext(static fn(IntegerEnum|string $value) => null),
             ],
             'array to non-instantiable object' => [
                 Result::fail(),
