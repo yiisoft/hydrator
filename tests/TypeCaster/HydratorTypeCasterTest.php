@@ -11,6 +11,7 @@ use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\ObjectFactory\ContainerObjectFactory;
 use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\Tests\Support\IntegerEnum;
+use Yiisoft\Hydrator\Tests\Support\InvalidDataResolverEnum;
 use Yiisoft\Hydrator\Tests\Support\PrivateConstructorObject;
 use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
@@ -64,6 +65,23 @@ final class HydratorTypeCasterTest extends TestCase
                 [],
                 TestHelper::createTypeCastContext(static fn(IntegerEnum|string $value) => null),
             ],
+            'array to union type enum|object' => [
+                Result::success(new StringableObject('hello')),
+                ['string' => 'hello'],
+                TestHelper::createTypeCastContext(static fn(IntegerEnum|StringableObject $value) => null),
+            ],
+            'array to enum with data attribute' => [
+                Result::fail(),
+                ['string' => 'hello'],
+                TestHelper::createTypeCastContext(static fn(InvalidDataResolverEnum $value) => null),
+            ],
+            'array to union type enum with data attribute|object' => [
+                Result::success(new StringableObject('hello')),
+                ['string' => 'hello'],
+                TestHelper::createTypeCastContext(
+                    static fn(InvalidDataResolverEnum|StringableObject $value) => null,
+                ),
+            ],
             'array to non-instantiable object' => [
                 Result::fail(),
                 ['string' => 'hello'],
@@ -86,13 +104,26 @@ final class HydratorTypeCasterTest extends TestCase
     public static function dataEnumWithContainerObjectFactory(): array
     {
         return [
-            'enum' => [static fn(IntegerEnum $value) => null],
-            'union type enum|string' => [static fn(IntegerEnum|string $value) => null],
+            'enum' => [
+                Result::fail(),
+                [],
+                static fn(IntegerEnum $value) => null,
+            ],
+            'union type enum|string' => [
+                Result::fail(),
+                [],
+                static fn(IntegerEnum|string $value) => null,
+            ],
+            'union type enum|object' => [
+                Result::success(new StringableObject('hello')),
+                ['string' => 'hello'],
+                static fn(IntegerEnum|StringableObject $value) => null,
+            ],
         ];
     }
 
     #[DataProvider('dataEnumWithContainerObjectFactory')]
-    public function testEnumWithContainerObjectFactory(Closure $closure): void
+    public function testEnumWithContainerObjectFactory(Result $expected, array $value, Closure $closure): void
     {
         $hydrator = new Hydrator(
             objectFactory: new ContainerObjectFactory(new Injector(new SimpleContainer())),
@@ -100,8 +131,9 @@ final class HydratorTypeCasterTest extends TestCase
         $context = new TypeCastContext($hydrator, TestHelper::getFirstParameter($closure));
         $typeCaster = new HydratorTypeCaster();
 
-        $result = $typeCaster->cast([], $context);
+        $result = $typeCaster->cast($value, $context);
 
-        $this->assertFalse($result->isResolved());
+        $this->assertSame($expected->isResolved(), $result->isResolved());
+        $this->assertEquals($expected->getValue(), $result->getValue());
     }
 }

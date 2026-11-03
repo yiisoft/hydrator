@@ -13,8 +13,9 @@ use Yiisoft\Hydrator\Exception\NonInstantiableException;
 interface ObjectFactoryInterface
 {
     /**
-     * Creates an object of the given class. Enums are never passed to this method, so implementations don't need to
-     * handle them.
+     * Creates an object of the given class.
+     *
+     * Callers must not pass enums to this method, so implementations aren't required to handle them.
      *
      * @throws NonInstantiableException
      *

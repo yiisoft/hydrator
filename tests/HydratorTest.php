@@ -47,6 +47,7 @@ use Yiisoft\Hydrator\Tests\Support\Classes\StaticClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\StringableCar;
 use Yiisoft\Hydrator\Tests\Support\Classes\TypeClass;
 use Yiisoft\Hydrator\Tests\Support\IntegerEnum;
+use Yiisoft\Hydrator\Tests\Support\InvalidDataResolverEnum;
 use Yiisoft\Hydrator\Tests\Support\PrivateConstructor;
 use Yiisoft\Hydrator\Tests\Support\ProtectedConstructor;
 use Yiisoft\Hydrator\Tests\Support\String42TypeCaster;
@@ -758,6 +759,17 @@ final class HydratorTest extends TestCase
         $this->expectException(EnumException::class);
         $this->expectExceptionMessage('"' . IntegerEnum::class . '" is not instantiable because it is an enum.');
         $hydrator->create(IntegerEnum::class);
+    }
+
+    public function testCreateEnumWithDataAttribute(): void
+    {
+        $hydrator = new Hydrator();
+
+        $this->expectException(EnumException::class);
+        $this->expectExceptionMessage(
+            '"' . InvalidDataResolverEnum::class . '" is not instantiable because it is an enum.',
+        );
+        $hydrator->create(InvalidDataResolverEnum::class);
     }
 
     public function testReadonlyObject(): void
