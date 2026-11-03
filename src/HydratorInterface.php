@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator;
 
+use Yiisoft\Hydrator\Exception\EnumException;
 use Yiisoft\Hydrator\Exception\NonInstantiableException;
 
 /**
@@ -27,6 +28,7 @@ interface HydratorInterface
      * @param string $class The class name to create.
      * @param array|DataInterface $data Data to hydrate an object with.
      *
+     * @throws EnumException If the class is an enum.
      * @throws NonInstantiableException
      * @return object Created and hydrated object.
      *

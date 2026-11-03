@@ -14,10 +14,13 @@ use Yiisoft\Hydrator\Attribute\Parameter\DiResolver;
 use Yiisoft\Hydrator\Attribute\Parameter\ToString;
 use Yiisoft\Hydrator\Attribute\Data\DataAttributeResolverInterface;
 use Yiisoft\Hydrator\Exception\AbstractClassException;
+use Yiisoft\Hydrator\Exception\EnumException;
 use Yiisoft\Hydrator\Exception\NonExistClassException;
 use Yiisoft\Hydrator\Exception\NonPublicConstructorException;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Hydrator\ObjectFactory\ContainerObjectFactory;
+use Yiisoft\Hydrator\ObjectFactory\ObjectFactoryInterface;
+use Yiisoft\Hydrator\ObjectFactory\ReflectionObjectFactory;
 use Yiisoft\Hydrator\Attribute\Parameter\ParameterAttributeResolverInterface;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\ContainerAttributeResolverFactory;
 use Yiisoft\Hydrator\Tests\Support\AbstractClass;
@@ -43,6 +46,7 @@ use Yiisoft\Hydrator\Tests\Support\Classes\SimpleClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\StaticClass;
 use Yiisoft\Hydrator\Tests\Support\Classes\StringableCar;
 use Yiisoft\Hydrator\Tests\Support\Classes\TypeClass;
+use Yiisoft\Hydrator\Tests\Support\IntegerEnum;
 use Yiisoft\Hydrator\Tests\Support\PrivateConstructor;
 use Yiisoft\Hydrator\Tests\Support\ProtectedConstructor;
 use Yiisoft\Hydrator\Tests\Support\String42TypeCaster;
@@ -736,6 +740,24 @@ final class HydratorTest extends TestCase
         $this->expectException(NonExistClassException::class);
         $this->expectExceptionMessage('Class "NonExistClass" not exist.');
         $hydrator->create('NonExistClass');
+    }
+
+    public static function dataCreateEnum(): array
+    {
+        return [
+            'reflection object factory' => [new ReflectionObjectFactory()],
+            'container object factory' => [new ContainerObjectFactory(new Injector(new SimpleContainer()))],
+        ];
+    }
+
+    #[DataProvider('dataCreateEnum')]
+    public function testCreateEnum(ObjectFactoryInterface $objectFactory): void
+    {
+        $hydrator = new Hydrator(objectFactory: $objectFactory);
+
+        $this->expectException(EnumException::class);
+        $this->expectExceptionMessage('"' . IntegerEnum::class . '" is not instantiable because it is an enum.');
+        $hydrator->create(IntegerEnum::class);
     }
 
     public function testReadonlyObject(): void

@@ -2,13 +2,14 @@
 
 ## 1.6.4 under development
 
-- Bug #139: Prevent `HydratorTypeCaster` from hydrating enums from array input (@viktorprogger)
 - Chg #131: Deprecate the `..` range syntax in the `characters` parameter of `Trim`, `LeftTrim` and `RightTrim`
   attributes (@vjik)
 - Enh #131: Add `multibyte` and `encoding` parameters to `Trim`, `LeftTrim`, `RightTrim` and `ToArrayOfStrings`
   attributes and their resolvers (@vjik)
 - Enh #117: Explicitly import functions and constants in "use" section (@mspirkov)
 - Enh #132: Exclude development files from the distribution archive (@vjik)
+- Bug #139: Add `EnumException` and throw it in `Hydrator::create()` when an enum is passed, which also prevents
+  `HydratorTypeCaster` from hydrating enums from array input (@viktorprogger, @vjik)
 
 ## 1.6.3 December 16, 2025
 

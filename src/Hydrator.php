@@ -9,6 +9,7 @@ use ReflectionProperty;
 use Yiisoft\Hydrator\AttributeHandling\ResolverFactory\AttributeResolverFactoryInterface;
 use Yiisoft\Hydrator\AttributeHandling\DataAttributesHandler;
 use Yiisoft\Hydrator\AttributeHandling\ParameterAttributesHandler;
+use Yiisoft\Hydrator\Exception\EnumException;
 use Yiisoft\Hydrator\Exception\NonExistClassException;
 use Yiisoft\Hydrator\Internal\ConstructorArgumentsExtractor;
 use Yiisoft\Hydrator\Internal\ReflectionFilter;
@@ -101,6 +102,10 @@ final class Hydrator implements HydratorInterface
         }
 
         $reflectionClass = new ReflectionClass($class);
+        if ($reflectionClass->isEnum()) {
+            throw new EnumException($reflectionClass);
+        }
+
         $constructor = $reflectionClass->getConstructor();
 
         $data = $this->dataAttributesHandler->handle($reflectionClass, $data);

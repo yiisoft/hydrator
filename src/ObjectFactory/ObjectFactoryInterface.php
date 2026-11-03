@@ -13,6 +13,9 @@ use Yiisoft\Hydrator\Exception\NonInstantiableException;
 interface ObjectFactoryInterface
 {
     /**
+     * Creates an object of the given class. Enums are never passed to this method, so implementations don't need to
+     * handle them.
+     *
      * @throws NonInstantiableException
      *
      * @psalm-template T of object

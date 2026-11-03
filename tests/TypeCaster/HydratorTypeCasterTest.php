@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Hydrator\Tests\TypeCaster;
 
+use Closure;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Hydrator\Hydrator;
+use Yiisoft\Hydrator\ObjectFactory\ContainerObjectFactory;
 use Yiisoft\Hydrator\Result;
 use Yiisoft\Hydrator\Tests\Support\IntegerEnum;
 use Yiisoft\Hydrator\Tests\Support\PrivateConstructorObject;
@@ -13,6 +16,8 @@ use Yiisoft\Hydrator\Tests\Support\StringableObject;
 use Yiisoft\Hydrator\Tests\Support\TestHelper;
 use Yiisoft\Hydrator\TypeCaster\HydratorTypeCaster;
 use Yiisoft\Hydrator\TypeCaster\TypeCastContext;
+use Yiisoft\Injector\Injector;
+use Yiisoft\Test\Support\Container\SimpleContainer;
 
 final class HydratorTypeCasterTest extends TestCase
 {
@@ -76,5 +81,27 @@ final class HydratorTypeCasterTest extends TestCase
 
         $this->assertSame($expected->isResolved(), $result->isResolved());
         $this->assertEquals($expected->getValue(), $result->getValue());
+    }
+
+    public static function dataEnumWithContainerObjectFactory(): array
+    {
+        return [
+            'enum' => [static fn(IntegerEnum $value) => null],
+            'union type enum|string' => [static fn(IntegerEnum|string $value) => null],
+        ];
+    }
+
+    #[DataProvider('dataEnumWithContainerObjectFactory')]
+    public function testEnumWithContainerObjectFactory(Closure $closure): void
+    {
+        $hydrator = new Hydrator(
+            objectFactory: new ContainerObjectFactory(new Injector(new SimpleContainer())),
+        );
+        $context = new TypeCastContext($hydrator, TestHelper::getFirstParameter($closure));
+        $typeCaster = new HydratorTypeCaster();
+
+        $result = $typeCaster->cast([], $context);
+
+        $this->assertFalse($result->isResolved());
     }
 }
